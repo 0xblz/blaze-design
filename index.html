@@ -45,7 +45,7 @@
         h2 {
             font-size: 1rem;
             line-height: 1.4em;
-            font-weight: 500;
+            font-weight: 700;
         }
         h3 {
             font-size: 1.1rem;
@@ -85,13 +85,16 @@
         }
         header {
             flex-direction: row;
-            justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             padding: 1rem;
             padding-top: 2rem;
             padding-bottom: 2rem;
             gap: 0.5rem;
+        }
+        header h1 {
+            display: flex;
+            flex: 1;
         }
         aside {
             transition: all 0.2s ease-in-out;
@@ -106,6 +109,17 @@
         aside h2 {
             width: 100%;
         }
+        .avatar {
+            width: 2.5em;
+            height: 2.5rem;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         .row-link {
             display: flex;
             align-items: center;
@@ -116,14 +130,22 @@
             gap: 0.75rem;
             padding: 1.5rem;
             border-radius: 1.5rem;
+            border: 4px solid transparent
         }
-        .row-link img,
         figure {
             transition: all 0.2s ease-in-out;
             width: 4rem;
             height: 4rem;
             border-radius: 1rem;
-            background-color: #01B3FF;
+            background-color: var(--secondary-color);
+            overflow: hidden;
+        }
+        figure.rounded {
+            border-radius: 9999px;
+        }
+        figure img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
         }
         .row-link:hover,
@@ -131,10 +153,11 @@
         .row-link:active {
             background-color: rgba(255, 255, 255, 0.1);
             transform: scale(1.02);
+            border-color: var(--primary-color);
         }
-        .row-link:hover img,
-        .row-link:focus img,
-        .row-link:active img {
+        .row-link:hover figure,
+        .row-link:focus figure,
+        .row-link:active figure {
             background-color: rgba(255, 255, 255, 0.1);
             transform: scale(1.05) rotate(-5deg);
         }
@@ -158,6 +181,7 @@
 </head>
 <body>
     <header>
+        <div class="avatar"><img src="/avatar.png"/></div>
         <h1>blaze</h1>
         <h2>digital designer</h2>
     </header>
@@ -166,10 +190,12 @@
             <h2>About me message</h2>
         </aside> -->
         <aside>
-            <h2>💾 Recent Projects</h2>
+            <h2>💾 recent projects</h2>
             <a href="https://apps.apple.com/us/app/holy-hues/id6740889386" target="_blank" class="row-link">
                 <div class="row-link-content">
-                    <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/09/38/7e/09387eee-34a0-9197-cc11-b5308238ff3b/AppIcon-0-0-1x_U007ephone-0-85-220.jpeg/460x0w.webp" alt="Holy Hues App" />
+                    <figure>
+                        <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/09/38/7e/09387eee-34a0-9197-cc11-b5308238ff3b/AppIcon-0-0-1x_U007ephone-0-85-220.jpeg/460x0w.webp" alt="Holy Hues App" />
+                    </figure>
                     <h3>Holy Hues</h3>
                 </div>
                 <small>Creator, 2025</small>
@@ -179,43 +205,69 @@
                     <figure></figure>
                     <h3><span class="blur">[Redacted]</span></h3>
                 </div>
-                <small>Team Designer, 2024 - 2025</small>
+                <small>App Design, 2024 - 2025</small>
             </a>
             <a href="https://base.party.app/party/0x3ecf401c2c19f2d68294b2fccdd05b1af032d3f3" target="_blank" class="row-link">
                 <div class="row-link-content">
-                    <img src="https://partyprod.nyc3.cdn.digitaloceanspaces.com/app-icon.png" alt="Party App" />
+                    <figure>
+                        <img src="https://partyprod.nyc3.cdn.digitaloceanspaces.com/app-icon.png" alt="Party App" />
+                    </figure>
                     <h3>Party</h3>
                 </div>
                 <small>Team Designer, 2024</small>
             </a>
         </aside>
         <aside>
-            <h2>💼 Experience</h2>
+            <h2>💼 experience</h2>
             <a href="http://x.com/prtyDAO" target="_blank" class="row-link">
-                <h3>PartyDAO<br><small>Designer</small></h3>
+                <div class="row-link-content">
+                    <figure class="rounded">
+                        <img src="https://pbs.twimg.com/profile_images/1587859502312968196/LQW03sTy_400x400.jpg" alt="Party" />
+                    </figure>
+                    <h3>PartyDAO<br><small>Designer</small></h3>
+                </div>
                 <small>2022 - Present</small>
             </a>
             <a href="http://x.com/drakulaapp" target="_blank" class="row-link">
-                <h3>Showtime<br><small>Founding Designer</small></h3>
+                <div class="row-link-content">
+                    <figure class="rounded">
+                        <img src="https://developers.moralis.com/wp-content/uploads/web3wiki/281-showtime/637adccd3dba572f17c113e9_fHOjg_vNxPNQgdUQf4Mr9ppGaTh8UxMdpEzwhrDGw1o-700x700.png" alt="Showtime" />
+                    </figure>
+                    <h3>Showtime<br><small>Founding Designer</small></h3>
+                </div>
                 <small>2021 - 2022</small>
             </a>
             <a href="#" class="row-link">
-                <h3>Freelance / Gov<br><small>Experimental Designer</small></h3>
+                <div class="row-link-content">
+                    <figure class="rounded">
+                    </figure>
+                    <h3>Freelance / Gov<br><small>Experimental Designer</small></h3>
+                </div>
                 <small>2017 - 2021</small>
             </a>
             <a href="http://bitovi.com" target="_blank" class="row-link">
-                <h3>Bitovi<br><small>UI Engineer</small></h3>
+                <div class="row-link-content">
+                    <figure class="rounded">
+                        <img src="https://pbs.twimg.com/profile_images/1717631289103204352/52I8GaXv_400x400.jpg" alt="Bitovi" />
+                    </figure>
+                    <h3>Bitovi<br><small>UI Engineer</small></h3>
+                </div>
                 <small>2015 - 2017</small>
             </a>
             <a href="http://scribd.com" target="_blank" class="row-link">
-                <h3>Scribd<br><small>Designer</small></h3>
+                <div class="row-link-content">
+                    <figure class="rounded">
+                        <img src="https://pbs.twimg.com/profile_images/1598396115937886216/7VThFdt9_400x400.png" alt="Scribd" />
+                    </figure>
+                    <h3>Scribd<br><small>Designer</small></h3>
+                </div>
                 <small>2010 - 2012</small>
             </a>
         </aside>
         <aside>
-            <h2>💬 Socials</h2>
+            <h2>💬 socials</h2>
             <a href="http://x.com/0xblz" target="_blank" class="row-link">
-                <h3>X.com</h3>
+                <h3>x.com</h3>
                 <small>@0xblz</small>
             </a>
         </aside>
