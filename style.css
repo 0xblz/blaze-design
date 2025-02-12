@@ -116,11 +116,26 @@ aside h2 {
     height: 2.5rem;
     border-radius: 9999px;
     overflow: hidden;
+    animation: avatar 10s linear infinite;
+    position: relative;
 }
-.avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.avatar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1rem;
+    height: 1rem;
+    background-image: url('/avatar.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transform: rotate(180deg) translateY(-50%) translateX(-50%);
+    border-radius: 9999px;
+}
+@keyframes avatar {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 .row-link {
     display: flex;
@@ -144,14 +159,35 @@ figure {
     background-color: var(--secondary-color);
     overflow: hidden;
 }
-figure.rounded {
+.rounded {
     border-radius: 9999px;
 }
-figure img {
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+.grid-item {
+    display: flex;
+    width: 100%;
+    max-width: 20rem;
+    min-width: 10rem;
+    flex: 1;
+    height: 10rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+.avatar img,
+figure img,
+.grid-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: all 0.2s ease-in-out;
 }
+.grid-item:hover,
+.grid-item:focus,
+.grid-item:active,
 .row-link:hover,
 .row-link:focus,
 .row-link:active {
@@ -159,6 +195,11 @@ figure img {
     transform: scale(1.02);
     border-color: var(--primary-color);
     box-shadow: 0 0 3rem 0 var(--primary-color);
+}
+.grid-item:hover img,
+.grid-item:focus img,
+.grid-item:active img {
+    transform: scale(1.25);
 }
 .row-link:hover figure,
 .row-link:focus figure,
