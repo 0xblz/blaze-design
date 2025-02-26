@@ -1,0 +1,24 @@
+// Animations
+@keyframes rainbow {
+    0% { color: var(--primary-color); }
+    50% { color: var(--tertiary-color); }
+    100% { color: var(--primary-color); }
+}
+
+@keyframes fade {
+    0% { 
+        opacity: 0; 
+        transform: translateY(10vh); 
+        filter: blur(2rem); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: translateY(0); 
+        filter: blur(0px); 
+    }
+}
+
+@keyframes avatar {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+} 

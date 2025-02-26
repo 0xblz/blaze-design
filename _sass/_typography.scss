@@ -1,0 +1,37 @@
+// Typography
+h1 {
+    font-size: 1.6rem;
+    line-height: 1.4em;
+    font-weight: 700;
+    animation: rainbow 10s ease-in-out infinite;
+    color: var(--primary-color);
+}
+
+h2 {
+    font-size: 1.1rem;
+    line-height: 1.4em;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 1.1rem;
+    line-height: 1.4em;
+    font-weight: 700;
+}
+
+a {
+    transition: all 0.2s ease-in-out;
+    color: var(--quaternary-color);
+    text-decoration: none;
+    
+    &:hover,
+    &:focus,
+    &:active {
+        color: white;
+    }
+}
+
+small {
+    opacity: 0.6;
+    font-weight: 600;
+} 
