@@ -27,8 +27,8 @@ article {
     height: 100%;
     padding: 1.5rem;
     background: rgba(255, 255, 255, 0.01);
-    backdrop-filter: blur(0.5rem);
-    -webkit-backdrop-filter: blur(0.5rem);
+    backdrop-filter: blur(1rem);
+    -webkit-backdrop-filter: blur(1rem);
     z-index: 1;
 
     @media (max-width: 1000px) {

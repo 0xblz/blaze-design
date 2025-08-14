@@ -22,7 +22,7 @@ const CONFIG = {
     // Contour shape (abstract curve the lines follow)
     contourAmplitude1: 0.8,  // Primary wave amplitude
     contourAmplitude2: 1.4,  // Secondary wave amplitude  
-    contourAmplitude3: 1.2,  // Tertiary wave amplitude
+    contourAmplitude3: 2.2,  // Tertiary wave amplitude
     contourFrequency1: 0.3,  // Primary wave frequency
     contourFrequency2: 0.1,  // Secondary wave frequency
     contourFrequency3: 0.5,  // Tertiary wave frequency
@@ -42,8 +42,8 @@ const CONFIG = {
     naturalWaveFrequency: 0.5,    // Frequency of natural waves
     
     // Scene rotation (for abstract look)
-    rotationX: Math.PI * -0.08,    // ~15 degrees
-    rotationY: Math.PI * -0.08,    // Slight y rotation
+    rotationX: Math.PI * 0,    // ~15 degrees
+    rotationY: Math.PI * 0,    // Slight y rotation
     
     // Camera
     cameraDistance: 5,            // How far camera is from scene
