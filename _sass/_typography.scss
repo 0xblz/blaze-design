@@ -2,12 +2,8 @@
 body {
     font-family: var(--font-primary);
     font-size: 16px;
-    color: var(--primary-color);
+    color: var(--secondary-color);
     font-weight: 400;
-
-    @media (prefers-color-scheme: dark) {
-        color: var(--secondary-color);
-    }
 }
 
 h1 {
@@ -54,22 +50,14 @@ small {
 
 a {
     transition: all 0.2s ease-in-out;
-    color: var(--primary-color);
+    color: white;
     text-decoration: none;
     font-weight: 800;
-
-    @media (prefers-color-scheme: dark) {
-        color: var(--secondary-color);
-    }
 
     &:hover,
     &:focus,
     &:active {
-        color: var(--secondary-color);
-
-        @media (prefers-color-scheme: dark) {
-            color: var(--primary-color);
-        }
+        color: var(--primary-color);
     }
 }
 
