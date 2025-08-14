@@ -2,30 +2,33 @@
 body {
     font-family: var(--font-primary);
     font-size: 16px;
-    color: white;
+    color: var(--text-color-light);
     font-weight: 400;
+
+    @media (prefers-color-scheme: dark) {
+        color: var(--text-color-dark);
+    }
 }
 
 h1 {
-    font-family: var(--font-secondary);
-    font-size: 2.6rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    line-height: 1em;
-    text-align: center;
+    line-height: 1.4em;
 
-    @media (max-width: 500px) {
-        font-size: 2rem;
-    }
-
-    @media (max-width: 360px) {
-        font-size: 1.8rem;
+    img {
+        width: 2rem;
+        height: 2rem;
+        border-radius: 999px;
+        display: inline-block;
+        vertical-align: text-bottom;
+        margin: 0 0.25rem;
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
     }
 }
 
-
 h2 {
     font-family: var(--font-secondary);
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 1.5px;
     text-transform: uppercase;
@@ -38,55 +41,34 @@ h3 {
     line-height: 1.2em;
 }
 
-p, article {
-    font-size: 1.1rem;
+p {
     line-height: 1.4em;
     font-weight: 500;
 }
 
+small {
+    font-size: 0.8rem;
+    font-weight: 900;
+    opacity: 0.6;
+}
+
 a {
     transition: all 0.2s ease-in-out;
-    color: white;
+    color: var(--text-color-light);
     text-decoration: none;
     font-weight: 800;
-    
+
+    @media (prefers-color-scheme: dark) {
+        color: var(--text-color-dark);
+    }
+
     &:hover,
     &:focus,
     &:active {
-        color: rgba(255, 255, 255, 0.4);
-    }
+        color: var(--text-color-dark);
 
-    &.button {
-        border-radius: 999px;
-
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        width: 2.5rem;
-        height: 2.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &:hover,
-        &:focus,
-        &:active {
-            border-color: white;
-            color: white;
-        }
-    }
-}
-
-h1, h2, h3, p { 
-    img {
-        width: 1.5rem;
-        height: 1.5rem;
-        border-radius: 0.5rem;
-        display: inline-block;
-        vertical-align: text-bottom;
-        margin: 0 0.25rem;
-        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-
-        &.avatar {
-            border-radius: 999px;
+        @media (prefers-color-scheme: dark) {
+            color: var(--text-color-light);
         }
     }
 }

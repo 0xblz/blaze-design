@@ -12,10 +12,10 @@ html {
 // Selection styling
 ::-moz-selection {
     color: white;
-    background: transparent;
+    background: var(--text-color-light);
 }
 
 ::selection {
     color: white;
-    background: transparent;
+    background: var(--text-color-light);
 } 

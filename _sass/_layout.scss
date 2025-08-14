@@ -7,83 +7,19 @@ html, body {
 
 body {
     position: relative;
+    background: var(--bg-color-light);
+
+    @media (prefers-color-scheme: dark) {
+        background: var(--bg-color-dark);
+    }
 }
 
 main {
     display: flex;
-    flex-direction: column;
-    gap: 3rem;
-    padding-bottom: 3rem;
-    align-items: center;
-    width: 100%;
-    min-height: 100vh;
     position: relative;
-    background-image: 
-        url('/assets/images/bg.png'),
-        linear-gradient(45deg, var(--primary-color), var(--quaternary-color));
-    background-size: 2rem, cover;
-    background-position: center, center;
-    background-repeat: repeat, no-repeat;
-    background-attachment: fixed, fixed;
-    background-blend-mode: overlay;
-    overflow: hidden;
-    transition: background 1s ease-in-out;
 
-    &:before,
-    &:after {
-        content: "";
-        display: block;
-        width: 100vw;
-        height: 100vw;
-        border-radius: 100%;
-        border: 4rem solid white;
-        background: var(--secondary-color);
-        position: fixed;
-        top: 0;
-        left: -25%;
-        z-index: 1;
-        filter: blur(6rem);
-        will-change: transform, background-color; // Tell browser to optimize these properties
-        transform: translateZ(0) translate(var(--before-left, 0), var(--before-top, 0)) rotate(var(--before-rotation, 0deg));
-        transition: background-color 1s ease-in-out, transform 1s ease-in-out;
-
-        @media (max-width: 500px) {
-            width: 100vh;
-            height: 100vh;
-        }
-    }
-
-    &:after {
-        top: auto;
-        bottom: 0;
-        left: auto;
-        right: -25%;
-        background: var(--tertiary-color);
-        transform: translateZ(0) translate(var(--after-right, 0), var(--after-bottom, 0)) rotate(var(--after-rotation, 0deg));
-        transition: background-color 1s ease-in-out, transform 1s ease-in-out;
-        mix-blend-mode: lighten;
-    }
-}
-
-header {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 1.5rem;
-    max-width: var(--container-width);
-    width: 100%;
-    z-index: 3;
-    padding: 1.5rem;
-    position: relative;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-
-    nav {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 0.75rem;
+    @media (max-width: 500px) {
+        flex-direction: column-reverse;
     }
 }
 
@@ -91,76 +27,52 @@ article {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-width: var(--container-width);
-    gap: 1.5rem;
+    height: 100%;
     padding: 1.5rem;
-    z-index: 2;
-    opacity: 0;
-    will-change: transform, opacity;
-    animation: fade-up 0.5s ease-out forwards;
-    transition: all 0.5s ease-in-out;
+}
 
-    &.intro{
-        mix-blend-mode: overlay;
-        height: 30vh;
-        justify-content: center;
+article:first-child {
+    max-width: 30vw;
+
+    @media (max-width: 1000px) {
+        max-width: 50vw;
     }
 
-    &.box {
-        background: rgba(0, 0, 0, 0.2);
-        border-radius: 1.5rem;
-        box-shadow: 0 0 10rem white, inset 0 -3rem 8rem white, inset 0 0 1rem var(--primary-color);
-        border: 1px solid white;
-        gap: 0;
-        mix-blend-mode: overlay;
+    @media (max-width: 500px) {
+        max-width: 100vw;
+    }
+}
 
-        h2 {
-            transition: color 0.5s ease-in-out;
-        }
+article:last-child {
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    right: 0;
+    max-width: 70vw;
+    max-height: 100vh;
 
-        &:hover {
-            box-shadow: 0 0 10rem var(--primary-color), inset 0 3rem 8rem white, inset 0 0 1rem white;
+    @media (max-width: 1000px) {
+        max-width: 50vw;
+    }
 
-            h2 {
-                color: var(--primary-color);
-            }
-        }
+    @media (max-width: 500px) {
+        max-width: 100vw;
+        min-height: 25vh;
+        position: static;
+        width: 100%;
+        max-height: auto;
+    }
+}
 
-        h2 {
-            margin-bottom: 1.5rem;
-        }
+hr {
+    border: none;
+    border: 1px solid white;
+    width: 100%;
+    margin: 1.5rem 0;
 
-        > div {
-            transition: border-color 0.5s ease-in-out;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-
-            &:hover {
-                border-color: white;
-            }
-
-            > div:first-child {
-                flex: 0 0 8rem;
-                font-weight: 800;
-                font-size: 0.8rem;
-            }
-
-            > div:last-child {
-                flex: 1;
-            }
-
-            @media (max-width: 768px) {
-                flex-direction: column;
-                gap: 0.5rem;
-                
-                > div:first-child {
-                    flex: none;
-                }
-            }
-        }
+    @media (prefers-color-scheme: dark) {
+        border-color: rgba(255, 255, 255, 0.2);
     }
 }
 
