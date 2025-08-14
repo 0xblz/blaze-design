@@ -2,35 +2,23 @@ function generateSplitComplementaryColors() {
     // Generate a random base hue (0-360)
     const baseHue = Math.floor(Math.random() * 360);
     
-    // Convert to HSL with saturation and lightness adjusted for dark mode
-    const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const saturation = prefersDarkMode ? 20 : 25;
-    const lightness = prefersDarkMode ? 20 : 45;
-    
-    // Filter effects to mimic CSS filter
-    const hueRotate = prefersDarkMode ? 0 : 0;         // hue-rotate(90deg)
-    const brightness = prefersDarkMode ? 1 : 1.3;    // brightness(1.2)
-    const contrast = prefersDarkMode ? 0.5 : 0.8;      // contrast(0.8)
-    const shouldInvert = prefersDarkMode ? false : true; // invert(1)
+    // Set fixed saturation and lightness values
+    const saturation = 25;
+    const lightness = 45;
 
-    // Calculate split-complementary colors (base + complement ± 30°)
-    const hue1 = (baseHue + hueRotate) % 360;                    // Primary color
-    const hue2 = (baseHue + 45 + hueRotate) % 360;             // Complementary color
-    const hue3 = (baseHue + 90 + hueRotate) % 360;             // Split-complementary (-30° from complement)
+    // Calculate split-complementary colors (base + complement ± degrees)
+    const hue1 = baseHue;                    // Primary color
+    const hue2 = (baseHue + 45) % 360;      // Complementary color
+    const hue3 = (baseHue + 90) % 360;      // Split-complementary color
     
-    // Apply brightness and contrast to lightness
-    let adjustedLightness = lightness * brightness;
-    adjustedLightness = 50 + (adjustedLightness - 50) * contrast; // Apply contrast around midpoint
-    adjustedLightness = Math.min(100, Math.max(0, adjustedLightness)); // Clamp to 0-100
-    
-    // Apply invert
-    const finalLightness = shouldInvert ? 100 - adjustedLightness : adjustedLightness;
+    // Use consistent lightness value
+    const finalLightness = lightness;
     
     // Convert HSL to hex - create 3 split-complementary colors + 1 dark
     const color1 = hslToHex(hue1, saturation, finalLightness);                    // Primary color
     const color2 = hslToHex(hue2, saturation, finalLightness);                    // Complementary color
     const color3 = hslToHex(hue3, saturation, finalLightness);                    // Split-complementary color
-    const color4 = hslToHex(hue1, saturation, Math.max(10, finalLightness * 0.4)); // Dark version of primary
+    const color4 = hslToHex(hue1, saturation, Math.max(10, finalLightness * 0.4)); // Darker version of primary
 
     // Generate random positions for the pseudo-elements with moderate movement
     const beforeTop = Math.random() * 50 - 25; // -25% to 25%
@@ -48,359 +36,15 @@ function generateSplitComplementaryColors() {
     document.documentElement.style.setProperty('--tertiary-color', color3);
     document.documentElement.style.setProperty('--quaternary-color', color4);
     
-    // Update position variables
-    document.documentElement.style.setProperty('--before-top', `${beforeTop}%`);
-    document.documentElement.style.setProperty('--before-left', `${beforeLeft}%`);
-    document.documentElement.style.setProperty('--after-bottom', `${afterBottom}%`);
-    document.documentElement.style.setProperty('--after-right', `${afterRight}%`);
+    // Update position variables for transform-based animation
+    document.documentElement.style.setProperty('--before-top', `${beforeTop}vw`);
+    document.documentElement.style.setProperty('--before-left', `${beforeLeft}vw`);
+    document.documentElement.style.setProperty('--after-bottom', `${afterBottom}vw`);
+    document.documentElement.style.setProperty('--after-right', `${afterRight}vw`);
     
     // Update rotation variables
     document.documentElement.style.setProperty('--before-rotation', `${beforeRotation}deg`);
     document.documentElement.style.setProperty('--after-rotation', `${afterRotation}deg`);
-}
-
-function createCrossSectionGrid() {
-    // Get actual document height for Chrome compatibility
-    const docHeight = Math.max(
-        document.body.scrollHeight,
-        document.body.offsetHeight,
-        document.documentElement.clientHeight,
-        document.documentElement.scrollHeight,
-        document.documentElement.offsetHeight
-    );
-    
-    // Create vertical line
-    const verticalLine = document.createElement('div');
-    verticalLine.id = 'vertical-line';
-    verticalLine.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 1px;
-        height: ${docHeight}px;
-        background: rgba(255, 255, 255, 0.1);
-        pointer-events: none;
-        z-index: 999;
-    `;
-    
-    // Create horizontal line
-    const horizontalLine = document.createElement('div');
-    horizontalLine.id = 'horizontal-line';
-    horizontalLine.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 1px;
-        background: rgba(255, 255, 255, 0.1);
-        pointer-events: none;
-        z-index: 999;
-    `;
-    
-    // Create center dot
-    const centerDot = document.createElement('div');
-    centerDot.id = 'center-dot';
-    centerDot.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 6px;
-        height: 6px;
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 1000;
-        transform: translate(-50%, -50%);
-    `;
-    
-    document.body.appendChild(verticalLine);
-    document.body.appendChild(horizontalLine);
-    document.body.appendChild(centerDot);
-    
-    return { verticalLine, horizontalLine, centerDot };
-}
-
-function updateCrossSectionGrid(x, y) {
-    const verticalLine = document.getElementById('vertical-line');
-    const horizontalLine = document.getElementById('horizontal-line');
-    const centerDot = document.getElementById('center-dot');
-    
-    if (verticalLine && horizontalLine && centerDot) {
-        // Use the same coordinates for everything
-        verticalLine.style.left = `${x}px`;
-        horizontalLine.style.top = `${y}px`;
-        centerDot.style.left = `${x}px`;
-        centerDot.style.top = `${y}px`;
-        
-        // Chrome-specific fix: ensure lines are visible when scrolling
-        const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-        if (isChrome) {
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const windowHeight = window.innerHeight;
-            
-            // Adjust vertical line height dynamically for Chrome
-            if (verticalLine.style.height !== '100vh') {
-                const newHeight = Math.max(windowHeight, document.documentElement.scrollHeight);
-                verticalLine.style.height = `${newHeight}px`;
-            }
-        }
-    }
-}
-
-// Ripple distortion system
-class RippleDistortion {
-    constructor() {
-        this.canvas = null;
-        this.ctx = null;
-        this.ripples = [];
-        this.animationId = null;
-        this.setupCanvas();
-    }
-
-    setupCanvas() {
-        // Create canvas element
-        this.canvas = document.createElement('canvas');
-        this.canvas.id = 'ripple-canvas';
-        this.canvas.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 1001;
-            mix-blend-mode: difference;
-            opacity: 0.8;
-        `;
-        
-        document.body.appendChild(this.canvas);
-        this.ctx = this.canvas.getContext('2d');
-        
-        this.resize();
-        window.addEventListener('resize', () => this.resize());
-        
-        // Start animation loop
-        this.animate();
-    }
-
-    resize() {
-        const dpr = window.devicePixelRatio || 1;
-        const rect = this.canvas.getBoundingClientRect();
-        
-        this.canvas.width = rect.width * dpr;
-        this.canvas.height = rect.height * dpr;
-        
-        this.ctx.scale(dpr, dpr);
-        this.canvas.style.width = rect.width + 'px';
-        this.canvas.style.height = rect.height + 'px';
-    }
-
-    addRipple(x, y) {
-        const ripple = {
-            x: x,
-            y: y,
-            radius: 0,
-            maxRadius: 400,
-            speed: 2.5,
-            opacity: 1,
-            life: 0,
-            maxLife: 280,
-            frequency: 0.02,
-            amplitude: 20
-        };
-        
-        this.ripples.push(ripple);
-    }
-
-    updateRipples() {
-        this.ripples = this.ripples.filter(ripple => {
-            ripple.life += 1;
-            ripple.radius += ripple.speed;
-            
-            // Smooth single-curve fade out
-            const progress = ripple.life / ripple.maxLife;
-            
-            // Single smooth exponential decay curve
-            ripple.opacity = Math.pow(1 - progress, 2.5);
-            
-            ripple.opacity = Math.max(0, ripple.opacity);
-            
-            // Only remove when opacity is truly near zero
-            return ripple.opacity > 0.001;
-        });
-    }
-
-    drawRipples() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        
-        this.ripples.forEach(ripple => {
-            this.ctx.save();
-            
-            // Create smoother gradient for the ripple
-            const gradient = this.ctx.createRadialGradient(
-                ripple.x, ripple.y, 0,
-                ripple.x, ripple.y, ripple.radius
-            );
-            
-            const baseOpacity = ripple.opacity;
-            
-            // Much smoother gradient stops
-            gradient.addColorStop(0, `rgba(255, 255, 255, 0)`);
-            gradient.addColorStop(0.3, `rgba(255, 255, 255, ${baseOpacity * 0.1})`);
-            gradient.addColorStop(0.5, `rgba(255, 255, 255, ${baseOpacity * 0.3})`);
-            gradient.addColorStop(0.7, `rgba(255, 255, 255, ${baseOpacity * 0.5})`);
-            gradient.addColorStop(0.85, `rgba(255, 255, 255, ${baseOpacity * 0.3})`);
-            gradient.addColorStop(0.95, `rgba(255, 255, 255, ${baseOpacity * 0.1})`);
-            gradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
-            
-            // Draw main ripple with smoother distortion effect
-            this.ctx.beginPath();
-            this.ctx.arc(ripple.x, ripple.y, ripple.radius, 0, Math.PI * 2);
-            this.ctx.fillStyle = gradient;
-            this.ctx.fill();
-            
-            // Draw fewer, more consistent concentric circles
-            for (let i = 0; i < 2; i++) {
-                const waveRadius = ripple.radius + (i * 20);
-                const waveOpacity = baseOpacity * (0.4 - i * 0.2);
-                
-                if (waveOpacity > 0.01) {
-                    this.ctx.beginPath();
-                    this.ctx.arc(ripple.x, ripple.y, waveRadius, 0, Math.PI * 2);
-                    this.ctx.strokeStyle = `rgba(255, 255, 255, ${waveOpacity})`;
-                    this.ctx.lineWidth = 1.5 - i * 0.3;
-                    this.ctx.stroke();
-                }
-            }
-            
-            this.ctx.restore();
-        });
-    }
-
-    animate() {
-        this.updateRipples();
-        this.drawRipples();
-        this.animationId = requestAnimationFrame(() => this.animate());
-    }
-
-    destroy() {
-        if (this.animationId) {
-            cancelAnimationFrame(this.animationId);
-        }
-        if (this.canvas && this.canvas.parentNode) {
-            this.canvas.parentNode.removeChild(this.canvas);
-        }
-    }
-}
-
-// Global ripple distortion instance
-let rippleDistortion = null;
-
-function createRippleEffect(x, y) {
-    // Add ripple to the distortion system
-    if (rippleDistortion) {
-        rippleDistortion.addRipple(x, y);
-    }
-    
-    // Keep the original simple ripple as a backup/enhancement
-    const ripple = document.createElement('div');
-    ripple.style.cssText = `
-        position: fixed;
-        left: ${x}px;
-        top: ${y}px;
-        width: 0;
-        height: 0;
-        border: 2px solid rgba(255, 255, 255, 0.6);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 998;
-        transform: translate(-50%, -50%);
-        animation: rippleExpand 3s ease-out forwards;
-        mix-blend-mode: difference;
-    `;
-    
-    document.body.appendChild(ripple);
-    
-    // Remove ripple when animation actually completes
-    ripple.addEventListener('animationend', () => {
-        if (ripple.parentNode) {
-            ripple.parentNode.removeChild(ripple);
-        }
-    });
-    
-    // Fallback timeout in case animation event doesn't fire
-    setTimeout(() => {
-        if (ripple.parentNode) {
-            ripple.parentNode.removeChild(ripple);
-        }
-    }, 3500);
-}
-
-function createStarAnimation(x, y) {
-    // Create star element
-    const star = document.createElement('div');
-    star.innerHTML = '<i class="fa-regular fa-circle"></i>';
-    star.style.cssText = `
-        position: fixed;
-        left: ${x}px;
-        top: ${y}px;
-        font-size: 1rem;
-        color: white;
-        pointer-events: none;
-        z-index: 1000;
-        transform: translate(-50%, -50%);
-        animation: starFloat 0.5s ease-out forwards;
-    `;
-    
-    document.body.appendChild(star);
-    
-    // Remove star after animation
-    setTimeout(() => {
-        if (star.parentNode) {
-            star.parentNode.removeChild(star);
-        }
-    }, 1500);
-}
-
-function handleClick(event) {
-    // Regenerate colors and positions
-    generateSplitComplementaryColors();
-
-    // Use the same coordinate calculation as the cross-section grid
-    const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-
-    let x, y;
-    if (isChrome) {
-        // Adjust for Chrome's scroll behavior (same as cross-section grid)
-        x = event.clientX + window.scrollX;
-        y = event.clientY + window.scrollY;
-    } else {
-        x = event.clientX;
-        y = event.clientY;
-    }
-
-    // Create ripple effect at cursor position
-    createRippleEffect(x, y);
-
-    // Create star animation at the same position as the cross-section grid
-    createStarAnimation(x, y);
-}
-
-function handleMouseMove(event) {
-    // Use viewport coordinates but adjust for Chrome scroll
-    const isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-    
-    let x, y;
-    if (isChrome) {
-        // Adjust for Chrome's scroll behavior
-        x = event.clientX + window.scrollX;
-        y = event.clientY + window.scrollY;
-    } else {
-        x = event.clientX;
-        y = event.clientY;
-    }
-    
-    updateCrossSectionGrid(x, y);
 }
 
 function hslToHex(h, s, l) {
@@ -414,79 +58,74 @@ function hslToHex(h, s, l) {
     return `#${f(0)}${f(8)}${f(4)}`;
 }
 
+// Word cycling functionality
+class WordCycler {
+    constructor(element, words, interval = 2000) {
+        this.element = element;
+        this.words = words;
+        this.interval = interval;
+        this.currentIndex = 0;
+        this.isAnimating = false;
+        this.fadeOutDuration = 300;
+        this.fadeInDuration = 300;
+        
+        // Set initial word
+        this.element.textContent = this.words[0];
+        
+        // Start cycling
+        this.startCycling();
+    }
+    
+    startCycling() {
+        setInterval(() => {
+            this.cycleToNextWord();
+        }, this.interval);
+    }
+    
+    cycleToNextWord() {
+        if (this.isAnimating) return;
+        
+        this.isAnimating = true;
+        
+        // Fade out current word
+        this.element.style.transition = `opacity ${this.fadeOutDuration}ms ease-out`;
+        this.element.style.opacity = '0';
+        
+        setTimeout(() => {
+            // Change to next word
+            this.currentIndex = (this.currentIndex + 1) % this.words.length;
+            this.element.textContent = this.words[this.currentIndex];
+            
+            // Generate new background colors when word changes
+            generateSplitComplementaryColors();
+            
+            // Fade in new word
+            this.element.style.transition = `opacity ${this.fadeInDuration}ms ease-in`;
+            this.element.style.opacity = '1';
+            
+            setTimeout(() => {
+                this.isAnimating = false;
+            }, this.fadeInDuration);
+            
+        }, this.fadeOutDuration);
+    }
+}
+
 // Generate colors when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     generateSplitComplementaryColors();
 
-    // Create cross-section grid
-    createCrossSectionGrid();
-    
-    // Initialize ripple distortion system
-    rippleDistortion = new RippleDistortion();
-
-    // Add event listeners
-    document.addEventListener('click', handleClick);
-    document.addEventListener('mousemove', handleMouseMove);
-
-    // Add CSS animation for star and enhanced ripple
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes starFloat {
-            0% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(0.5);
-            }
-            50% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.2);
-            }
-            90% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.2);
-            }
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0);
-            }
-        }
+    // Initialize word cycling for h1
+    const h1Element = document.querySelector('.intro-cycle');
+    if (h1Element) {
+        const words = [
+            'creative builder',
+            'ui/ux designer',
+            'micro animator',
+            'design prototyper',
+            'systems maker'
+        ];
         
-        @keyframes rippleExpand {
-            0% {
-                width: 0;
-                height: 0;
-                opacity: 1;
-                border-width: 2px;
-            }
-            30% {
-                opacity: 0.8;
-                border-width: 1.5px;
-            }
-            60% {
-                opacity: 0.5;
-                border-width: 1px;
-            }
-            80% {
-                opacity: 0.2;
-                border-width: 0.7px;
-            }
-            95% {
-                opacity: 0.05;
-                border-width: 0.5px;
-            }
-            100% {
-                width: 400px;
-                height: 400px;
-                opacity: 0;
-                border-width: 0.3px;
-            }
-        }
-    `;
-    document.head.appendChild(style);
-});
-
-// Clean up on page unload
-window.addEventListener('beforeunload', () => {
-    if (rippleDistortion) {
-        rippleDistortion.destroy();
+        new WordCycler(h1Element, words, 4000);
     }
 });
