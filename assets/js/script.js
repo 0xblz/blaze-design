@@ -29,7 +29,7 @@ const CONFIG = {
     
     // Mouse interaction
     mouseInfluenceRange: 4.0,     // Distance mouse affects lines
-    oscillationAmplitude: 0.8,    // How much lines wiggle
+    oscillationAmplitude: 2.8,    // How much lines wiggle
     dampeningAmplitude: 0.5,      // Secondary movement amplitude
     animationSpeed: 0.005,        // Speed of oscillation
     returnSpeed: 0.05,            // How fast lines return to original position
