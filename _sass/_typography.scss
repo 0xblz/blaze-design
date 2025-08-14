@@ -40,6 +40,20 @@ h3 {
 p {
     line-height: 1.4em;
     font-weight: 500;
+    transition: opacity 0.25s ease-in-out;
+}
+
+// Paragraph hover effect - fade siblings when hovering
+article:hover p {
+    opacity: 0.4;
+
+    @media (max-width: 600px) {
+        opacity: 1;
+    }
+}
+
+article:hover p:hover {
+    opacity: 1;
 }
 
 small {
