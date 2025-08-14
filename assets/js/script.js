@@ -11,18 +11,18 @@ console.log('Three.js loaded successfully:', THREE.REVISION);
 // Configuration - Edit these values to customize the appearance
 const CONFIG = {
     // Line properties
-    lineCount: 100,           // Number of horizontal lines
+    lineCount: 300,           // Number of horizontal lines
     lineLength: 80,           // Length of each line
-    lineSpacing: 0.05,        // Vertical spacing between lines
+    lineSpacing: 0.1,        // Vertical spacing between lines
     linePoints: 400,         // Number of points per line (higher = smoother curves)
-    lineColor: 0xffffff,     // Line color (hex: 0xffffff = white, 0xff0000 = red, etc.)
-    lineOpacity: 0.25,        // Line transparency (0.0 = invisible, 1.0 = solid)
+    lineColor: 0xFF8A58,     // Line color (hex: 0xffffff = white, 0xff0000 = red, etc.)
+    lineOpacity: 0.1,        // Line transparency (0.0 = invisible, 1.0 = solid)
     lineWidth: 1,            // Line thickness
     
     // Contour shape (abstract curve the lines follow)
-    contourAmplitude1: 0.8,  // Primary wave amplitude
-    contourAmplitude2: 1.4,  // Secondary wave amplitude  
-    contourAmplitude3: 2.2,  // Tertiary wave amplitude
+    contourAmplitude1: 0.3,  // Primary wave amplitude
+    contourAmplitude2: 0.3,  // Secondary wave amplitude  
+    contourAmplitude3: 0.3,  // Tertiary wave amplitude
     contourFrequency1: 0.3,  // Primary wave frequency
     contourFrequency2: 0.1,  // Secondary wave frequency
     contourFrequency3: 0.5,  // Tertiary wave frequency
@@ -41,13 +41,20 @@ const CONFIG = {
     naturalWaveSpeed: 0.01,      // Speed of natural wave animation (very slow)
     naturalWaveFrequency: 0.5,    // Frequency of natural waves
     
+    // Electrical pulse effect
+    pulseEnabled: true,           // Enable/disable pulse effect
+    pulseMaxOpacity: 1.0,         // Maximum opacity during pulse
+    pulseMinInterval: 800,        // Minimum time between pulses on same line (ms)
+    pulseMaxInterval: 4000,       // Maximum time between pulses on same line (ms)
+    maxConcurrentPulses: 4,       // Maximum number of pulses visible at once
+    
     // Scene rotation (for abstract look)
     rotationX: Math.PI * 0,    // ~15 degrees
     rotationY: Math.PI * 0,    // Slight y rotation
     
     // Camera
-    cameraDistance: 5,            // How far camera is from scene
-    fov: 85                       // Field of view
+    cameraDistance: 10,            // How far camera is from scene
+    fov: 105                       // Field of view
 };
 
 // Scene setup
@@ -56,6 +63,7 @@ let mouse = new THREE.Vector2();
 let raycaster = new THREE.Raycaster();
 let isMouseOver = false;
 let mousePosition = new THREE.Vector3();
+let activePulses = []; // Track active electrical pulses
 
 // Initialize the scene
 function init() {
@@ -108,7 +116,7 @@ function createFabricLines() {
         // Create geometry from points
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
         
-        // Create material using config values
+        // Create simple material for now (debugging)
         const material = new THREE.LineBasicMaterial({ 
             color: CONFIG.lineColor, 
             linewidth: CONFIG.lineWidth,
@@ -119,11 +127,14 @@ function createFabricLines() {
         // Create line mesh
         const line = new THREE.Line(geometry, material);
         
-        // Store original positions for animation
+        // Store original positions and pulse data for animation
         line.userData = {
             originalPositions: [...points],
             index: i,
-            currentOffset: 0
+            currentOffset: 0,
+            lastPulseTime: Date.now() + Math.random() * CONFIG.pulseMaxInterval * 2, // Much longer random initial delay
+            nextPulseDelay: CONFIG.pulseMinInterval + Math.random() * (CONFIG.pulseMaxInterval - CONFIG.pulseMinInterval),
+            baseInterval: CONFIG.pulseMinInterval + Math.random() * (CONFIG.pulseMaxInterval - CONFIG.pulseMinInterval) // Unique base interval per line
         };
         
         lines.push(line);
@@ -155,7 +166,7 @@ function setupMouseInteraction() {
         isMouseOver = true;
         
         // Debug output (remove this later)
-        console.log('Mouse world position:', mousePosition.x.toFixed(2), mousePosition.y.toFixed(2));
+        // console.log('Mouse world position:', mousePosition.x.toFixed(2), mousePosition.y.toFixed(2));
     });
     
     canvas.addEventListener('mouseleave', () => {
@@ -167,10 +178,58 @@ function setupMouseInteraction() {
 function animate() {
     requestAnimationFrame(animate);
     
+    // Manage electrical pulses
+    managePulses();
+    
     // Update line positions for fabric effect
     updateFabricEffect();
     
     renderer.render(scene, camera);
+}
+
+// Manage electrical pulses
+function managePulses() {
+    const currentTime = Date.now();
+    
+    // Remove completed pulses
+    activePulses = activePulses.filter(pulse => {
+        const progress = (currentTime - pulse.startTime) / pulse.duration;
+        return progress < 1.0;
+    });
+    
+    // Check if we can start new pulses - but only start ONE per frame to prevent batching
+    if (activePulses.length < CONFIG.maxConcurrentPulses && CONFIG.pulseEnabled) {
+        // Find all lines ready to pulse
+        const readyLines = lines.filter(line => {
+            const userData = line.userData;
+            const timeSinceLastPulse = currentTime - userData.lastPulseTime;
+            return timeSinceLastPulse >= userData.nextPulseDelay;
+        });
+        
+        // Only start ONE pulse per frame, chosen randomly from ready lines
+        if (readyLines.length > 0) {
+            const randomLine = readyLines[Math.floor(Math.random() * readyLines.length)];
+            const userData = randomLine.userData;
+            
+            // Start a new pulse on this line - shorter duration
+            const pulseDuration = 1500; // Fixed 1.5 second duration
+            
+            activePulses.push({
+                lineIndex: userData.index,
+                startTime: currentTime,
+                duration: pulseDuration
+            });
+            
+            // console.log('Starting pulse on line', userData.index, 'Duration:', pulseDuration, 'Active pulses:', activePulses.length);
+            
+            // Update timing for next pulse with much more variation
+            userData.lastPulseTime = currentTime;
+            // Use the line's unique base interval plus extra randomness
+            const extraVariation = (Math.random() - 0.5) * 2000; // +/- 1000ms variation
+            const bonusDelay = Math.random() * 2000; // Additional 0-2s random delay
+            userData.nextPulseDelay = userData.baseInterval + extraVariation + bonusDelay;
+        }
+    }
 }
 
 // Update fabric effect - make lines wiggle near mouse
@@ -233,6 +292,30 @@ function updateFabricEffect() {
             }
         }
         
+        // Apply electrical pulse effect (simple version for debugging)
+        if (CONFIG.pulseEnabled) {
+            const currentTime = Date.now();
+            
+            // Check if this line has an active pulse
+            const activePulse = activePulses.find(pulse => pulse.lineIndex === lineIndex);
+            if (activePulse) {
+                const progress = (currentTime - activePulse.startTime) / activePulse.duration;
+                
+                if (progress >= 0 && progress <= 1) {
+                    // Create a fade effect - bright at start, fading out over time
+                    const fadeOut = 1 - progress; // 1 at start, 0 at end
+                    const pulseIntensity = Math.pow(fadeOut, 2); // Smooth fade curve
+                    
+                    const brightness = CONFIG.lineOpacity + (CONFIG.pulseMaxOpacity - CONFIG.lineOpacity) * pulseIntensity;
+                    line.material.opacity = brightness;
+                } else {
+                    line.material.opacity = CONFIG.lineOpacity;
+                }
+            } else {
+                line.material.opacity = CONFIG.lineOpacity;
+            }
+        }
+        
         line.geometry.attributes.position.needsUpdate = true;
     });
 }
@@ -249,7 +332,9 @@ window.addEventListener('resize', onWindowResize);
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('Initializing three.js scene with pulse system...');
     init();
+    console.log('Lines created:', lines.length, 'Pulse enabled:', CONFIG.pulseEnabled);
 });
 
 }
