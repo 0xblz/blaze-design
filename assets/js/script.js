@@ -11,18 +11,18 @@ console.log('Three.js loaded successfully:', THREE.REVISION);
 // Configuration - Edit these values to customize the appearance
 const CONFIG = {
     // Line properties
-    lineCount: 300,           // Number of horizontal lines
-    lineLength: 80,           // Length of each line
-    lineSpacing: 0.1,        // Vertical spacing between lines
-    linePoints: 400,         // Number of points per line (higher = smoother curves)
+    lineCount: 200,           // Number of horizontal lines
+    lineLength: 60,           // Length of each line
+    lineSpacing: 0.3,        // Vertical spacing between lines
+    linePoints: 600,         // Number of points per line (higher = smoother curves)
     lineColor: 0xFF8A58,     // Line color (hex: 0xffffff = white, 0xff0000 = red, etc.)
     lineOpacity: 0.1,        // Line transparency (0.0 = invisible, 1.0 = solid)
     lineWidth: 1,            // Line thickness
     
     // Contour shape (abstract curve the lines follow)
-    contourAmplitude1: 0.3,  // Primary wave amplitude
-    contourAmplitude2: 0.3,  // Secondary wave amplitude  
-    contourAmplitude3: 0.3,  // Tertiary wave amplitude
+    contourAmplitude1: 0.6,  // Primary wave amplitude
+    contourAmplitude2: 0.2,  // Secondary wave amplitude  
+    contourAmplitude3: 0.5,  // Tertiary wave amplitude
     contourFrequency1: 0.3,  // Primary wave frequency
     contourFrequency2: 0.1,  // Secondary wave frequency
     contourFrequency3: 0.5,  // Tertiary wave frequency
@@ -37,9 +37,9 @@ const CONFIG = {
     
     // Natural wave animation (subtle movement when no mouse interaction)
     naturalWaveEnabled: true,     // Enable/disable natural wave animation
-    naturalWaveAmplitude: 0.1,    // How much natural movement (very subtle)
-    naturalWaveSpeed: 0.01,      // Speed of natural wave animation (very slow)
-    naturalWaveFrequency: 0.5,    // Frequency of natural waves
+    naturalWaveAmplitude: 1.2,    // How much natural movement (very subtle)
+    naturalWaveSpeed: 0.005,      // Speed of natural wave animation (very slow)
+    naturalWaveFrequency: 0.4,    // Frequency of natural waves
     
     // Electrical pulse effect
     pulseEnabled: true,           // Enable/disable pulse effect
