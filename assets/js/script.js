@@ -339,7 +339,7 @@ window.addEventListener('resize', onWindowResize);
 const GLITCH_CONFIG = {
     interval: 3000,           // 3 seconds between glitches
     glitchDuration: 300,      // Duration of glitch animation (matches CSS)
-    words: ['designer', 'prototyper'],
+    words: ['designer', 'prototyper', 'builder'],
     currentWordIndex: 0
 };
 
