@@ -1,14 +1,12 @@
 // animations
 
-@keyframes fade-up {
+@keyframes blur-in {
     0% {
         opacity: 0;
-        transform: translateY(10vh) scale(0.9);
-        filter: blur(2rem);
+        filter: blur(4rem);
     }
     100% {
         opacity: 1;
-        transform: translateY(0) scale(1);
         filter: blur(0);
     }
 }
