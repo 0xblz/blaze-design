@@ -147,7 +147,7 @@ canvas {
     height: 100vh;    
 }
 
-.project {
+.item {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -198,8 +198,10 @@ canvas {
 }
 
 .glass {
+    position: relative;
+    overflow: hidden;
     transition: all 0.25s ease-in-out;
-    background: rgba(255, 255, 255, 0.05);
+    background: linear-gradient(to top, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
     backdrop-filter: blur(0.5rem);
     -webkit-backdrop-filter: blur(0.5rem);
     box-shadow: 
@@ -208,12 +210,38 @@ canvas {
         inset 0.3px 0.3px 0 0 var(--primary-color),
         inset -0.3px -0.3px 0 0 var(--secondary-color);
 
+    // Glass streak effect
+    &::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+            45deg,
+            transparent 30%,
+            rgba(255, 255, 255, 0.05) 45%,
+            rgba(255, 255, 255, 0.2) 50%,
+            rgba(255, 255, 255, 0.05) 55%,
+            transparent 70%
+        );
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+        pointer-events: none;
+        z-index: 1;
+    }
+
     &:hover {
         transform: scale(1.01);
+        
+        &::before {
+            transform: translateX(100%) translateY(100%) rotate(45deg);
+            transition: transform 1s ease-out;
+        }
     }
 
     @media (prefers-color-scheme: light) {
-        background: rgba(255, 255, 255, 0.4);
+        background: linear-gradient(to top, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.2));
     }
 
     &--button {

@@ -48,7 +48,7 @@ p {
 
 article {
     &:hover {
-        .project {
+        .item {
             transition: all 0.25s ease-in-out;
             opacity: 0.4;
 

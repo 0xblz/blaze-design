@@ -13,7 +13,18 @@
 <body class="{% if page.custom_class %}{{ page.custom_class }}{% endif %}">
 
     <main>
-        {{ content }}
+        <header>
+            <div class="intro">
+                <nav>
+                    <a href="https://x.com/0xblz" target="_blank" class="avatar glass"><img src="/assets/images/avatar.jpg" alt="Blaze" />blaze</a>
+                    <!-- <a href="#" class="glass glass--button">🌙</a> -->
+                </nav>
+                <h1 class="glitch" data-text="designer">designer</h1>
+            </div>
+        </header> 
+        <section>
+            {{ content }}
+        </section>
         <canvas id="canvas"></canvas>
     </main>
     
@@ -32,7 +43,6 @@
     
     <script src="/assets/js/background-lines.js"></script>
     <script src="/assets/js/glitch.js"></script>
-    <script src="/assets/js/toggle.js"></script>
     
 </body>
 </html> 
