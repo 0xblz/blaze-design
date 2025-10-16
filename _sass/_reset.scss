@@ -11,11 +11,11 @@ html {
 
 // Selection styling
 ::-moz-selection {
-    color: var(--secondary-color);
-    background: var(--primary-color);
+    color: white;
+    background: var(--glass);
 }
 
 ::selection {
-    color: var(--secondary-color);
-    background: var(--primary-color);
+    color: white;
+    background: var(--glass);
 } 

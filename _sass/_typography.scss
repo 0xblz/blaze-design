@@ -4,6 +4,10 @@ body {
     font-size: 16px;
     color: var(--light-color);
     font-weight: 400;
+
+    @media (prefers-color-scheme: light) {
+        color: var(--dark-color);
+    }
 }
 
 h1 {
@@ -12,6 +16,10 @@ h1 {
     font-size: 1.4rem;
     font-weight: 700;
     line-height: 1.2em;
+
+    @media (prefers-color-scheme: light) {
+        color: white;
+    }
 }
 
 h2 {
@@ -40,7 +48,7 @@ p {
 
 article {
     &:hover {
-        p {
+        .project {
             transition: all 0.25s ease-in-out;
             opacity: 0.4;
 
@@ -65,13 +73,21 @@ small {
     font-weight: 700;
     font-family: var(--font-primary);
     color: var(--glass);
+
+    @media (prefers-color-scheme: light) {
+        color: var(--glass-dark);
+    }
 }
 
 a {
     transition: all 0.2s ease-in-out;
-    color: var(--light-color);
+    color: white;
     text-decoration: none;
     font-weight: 700;
+
+    @media (prefers-color-scheme: light) {
+        color: var(--dark-color);
+    }
 
     &:hover,
     &:focus,
