@@ -185,11 +185,6 @@ canvas {
         transform: scale(1.05);
     }
 
-    @media (max-width: 36rem) {
-        left: 1.5rem;
-        right: initial;
-    }
-
     img {
         width: 1.5rem;
         height: 1.5rem;
