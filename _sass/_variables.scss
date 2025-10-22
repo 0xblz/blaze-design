@@ -3,13 +3,22 @@
 
 // Color variables
 :root {
-    
-    --primary-color: lightblue;
-    --secondary-color: blue;
-    --tertiary-color: darkblue;
-    --quaternary-color: black;
+    --primary-color: #5b84ff;
+    --secondary-color: #ff5ba5;
+    --light-color: rgba(255, 255, 255, 0.8);
+    --dark-color: #191f2e;
+
+    --line-color: var(--primary-color);
+
+    --glass: rgba(255, 255, 255, 0.4);
+    --glass-dark: rgba(0, 0, 0, 0.4);
 
     --font-primary: 'DM Sans', sans-serif;
     --font-secondary: 'Zen Dots', sans-serif;
-    --container-width: 580px;
+    --font-mono: monospace;
+    --container-width: 440px;
+
+    @media (prefers-color-scheme: light) {
+        --line-color: var(--glass);
+    }
 } 

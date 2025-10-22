@@ -1,31 +1,131 @@
 // animations
 
-@keyframes fade-up {
+@keyframes blur-in {
     0% {
         opacity: 0;
-        transform: translateY(10vh) scale(0.9);
-        filter: blur(2rem);
+        filter: blur(4rem);
     }
     100% {
         opacity: 1;
-        transform: translateY(0) scale(1);
         filter: blur(0);
     }
 }
 
-@keyframes progress {
-    0% {
-        transform: translateX(0px);
-        opacity: 0;
+// Glitch effect animations
+@keyframes glitch-1 {
+    0%, 100% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-2px, 2px);
+    }
+    40% {
+        transform: translate(-2px, -2px);
+    }
+    60% {
+        transform: translate(2px, 2px);
+    }
+    80% {
+        transform: translate(2px, -2px);
+    }
+}
+
+@keyframes glitch-2 {
+    0%, 100% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(2px, -2px);
+    }
+    40% {
+        transform: translate(2px, 2px);
+    }
+    60% {
+        transform: translate(-2px, -2px);
+    }
+    80% {
+        transform: translate(-2px, 2px);
+    }
+}
+
+@keyframes glitch-text-shadow {
+    0%, 100% {
+        text-shadow: 0 0 0 var(--primary-color);
+    }
+    25% {
+        text-shadow: -2px 0 0 var(--primary-color), 2px 0 0 var(--secondary-color);
+    }
+    50% {
+        text-shadow: 2px 0 0 var(--primary-color), -2px 0 0 var(--secondary-color);
+    }
+    75% {
+        text-shadow: -2px 0 0 var(--secondary-color), 2px 0 0 var(--primary-color);
+    }
+}
+
+@keyframes glitch-opacity {
+    0%, 100% {
+        opacity: 1;
+    }
+    10% {
+        opacity: 0.8;
     }
     20% {
         opacity: 1;
     }
+    30% {
+        opacity: 0.9;
+    }
+    40% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    60% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 0.9;
+    }
     80% {
         opacity: 1;
     }
-    100% {
-        transform: translateX(1440px);
-        opacity: 0;
+    90% {
+        opacity: 0.8;
+    }
+}
+
+// Glitch class for h1
+.glitch {
+    position: relative;
+    
+    &.glitching {
+        animation: glitch-1 0.3s ease-in-out, glitch-text-shadow 0.3s ease-in-out, glitch-opacity 0.3s ease-in-out;
+        
+        &::before,
+        &::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        &::before {
+            animation: glitch-2 0.3s ease-in-out;
+            color: var(--primary-color);
+            z-index: -1;
+            opacity: 0.7;
+        }
+        
+        &::after {
+            animation: glitch-1 0.3s ease-in-out reverse;
+            color: var(--secondary-color);
+            z-index: -2;
+            opacity: 0.7;
+        }
     }
 }
