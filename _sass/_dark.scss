@@ -1,0 +1,41 @@
+// Dark theme styles - applied when body has 'dark-theme' class
+body.dark-theme {
+
+    background: var(--dark-color);
+    color: var(--light-color);
+
+    &:before {
+        background: var(--primary-color);
+        mix-blend-mode: overlay;
+    }
+
+    &:after {
+        background: linear-gradient(to top, var(--dark-color) 0%, transparent 50%);
+        mix-blend-mode: overlay;
+    }
+
+    small {
+        color: var(--glass);
+    }
+
+    a {
+        color: var(--light-color);
+    }
+
+    .system {
+        mix-blend-mode: overlay;
+        
+        .orb {
+            background: var(--tertiary-color);
+            top: 0;
+            right: 0;
+            width: 20vw;
+            height: 20vw;
+
+            @media (max-width: 36rem) {
+                width: 60vh;
+                height: 60vh;
+            }
+        }
+    }
+}
