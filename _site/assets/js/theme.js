@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to enable dark theme
     function enableDarkTheme() {
         body.classList.add('dark-theme');
-        themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>'; // Moon icon for dark theme
+        themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>'; // Moon icon for dark theme
         localStorage.setItem('theme', 'dark');
         
         // Update water color for dark theme
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Function to enable light theme
     function enableLightTheme() {
         body.classList.remove('dark-theme');
-        themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>'; // Sun icon for light theme
+        themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>'; // Sun icon for light theme
         localStorage.setItem('theme', 'light');
         
         // Update water color for light theme

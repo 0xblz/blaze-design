@@ -136,6 +136,7 @@ canvas {
     height: 100vh;    
     animation: blur-in 1s ease-in-out;
     z-index: 1;
+    mix-blend-mode: normal;
 }
 
 .item {
@@ -246,7 +247,7 @@ canvas {
 .system {
     width: 100vw;
     height: 100vh;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     pointer-events: none;
@@ -265,6 +266,7 @@ canvas {
         height: 50vw;
         background: var(--secondary-color);
         z-index: -2;
+        border: 3rem solid var(--primary-color);
 
         @media (max-width: 36rem) {
             width: 80vh;

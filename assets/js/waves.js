@@ -18,6 +18,9 @@ const CONFIG = {
     gradientColors: null,     // Will be set dynamically from CSS variables
     gradientOpacity: 0.8,     // Base gradient transparency
     
+    // Line properties
+    lineWidth: 0.1,          // Thickness of contour lines (adjustable)
+    
     
     // Wave animation is now handled entirely by natural wave animation
     
@@ -46,8 +49,11 @@ let scene, camera, renderer, gradientContours = [];
 function init() {
     // Get colors from CSS variables
     const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--water-color').trim();
+    const lightColor = getComputedStyle(document.documentElement).getPropertyValue('--light-color').trim();
     CONFIG.gradientColors = primaryColor;
+    CONFIG.lineColor = lightColor;
     console.log('Using gradient color:', primaryColor);
+    console.log('Using line color:', lightColor);
     
     // Create scene
     scene = new THREE.Scene();
@@ -124,25 +130,75 @@ function createGradientContours() {
         const contour = new THREE.Mesh(geometry, material);
         contour.position.z = i * 0.01; // Slight depth separation
         
+        // Create line at the top edge of this contour
+        const topLinePoints = [];
+        for (let j = 0; j <= CONFIG.contourResolution; j++) {
+            const x = (j / CONFIG.contourResolution) * CONFIG.contourWidth - CONFIG.contourWidth / 2;
+            const y = baseY; // Same Y as the bottom edge of contour
+            topLinePoints.push(new THREE.Vector3(x, y, 0));
+        }
+        
+        // Create thick line using BufferGeometry with custom vertices for width
+        const lineGeometry = new THREE.BufferGeometry();
+        const lineVertices = [];
+        const lineIndices = [];
+        const lineWidth = CONFIG.lineWidth; // Adjustable line thickness
+        
+        // Create vertices for a thick line (quad strip)
+        for (let j = 0; j < topLinePoints.length; j++) {
+            const point = topLinePoints[j];
+            // Create two vertices per point (top and bottom of thick line)
+            lineVertices.push(point.x, point.y + lineWidth/2, point.z);
+            lineVertices.push(point.x, point.y - lineWidth/2, point.z);
+            
+            // Create triangles to connect the quads
+            if (j < topLinePoints.length - 1) {
+                const base = j * 2;
+                // First triangle
+                lineIndices.push(base, base + 1, base + 2);
+                // Second triangle  
+                lineIndices.push(base + 1, base + 3, base + 2);
+            }
+        }
+        
+        lineGeometry.setAttribute('position', new THREE.Float32BufferAttribute(lineVertices, 3));
+        lineGeometry.setIndex(lineIndices);
+        lineGeometry.computeVertexNormals();
+        
+        const lineMaterial = new THREE.MeshBasicMaterial({
+            color: CONFIG.lineColor,
+            transparent: true,
+            opacity: 0.6,
+            side: THREE.DoubleSide
+        });
+        
+        const topLine = new THREE.Mesh(lineGeometry, lineMaterial);
+        topLine.position.z = i * 0.01 + 0.005; // Slightly in front of contour
+        
         // Store original data for animation
         contour.userData = {
             originalPoints: [...points],
             index: i,
             baseOpacity: opacity,
-            bottomPointCount: CONFIG.contourResolution + 1
+            bottomPointCount: CONFIG.contourResolution + 1,
+            topLine: topLine,
+            topLineOriginalPoints: [...topLinePoints]
         };
         
         gradientContours.push(contour);
         scene.add(contour);
+        scene.add(topLine);
     }
 }
+
+
 
 
 // Animation loop
 function animate() {
     requestAnimationFrame(animate);
     
-    // Update gradient contours
+    // Update gradient contours and their lines
     updateGradientEffect();
     
     renderer.render(scene, camera);
@@ -193,8 +249,45 @@ function updateGradientEffect() {
         }
         
         contour.geometry.attributes.position.needsUpdate = true;
+        
+        // Update the top line for this contour
+        if (contour.userData.topLine) {
+            const topLine = contour.userData.topLine;
+            const linePositions = topLine.geometry.attributes.position.array;
+            const lineOriginalPoints = contour.userData.topLineOriginalPoints;
+            const lineWidth = CONFIG.lineWidth;
+            
+            // Update each pair of vertices in the thick line
+            for (let i = 0; i < lineOriginalPoints.length; i++) {
+                const originalPoint = lineOriginalPoints[i];
+                const pointRatio = i / (lineOriginalPoints.length - 1);
+                
+                // Calculate natural wave animation for this line (same as bottom edge of contour)
+                const naturalOffsetX = Math.sin(time + contourIndex * CONFIG.naturalWaveFrequency + pointRatio * Math.PI * 2) * CONFIG.naturalWaveAmplitude;
+                const naturalOffsetY = Math.sin(time * 0.7 + contourIndex * CONFIG.naturalWaveFrequency * 0.8 + pointRatio * Math.PI * 1.5) * CONFIG.naturalWaveAmplitude * 0.5;
+                
+                // Apply animation to both vertices of this line segment (top and bottom)
+                const animatedX = originalPoint.x + naturalOffsetX;
+                const animatedY = originalPoint.y + naturalOffsetY;
+                const animatedZ = originalPoint.z;
+                
+                // Top vertex
+                linePositions[i * 6] = animatedX;
+                linePositions[i * 6 + 1] = animatedY + lineWidth/2;
+                linePositions[i * 6 + 2] = animatedZ;
+                
+                // Bottom vertex
+                linePositions[i * 6 + 3] = animatedX;
+                linePositions[i * 6 + 4] = animatedY - lineWidth/2;
+                linePositions[i * 6 + 5] = animatedZ;
+            }
+            
+            topLine.geometry.attributes.position.needsUpdate = true;
+        }
     });
 }
+
+
 
 
 // Handle window resize

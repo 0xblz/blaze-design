@@ -1,12 +1,14 @@
 // Dark theme styles - applied when body has 'dark-theme' class
 body.dark-theme {
 
-    background: var(--dark-color);
+    background: linear-gradient(to bottom, var(--darker-color) 0%, var(--dark-color) 50%);
     color: var(--light-color);
 
     &:before {
         background: var(--primary-color);
         mix-blend-mode: overlay;
+        left: 0;
+        top: 0;
     }
 
     &:after {
@@ -22,15 +24,23 @@ body.dark-theme {
         color: var(--light-color);
     }
 
-    .system {
+
+    canvas {
         mix-blend-mode: overlay;
-        
+    }
+
+    .system {
+        mix-blend-mode: screen;
+
         .orb {
-            background: var(--tertiary-color);
+            background: rgba(255, 255, 255, 0.2);
             top: 0;
             right: 0;
             width: 20vw;
             height: 20vw;
+            border-color: rgba(255, 255, 255, 0.5);
+            border-width: 1rem;
+            filter: blur(1rem);
 
             @media (max-width: 36rem) {
                 width: 60vh;
