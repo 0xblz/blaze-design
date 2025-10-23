@@ -1,18 +1,18 @@
 // Dark theme styles - applied when body has 'dark-theme' class
 body.dark-theme {
 
-    background: linear-gradient(to bottom, var(--darker-color) 0%, var(--dark-color) 50%);
+    background: var(--dark-color);
     color: var(--light-color);
 
     &:before {
-        background: var(--primary-color);
-        mix-blend-mode: overlay;
-        left: 0;
+        background: white;
+        left: 100%;
         top: 0;
     }
 
     &:after {
-        background: linear-gradient(to top, var(--dark-color) 0%, transparent 50%);
+        background: radial-gradient(circle, transparent 0%, var(--dark-color) 100%);
+        height: 100vh;
         mix-blend-mode: overlay;
     }
 

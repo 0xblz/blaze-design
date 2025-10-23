@@ -30,7 +30,7 @@ body {
         height: 80vw;
         background: linear-gradient(to bottom, var(--secondary-color) 0%, transparent 50%);
         border-radius: 100%;
-        mix-blend-mode: soft-light;
+        mix-blend-mode: overlay;
         filter: blur(10rem);
         z-index: 2;
         pointer-events: none;
@@ -136,7 +136,7 @@ canvas {
     height: 100vh;    
     animation: blur-in 1s ease-in-out;
     z-index: 1;
-    mix-blend-mode: normal;
+    mix-blend-mode: multiply;
 }
 
 .item {
