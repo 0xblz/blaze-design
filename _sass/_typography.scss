@@ -2,12 +2,8 @@
 body {
     font-family: var(--font-primary);
     font-size: 16px;
-    color: var(--dark-color);
+    color: var(--light-color);
     font-weight: 400;
-
-    @media (prefers-color-scheme: dark) {
-        color: var(--light-color);
-    }
 }
 
 h1, h2 {
@@ -18,10 +14,11 @@ h1, h2 {
 }
 
 h2 {
-    opacity: 0.6;
+    color: var(--primary-color);
 }
 
 p {
+    color: rgba(255, 255, 255, 0.8);
     line-height: 1.8em;
     font-size: 1rem;
     font-weight: 500;
@@ -36,22 +33,14 @@ small {
 
 a {
     transition: all 0.2s ease-in-out;
-    color: var(--dark-color);
+    color: white;
     text-decoration: none;
     font-weight: 700;
-
-    @media (prefers-color-scheme: dark) {
-        color: var(--light-color);
-    }
 
     &:hover,
     &:focus,
     &:active {
-        color: var(--primary-color);
-
-        @media (prefers-color-scheme: dark) {
-            color: var(--secondary-color);
-        }
+        color: var(--secondary-color);
     }
 }
 

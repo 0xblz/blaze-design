@@ -7,11 +7,7 @@ html, body {
 }
 
 html {
-    background-color: var(--light-color);
-
-    @media (prefers-color-scheme: dark) {
-        background-color: var(--dark-color);
-    }
+    background-color: var(--dark-color);
 }
 
 main {
@@ -24,7 +20,7 @@ main {
 section {
     display: flex;
     width: 100%;
-    max-width: 580px;
+    max-width: var(--container-width);
     gap: 1.5rem;
     padding: 1.5rem;
     padding-top: 3rem;
@@ -50,11 +46,7 @@ header {
 
 hr {
     border: none;
-    border: 1px solid white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
-
-    @media (prefers-color-scheme: dark) {
-        border-color: rgba(255, 255, 255, 0.1);
-    }
 }
 
