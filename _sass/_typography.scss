@@ -4,67 +4,33 @@ body {
     font-size: 16px;
     color: var(--dark-color);
     font-weight: 400;
+
+    @media (prefers-color-scheme: dark) {
+        color: var(--light-color);
+    }
 }
 
-h1 {
-    color: var(--primary-color);
-    font-family: var(--font-secondary);
-    font-size: 1.4rem;
-    font-weight: 700;
-    line-height: 1.2em;
-}
-
-h2 {
-    font-family: var(--font-secondary);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    line-height: 1.2em;
-}
-
-h3 {
+h1, h2 {
     font-size: 1.2rem;
     font-weight: 700;
     line-height: 1.2em;
 }
 
-p {
-    line-height: 1.4em;
-    font-size: 1rem;
-    font-weight: 400;
-    transition: opacity 0.25s ease-in-out;
+h2 {
+    opacity: 0.6;
 }
 
-// Paragraph hover effect - fade siblings when hovering
-
-article {
-    &:hover {
-        .item {
-            transition: all 0.25s ease-in-out;
-            opacity: 0.4;
-
-            &:hover {
-                opacity: 1;
-                transform: scale(1.05);
-
-                @media (max-width: 600px) {
-                    transform: scale(1);
-                }
-            }
-
-            @media (max-width: 600px) {
-                opacity: 1;
-            }
-        }
-    }
+p {
+    line-height: 1.8em;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: opacity 0.25s ease-in-out;
 }
 
 small {
     font-size: 0.8rem;
     font-weight: 700;
     font-family: var(--font-primary);
-    color: var(--glass-dark);
 }
 
 a {
@@ -73,9 +39,39 @@ a {
     text-decoration: none;
     font-weight: 700;
 
+    @media (prefers-color-scheme: dark) {
+        color: var(--light-color);
+    }
+
     &:hover,
     &:focus,
     &:active {
-        color: var(--dark-color);
+        color: var(--primary-color);
+
+        @media (prefers-color-scheme: dark) {
+            color: var(--secondary-color);
+        }
+    }
+}
+
+
+h1,
+h2,
+h3,
+p {
+    a {
+        white-space: nowrap;
+    }
+
+    img {
+        width: 1.5rem;
+        height: 1.5rem;
+        object-fit: cover;
+        display: inline-block;
+        margin-bottom: 0.125rem;
+        vertical-align: bottom;
+        border-radius: 0.5rem;
+        margin-right: 0.25rem;
+        box-shadow: 0 0.125rem 0.25rem 1px rgba(0, 0, 0, 0.1);
     }
 }
