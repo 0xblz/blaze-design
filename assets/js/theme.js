@@ -20,7 +20,16 @@ function generateTriadColors() {
     document.documentElement.style.setProperty('--secondary-color', secondaryColor);
     document.documentElement.style.setProperty('--tertiary-color', tertiaryColor);
     
+    // Update water and line colors for waves
+    document.documentElement.style.setProperty('--line-color', primaryColor);
+    
     console.log('New triad colors:', { primaryColor, secondaryColor, tertiaryColor });
+    
+    // Dispatch custom event to notify waves.js of color change
+    const colorChangeEvent = new CustomEvent('themeColorsChanged', {
+        detail: { primaryColor, secondaryColor, tertiaryColor }
+    });
+    window.dispatchEvent(colorChangeEvent);
 }
 
 // Convert HSL to Hex color format
