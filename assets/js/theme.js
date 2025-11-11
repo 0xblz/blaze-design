@@ -1,62 +1,87 @@
-// Theme toggle functionality
+// Generate random triad colors and update CSS variables
+function generateTriadColors() {
+    // Generate a random hue between 0-360
+    const primaryHue = Math.floor(Math.random() * 360);
+    
+    // Calculate triad colors (120 degrees apart on color wheel)
+    const secondaryHue = (primaryHue + 120) % 360;
+    const tertiaryHue = (primaryHue + 240) % 360;
+    
+    // Convert HSL to Hex with saturation and lightness values for vibrant colors
+    const saturation = 100;
+    const lightness = 64;
+    
+    const primaryColor = hslToHex(primaryHue, saturation, lightness);
+    const secondaryColor = hslToHex(secondaryHue, saturation, lightness);
+    const tertiaryColor = hslToHex(tertiaryHue, saturation, lightness);
+    
+    // Update CSS variables
+    document.documentElement.style.setProperty('--primary-color', primaryColor);
+    document.documentElement.style.setProperty('--secondary-color', secondaryColor);
+    document.documentElement.style.setProperty('--tertiary-color', tertiaryColor);
+    
+    console.log('New triad colors:', { primaryColor, secondaryColor, tertiaryColor });
+}
+
+// Convert HSL to Hex color format
+function hslToHex(h, s, l) {
+    s /= 100;
+    l /= 100;
+    
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const m = l - c / 2;
+    
+    let r = 0, g = 0, b = 0;
+    
+    if (h >= 0 && h < 60) {
+        r = c; g = x; b = 0;
+    } else if (h >= 60 && h < 120) {
+        r = x; g = c; b = 0;
+    } else if (h >= 120 && h < 180) {
+        r = 0; g = c; b = x;
+    } else if (h >= 180 && h < 240) {
+        r = 0; g = x; b = c;
+    } else if (h >= 240 && h < 300) {
+        r = x; g = 0; b = c;
+    } else if (h >= 300 && h < 360) {
+        r = c; g = 0; b = x;
+    }
+    
+    // Convert to 0-255 range
+    r = Math.round((r + m) * 255);
+    g = Math.round((g + m) * 255);
+    b = Math.round((b + m) * 255);
+    
+    // Convert to hex
+    const toHex = (n) => {
+        const hex = n.toString(16);
+        return hex.length === 1 ? '0' + hex : hex;
+    };
+    
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+// Add click event listener to the refresh button
 document.addEventListener('DOMContentLoaded', function() {
-    const themeToggle = document.querySelector('.theme-toggle');
-    const body = document.body;
+    const refreshButton = document.querySelector('.theme');
     
-    // Check for saved theme preference or default to light mode
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // Initialize theme
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        enableDarkTheme();
-    } else {
-        enableLightTheme();
-    }
-    
-    // Add click event listener to theme toggle button
-    themeToggle.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        if (body.classList.contains('dark-theme')) {
-            enableLightTheme();
-        } else {
-            enableDarkTheme();
-        }
-    });
-    
-    // Function to enable dark theme
-    function enableDarkTheme() {
-        body.classList.add('dark-theme');
-        themeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>'; // Moon icon for dark theme
-        localStorage.setItem('theme', 'dark');
-        
-        // Update water color for dark theme
-        if (typeof updateWaterColor === 'function') {
-            updateWaterColor();
-        }
-    }
-    
-    // Function to enable light theme
-    function enableLightTheme() {
-        body.classList.remove('dark-theme');
-        themeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>'; // Sun icon for light theme
-        localStorage.setItem('theme', 'light');
-        
-        // Update water color for light theme
-        if (typeof updateWaterColor === 'function') {
-            updateWaterColor();
-        }
-    }
-    
-    // Listen for system theme changes
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
-        if (!localStorage.getItem('theme')) {
-            if (e.matches) {
-                enableDarkTheme();
-            } else {
-                enableLightTheme();
+    if (refreshButton) {
+        refreshButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            generateTriadColors();
+            
+            // Add a subtle rotation animation to the refresh icon
+            const icon = this.querySelector('i');
+            if (icon) {
+                icon.style.transform = 'rotate(360deg)';
+                icon.style.transition = 'transform 0.5s ease';
+                setTimeout(() => {
+                    icon.style.transform = 'rotate(0deg)';
+                    icon.style.transition = 'none';
+                }, 500);
             }
-        }
-    });
+        });
+    }
 });
+

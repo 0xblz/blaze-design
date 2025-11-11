@@ -10,3 +10,30 @@
         filter: blur(0);
     }
 }
+
+@keyframes slide-down {
+    0% {
+        transform: translateY(4rem);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide-up {
+    0% {
+        transform: translateY(-4rem);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes opacity {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}

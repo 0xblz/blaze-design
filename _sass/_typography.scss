@@ -2,25 +2,35 @@
 body {
     font-family: var(--font-primary);
     font-size: 16px;
-    color: var(--light-color);
+    color: white;
     font-weight: 400;
 }
 
-h1, h2 {
+h1 {
     font-family: var(--font-secondary);
     font-size: 1.2rem;
     font-weight: 700;
-    line-height: 1.2em;
+    line-height: 1em;
+
+    span {
+        opacity: 0.4;
+        font-weight: 400;
+    }
 }
 
 h2 {
+    font-family: var(--font-secondary);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1em;
     color: var(--primary-color);
+    mix-blend-mode: screen;
 }
 
 p {
     color: rgba(255, 255, 255, 0.8);
-    line-height: 1.8em;
-    font-size: 1rem;
+    line-height: 1.7em;
+    font-size: 1.1rem;
     font-weight: 500;
     transition: opacity 0.25s ease-in-out;
 }
@@ -36,11 +46,34 @@ a {
     color: white;
     text-decoration: none;
     font-weight: 700;
+    border-bottom: 4px solid transparent;
 
     &:hover,
     &:focus,
     &:active {
-        color: var(--secondary-color);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    &.button {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 0.75rem 1.5rem;
+        border-radius: 9999px;
+        transition: all 0.2s ease-in-out;
+        border: none;
+
+        &:hover,
+        &:focus,
+        &:active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
+
+        &:active {
+            transform: scale(0.95);
+            background: rgba(0, 0, 0, 0.1);
+        }
     }
 }
 
@@ -58,7 +91,7 @@ p {
         height: 1.5rem;
         object-fit: cover;
         display: inline-block;
-        margin-bottom: 0.125rem;
+        margin-bottom: 0.25rem;
         vertical-align: bottom;
         border-radius: 0.5rem;
         margin-right: 0.25rem;

@@ -1,38 +1,46 @@
 // Body and main layout
-html, body {
+
+html {
+    background-color: var(--dark-color);
+}
+
+body {
     overflow-x: hidden;
     width: 100%;
     min-height: 100vh;
     position: relative;
 }
 
-html {
-    background-color: var(--dark-color);
+.follow {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 200vw;
+    height: 200vw;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    pointer-events: none;
+    background: 
+        radial-gradient(circle, 
+        white 0%, 
+        var(--primary-color) 40%, 
+        var(--secondary-color) 60%,
+        var(--tertiary-color) 80%,
+        transparent 100%);
+    mix-blend-mode: screen;
+    opacity: 0.2;
+
+    @media (max-width: 800px) {
+        width: 400vh;
+        height: 400vh;
+    }
 }
 
 main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    animation: blur-in 0.5s ease-in-out;
-}
-
-section {
-    display: flex;
-    width: 100%;
-    max-width: var(--container-width);
-    gap: 1.5rem;
-    padding: 1.5rem;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-}
-
-article {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    gap: 3rem;
+    min-height: 100vh;
 }
 
 header {
@@ -42,11 +50,52 @@ header {
     align-items: center;
     flex-wrap: wrap;
     gap: 1.5rem;
+    padding: 1.5rem;
+    animation: blur-in 0.4s ease-in-out, slide-up 0.4s ease-in-out;
+
+    nav {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+    gap: 3rem;
+    padding: 1.5rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    animation: blur-in 0.4s ease-in-out, slide-down 0.4s ease-in-out;
+
+    @media (max-width: 800px) {
+        flex-direction: column;
+    }
+}
+
+article {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: var(--container-width);
+    gap: 1.5rem;
+
+    p {
+        z-index: 2;
+    }
 }
 
 hr {
     border: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     width: 100%;
+    mix-blend-mode: overlay;
 }
 
