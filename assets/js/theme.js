@@ -71,25 +71,15 @@ function hslToHex(h, s, l) {
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-// Add click event listener to the refresh button
+// Add click event listener to the h1 theme element
 document.addEventListener('DOMContentLoaded', function() {
-    const refreshButton = document.querySelector('.theme');
+    const themeHeading = document.querySelector('h1.theme');
     
-    if (refreshButton) {
-        refreshButton.addEventListener('click', function(e) {
+    if (themeHeading) {
+        themeHeading.style.cursor = 'pointer';
+        themeHeading.addEventListener('click', function(e) {
             e.preventDefault();
             generateTriadColors();
-            
-            // Add a subtle rotation animation to the refresh icon
-            const icon = this.querySelector('i');
-            if (icon) {
-                icon.style.transform = 'rotate(360deg)';
-                icon.style.transition = 'transform 0.5s ease';
-                setTimeout(() => {
-                    icon.style.transform = 'rotate(0deg)';
-                    icon.style.transition = 'none';
-                }, 500);
-            }
         });
     }
 });

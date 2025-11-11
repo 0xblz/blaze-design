@@ -16,14 +16,16 @@ h1 {
         padding: 0.5rem;
         padding-left: 1rem;
         color: black;
-        mix-blend-mode: difference;
+        mix-blend-mode: screen;
         text-transform: uppercase;
         letter-spacing: 2px;
         font-style: italic;
-        font-size: 0.7rem;
+        font-size: 0.8rem;
         position: relative;
         border-top: 2px solid white;
-        text-shadow: 0 0 1px black;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        -webkit-text-stroke-width: 1px;
+        -webkit-text-stroke-color: black;
 
         &:after,
         &:before {
@@ -48,17 +50,19 @@ h1 {
             border-left: 0;
             border-right: 2px solid white;
             border-top: 2px solid white;
+            box-shadow: 
+                0 0.25rem 4rem var(--primary-color),
+                0 -0.25rem 4rem var(--tertiary-color);
         }
     }
 }
 
 h2 {
     font-family: var(--font-secondary);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 700;
     line-height: 1.5em;
-    color: var(--primary-color);
-    mix-blend-mode: screen;
+    mix-blend-mode: overlay;
 }
 
 p {
@@ -130,5 +134,19 @@ p {
         border-radius: 0.5rem;
         margin-right: 0.25rem;
         box-shadow: 0 0.125rem 0.25rem 1px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.theme {
+    transition: all 0.2s ease-in-out;
+    border-bottom: 2px solid transparent;
+
+    &:hover {
+        transform: scale(1.05);
+        border-color: var(--tertiary-color);
+    }
+
+    &:active {
+        transform: scale(0.95);
     }
 }
