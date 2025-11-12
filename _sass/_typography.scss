@@ -145,11 +145,9 @@ p {
 
 .theme {
     transition: all 0.2s ease-in-out;
-    border-bottom: 2px solid transparent;
 
     &:hover {
         transform: scale(1.05);
-        border-color: var(--tertiary-color);
     }
 
     &:active {
