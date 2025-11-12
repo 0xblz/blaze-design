@@ -23,19 +23,13 @@ body {
     pointer-events: none;
     background: 
         radial-gradient(circle, 
-        white 0%, 
+        transparent 0%, 
         var(--primary-color) 25%, 
         var(--secondary-color) 50%,
         var(--tertiary-color) 75%,
         transparent 100%);
-    mix-blend-mode: screen;
-    opacity: 0.2;
-
-    // neon mode for dark mode
-    @media (prefers-color-scheme: dark) {
-        mix-blend-mode: overlay;
-        opacity: 0.6;
-    }
+    mix-blend-mode: overlay;
+    opacity: 0.6;
 
     @media (max-width: 800px) {
         width: 400vh;
@@ -91,6 +85,7 @@ section {
 }
 
 article {
+    @extend .window-style;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     display: flex;
     flex-direction: column;
@@ -98,13 +93,7 @@ article {
     width: 100%;
     max-width: var(--container-width);
     gap: 1.5rem;
-    backdrop-filter: blur(0.5rem);
-    -webkit-backdrop-filter: blur(0.5rem);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 1rem 2rem 0 rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
-    border-radius: 1.5rem;
     z-index: 3;
 
     &:hover {
@@ -125,17 +114,5 @@ hr {
     border: 1px solid rgba(255, 255, 255, 0.2);
     width: 100%;
     mix-blend-mode: overlay;
-}
-
-canvas {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: 100%;
-    max-width: 100vw;
-    height: 100vh;    
-    animation: opacity 1s ease-in-out;
-    z-index: 2;
-    pointer-events: none;
 }
 
