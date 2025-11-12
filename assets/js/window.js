@@ -1,7 +1,10 @@
+// Shared z-index counter across all draggable elements
+let sharedZIndexCounter = 100;
+
 // Shared Draggable Base Class
 class DraggableBase {
     constructor() {
-        this.zIndexCounter = 10;
+        // Use shared z-index counter
     }
 
     isMobile() {
@@ -61,7 +64,7 @@ class DraggableBase {
     }
 
     bringToFront(obj) {
-        obj.element.style.zIndex = ++this.zIndexCounter;
+        obj.element.style.zIndex = ++sharedZIndexCounter;
     }
 }
 
@@ -70,7 +73,6 @@ class WindowManager extends DraggableBase {
     constructor() {
         super();
         this.windows = [];
-        this.zIndexCounter = 1000;
         this.init();
     }
 
@@ -101,7 +103,7 @@ class WindowManager extends DraggableBase {
         const windowElement = document.createElement('div');
         windowElement.className = 'app-window';
         windowElement.id = windowId;
-        windowElement.style.zIndex = ++this.zIndexCounter;
+        windowElement.style.zIndex = ++sharedZIndexCounter;
         
         // Create window structure
         windowElement.innerHTML = `
@@ -320,7 +322,7 @@ class ArticleDragger extends DraggableBase {
         articleObj.element.style.left = `${rect.left}px`;
         articleObj.element.style.top = `${rect.top}px`;
         articleObj.element.style.width = `${rect.width}px`;
-        articleObj.element.style.zIndex = ++this.zIndexCounter;
+        articleObj.element.style.zIndex = ++sharedZIndexCounter;
         articleObj.wasAbsolute = true;
         
         articleObj.dragOffset = {
