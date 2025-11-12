@@ -17,7 +17,7 @@ const CONFIG = {
     contourResolution: 400,    // Number of points per contour (higher = smoother)
     
     // Line properties
-    lineWidth: 0.1,            // Thickness of contour lines (adjustable)
+    lineWidth: 1,            // Thickness of contour lines (adjustable)
     
     // Natural wave animation
     naturalWaveEnabled: true,     // Enable/disable natural wave animation
@@ -116,7 +116,7 @@ function createContourLines() {
         const lineMaterial = new THREE.MeshBasicMaterial({
             color: CONFIG.lineColor,
             transparent: true,
-            opacity: 0.2,
+            opacity: 0.1,
             side: THREE.DoubleSide
         });
         
