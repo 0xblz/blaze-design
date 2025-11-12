@@ -22,8 +22,8 @@ h1 {
         font-style: italic;
         font-size: 0.8rem;
         position: relative;
-        border-top: 2px solid white;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-top: 4px solid var(--primary-color);
+        text-shadow: 0 2px 0.5rem rgba(0, 0, 0, 0.2);
         -webkit-text-stroke-width: 1px;
         -webkit-text-stroke-color: black;
 
@@ -67,13 +67,9 @@ h2 {
 p {
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.7em;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 500;
     transition: opacity 0.25s ease-in-out;
-
-    @media (max-width: 800px) {
-        font-size: 1rem;
-    }
 }
 
 small {
@@ -132,7 +128,7 @@ p {
         height: 1.5rem;
         object-fit: cover;
         display: inline-block;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.125rem;
         vertical-align: bottom;
         border-radius: 0.5rem;
         margin-right: 0.25rem;

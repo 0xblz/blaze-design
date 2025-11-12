@@ -2,6 +2,7 @@
 
 html {
     background-color: var(--dark-color);
+    overflow-x: hidden;
 }
 
 body {
@@ -41,6 +42,7 @@ main {
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
+    gap: 3rem;
 }
 
 header {
@@ -83,6 +85,7 @@ section {
 }
 
 article {
+    transition: all 0.2s ease-in-out;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -97,6 +100,10 @@ article {
     padding: 1.5rem;
     border-radius: 1.5rem;
     z-index: 3;
+
+    &:hover {
+        transform: scale(1.05);
+    }
 }
 
 hr {
