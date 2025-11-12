@@ -28,8 +28,14 @@ body {
         var(--secondary-color) 50%,
         var(--tertiary-color) 75%,
         transparent 100%);
-    mix-blend-mode: overlay;
-    opacity: 0.6;
+    mix-blend-mode: screen;
+    opacity: 0.2;
+
+    // neon mode for dark mode
+    @media (prefers-color-scheme: dark) {
+        mix-blend-mode: overlay;
+        opacity: 0.6;
+    }
 
     @media (max-width: 800px) {
         width: 400vh;
