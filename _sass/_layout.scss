@@ -70,9 +70,12 @@ section {
     width: 100%;
     gap: 3rem;
     padding: 1.5rem;
-    padding-top: 3rem;
-    padding-bottom: 3rem;
     animation: blur-in 0.4s ease-in-out, slide-down 0.4s ease-in-out;
+
+    @media (max-width: 1600px) {
+        justify-content: space-between;
+        align-items: flex-end;
+    }
 
     @media (max-width: 800px) {
         flex-direction: column;
@@ -86,10 +89,14 @@ article {
     width: 100%;
     max-width: var(--container-width);
     gap: 1.5rem;
-
-    p {
-        z-index: 2;
-    }
+    backdrop-filter: blur(0.5rem);
+    -webkit-backdrop-filter: blur(0.5rem);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 1rem 2rem 0 rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+    z-index: 3;
 }
 
 hr {
@@ -108,7 +115,6 @@ canvas {
     height: 100vh;    
     animation: opacity 1s ease-in-out;
     z-index: 2;
-    mix-blend-mode: screen;
     pointer-events: none;
 }
 

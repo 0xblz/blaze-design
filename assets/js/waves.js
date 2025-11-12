@@ -10,66 +10,58 @@ console.log('Three.js loaded successfully:', THREE.REVISION);
 
 // Configuration - Edit these values to customize the appearance
 const CONFIG = {
-    // Gradient contour properties
-    contourCount: 200,         // Number of gradient contour layers
-    contourWidth: 200,         // Width of each contour layer
-    contourSpacing: 2,      // Vertical spacing between contour layers
-    contourResolution: 400,   // Number of points per contour (higher = smoother)
-    gradientColors: null,     // Will be set dynamically from CSS variables
-    gradientOpacity: 1,     // Base gradient transparency
+    // Contour properties
+    contourCount: 200,         // Number of contour lines
+    contourWidth: 400,         // Width of each contour layer
+    contourSpacing: 1,       // Vertical spacing between contour layers
+    contourResolution: 400,    // Number of points per contour (higher = smoother)
     
     // Line properties
-    lineWidth: 0.1,          // Thickness of contour lines (adjustable)
+    lineWidth: 0.1,            // Thickness of contour lines (adjustable)
     
-    
-    // Wave animation is now handled entirely by natural wave animation
-    
-    // Animation settings
-    animationSpeed: 0.001,        // Speed of oscillation (kept for potential future use)
-    
-    // Natural wave animation (ocean wave movement)
+    // Natural wave animation
     naturalWaveEnabled: true,     // Enable/disable natural wave animation
-    naturalWaveAmplitude: 10,    // How much natural movement (more for ocean waves)
-    naturalWaveSpeed: 0.001,      // Speed of natural wave animation (slower for ocean)
-    naturalWaveFrequency: 0.1,    // Frequency of natural waves (lower for ocean)
+    naturalWaveAmplitude: 16,     // How much natural movement
+    naturalWaveSpeed: 0.001,      // Speed of natural wave animation
+    naturalWaveFrequency: 0.1,    // Frequency of natural waves
     
-    // Scene rotation (for ocean perspective)
-    rotationX: Math.PI * 1.1,    // Slight tilt for ocean perspective
-    rotationY: Math.PI * 0,       // No y rotation
+    // Scene rotation
+    rotationX: Math.PI * 0,    // No tilt
+    rotationY: Math.PI * 0,    // No y rotation
     
     // Camera
-    cameraDistance: 26,            // Closer camera for ocean view
-    fov: 105                       // Narrower field of view for ocean
+    cameraDistance: 30,        // Camera distance
+    fov: 75                    // Field of view
 };
 
 // Scene setup
-let scene, camera, renderer, gradientContours = [];
+let scene, camera, renderer, contourLines = [];
 
 // Initialize the scene
 function init() {
     // Get colors from CSS variables
-    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--water-color').trim();
     const lightColor = getComputedStyle(document.documentElement).getPropertyValue('--line-color').trim();
-    CONFIG.gradientColors = primaryColor;
     CONFIG.lineColor = lightColor;
-    console.log('Using gradient color:', primaryColor);
     console.log('Using line color:', lightColor);
     
     // Create scene
     scene = new THREE.Scene();
     
-    // Create camera (full screen with elevated POV)
+    // Create camera (full screen)
     const canvas = document.getElementById('canvas');
     camera = new THREE.PerspectiveCamera(CONFIG.fov, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-    camera.position.set(0, 4, CONFIG.cameraDistance); // Position higher to see ocean in bottom half
+    camera.position.set(0, 0, CONFIG.cameraDistance); // Center camera
     
-    // Create renderer (for half-screen canvas)
+    // Create renderer (for full-screen canvas)
     renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.setClearColor(0x000000, 0); // Transparent background
     
-    // Create gradient contours
-    createGradientContours();
+    // Apply mix-blend-mode to canvas
+    canvas.style.mixBlendMode = 'overlay';
+    
+    // Create contour lines
+    createContourLines();
     
     // Rotate the entire scene for abstract look
     scene.rotation.x = CONFIG.rotationX;
@@ -80,61 +72,17 @@ function init() {
 }
 
 
-// Create gradient contour surfaces
-function createGradientContours() {
+// Create contour lines
+function createContourLines() {
     for (let i = 0; i < CONFIG.contourCount; i++) {
-        // Position contours from bottom to top for ocean wave effect
-        const baseY = (i - CONFIG.contourCount) * CONFIG.contourSpacing + 1; // Position waves in bottom half
-        const nextY = ((i + 1) - CONFIG.contourCount) * CONFIG.contourSpacing + 1; // Next contour level
+        // Position contours to fill the screen from bottom to top
+        const baseY = (i - CONFIG.contourCount / 2) * CONFIG.contourSpacing;
         
-        // Create points for this contour surface
-        const points = [];
-        
-        // Bottom edge of this contour (current level) - flat, waves come from animation
-        for (let j = 0; j <= CONFIG.contourResolution; j++) {
-            const x = (j / CONFIG.contourResolution) * CONFIG.contourWidth - CONFIG.contourWidth / 2;
-            const y = baseY; // Flat contour, waves added by animation
-            points.push(new THREE.Vector2(x, y));
-        }
-        
-        // Top edge of this contour (next level) - only if not the last contour
-        if (i < CONFIG.contourCount - 1) {
-            for (let j = CONFIG.contourResolution; j >= 0; j--) {
-                const x = (j / CONFIG.contourResolution) * CONFIG.contourWidth - CONFIG.contourWidth / 2;
-                const y = nextY; // Flat contour, waves added by animation
-                points.push(new THREE.Vector2(x, y));
-            }
-        } else {
-            // For the top contour, create a thin band
-            for (let j = CONFIG.contourResolution; j >= 0; j--) {
-                const x = (j / CONFIG.contourResolution) * CONFIG.contourWidth - CONFIG.contourWidth / 2;
-                const y = baseY + 0.1; // Thin top band
-                points.push(new THREE.Vector2(x, y));
-            }
-        }
-        
-        // Create shape and geometry
-        const shape = new THREE.Shape(points);
-        const geometry = new THREE.ShapeGeometry(shape);
-        
-        // Create gradient material with opacity based on depth
-        const opacity = CONFIG.gradientOpacity * (1 - (i / CONFIG.contourCount) * 0.7); // Fade with depth
-        const material = new THREE.MeshBasicMaterial({
-            color: CONFIG.gradientColors,
-            transparent: true,
-            opacity: opacity,
-            side: THREE.DoubleSide
-        });
-        
-        // Create mesh
-        const contour = new THREE.Mesh(geometry, material);
-        contour.position.z = i * 0.01; // Slight depth separation
-        
-        // Create line at the top edge of this contour
+        // Create line at this contour level
         const topLinePoints = [];
         for (let j = 0; j <= CONFIG.contourResolution; j++) {
             const x = (j / CONFIG.contourResolution) * CONFIG.contourWidth - CONFIG.contourWidth / 2;
-            const y = baseY; // Same Y as the bottom edge of contour
+            const y = baseY;
             topLinePoints.push(new THREE.Vector3(x, y, 0));
         }
         
@@ -168,26 +116,21 @@ function createGradientContours() {
         const lineMaterial = new THREE.MeshBasicMaterial({
             color: CONFIG.lineColor,
             transparent: true,
-            opacity: 0.6,
+            opacity: 0.2,
             side: THREE.DoubleSide
         });
         
-        const topLine = new THREE.Mesh(lineGeometry, lineMaterial);
-        topLine.position.z = i * 0.01 + 0.005; // Slightly in front of contour
+        const line = new THREE.Mesh(lineGeometry, lineMaterial);
+        line.position.z = i * 0.01;
         
         // Store original data for animation
-        contour.userData = {
-            originalPoints: [...points],
+        line.userData = {
             index: i,
-            baseOpacity: opacity,
-            bottomPointCount: CONFIG.contourResolution + 1,
-            topLine: topLine,
-            topLineOriginalPoints: [...topLinePoints]
+            originalPoints: [...topLinePoints]
         };
         
-        gradientContours.push(contour);
-        scene.add(contour);
-        scene.add(topLine);
+        contourLines.push(line);
+        scene.add(line);
     }
 }
 
@@ -198,92 +141,51 @@ function createGradientContours() {
 function animate() {
     requestAnimationFrame(animate);
     
-    // Update gradient contours and their lines
-    updateGradientEffect();
+    // Update contour lines
+    updateLineAnimation();
     
     renderer.render(scene, camera);
 }
 
 
 
-// Update gradient effect - natural wave animation
-function updateGradientEffect() {
+// Update line animation - natural wave animation
+function updateLineAnimation() {
     if (!CONFIG.naturalWaveEnabled) return;
     
     const time = Date.now() * CONFIG.naturalWaveSpeed;
     
-    gradientContours.forEach((contour, contourIndex) => {
-        const positions = contour.geometry.attributes.position.array;
-        const originalPoints = contour.userData.originalPoints;
-        const bottomPointCount = contour.userData.bottomPointCount;
+    contourLines.forEach((line, lineIndex) => {
+        const linePositions = line.geometry.attributes.position.array;
+        const lineOriginalPoints = line.userData.originalPoints;
+        const lineWidth = CONFIG.lineWidth;
         
-        // Process bottom edge points (first half of points array)
-        for (let i = 0; i < bottomPointCount; i++) {
-            const originalPoint = originalPoints[i];
-            const pointRatio = i / (bottomPointCount - 1);
+        // Update each pair of vertices in the thick line
+        for (let i = 0; i < lineOriginalPoints.length; i++) {
+            const originalPoint = lineOriginalPoints[i];
+            const pointRatio = i / (lineOriginalPoints.length - 1);
             
-            // Calculate natural wave animation for this contour level
-            const naturalOffsetX = Math.sin(time + contourIndex * CONFIG.naturalWaveFrequency + pointRatio * Math.PI * 2) * CONFIG.naturalWaveAmplitude;
-            const naturalOffsetY = Math.sin(time * 0.7 + contourIndex * CONFIG.naturalWaveFrequency * 0.8 + pointRatio * Math.PI * 1.5) * CONFIG.naturalWaveAmplitude * 0.5;
+            // Calculate natural wave animation for this line
+            const naturalOffsetX = Math.sin(time + lineIndex * CONFIG.naturalWaveFrequency + pointRatio * Math.PI * 2) * CONFIG.naturalWaveAmplitude;
+            const naturalOffsetY = Math.sin(time * 0.7 + lineIndex * CONFIG.naturalWaveFrequency * 0.8 + pointRatio * Math.PI * 1.5) * CONFIG.naturalWaveAmplitude * 0.5;
             
-            // Apply animation directly to bottom edge
-            positions[i * 3] = originalPoint.x + naturalOffsetX;
-            positions[i * 3 + 1] = originalPoint.y + naturalOffsetY;
+            // Apply animation to both vertices of this line segment (top and bottom)
+            const animatedX = originalPoint.x + naturalOffsetX;
+            const animatedY = originalPoint.y + naturalOffsetY;
+            const animatedZ = originalPoint.z;
+            
+            // Top vertex
+            linePositions[i * 6] = animatedX;
+            linePositions[i * 6 + 1] = animatedY + lineWidth/2;
+            linePositions[i * 6 + 2] = animatedZ;
+            
+            // Bottom vertex
+            linePositions[i * 6 + 3] = animatedX;
+            linePositions[i * 6 + 4] = animatedY - lineWidth/2;
+            linePositions[i * 6 + 5] = animatedZ;
         }
         
-        // Process top edge points (second half of points array) - only if not the top contour
-        if (contourIndex < CONFIG.contourCount - 1) {
-            for (let i = bottomPointCount; i < originalPoints.length; i++) {
-                const originalPoint = originalPoints[i];
-                const topPointIndex = originalPoints.length - 1 - i + bottomPointCount; // Reverse index for top edge
-                const pointRatio = topPointIndex / (bottomPointCount - 1);
-                
-                // Calculate natural wave animation for the NEXT contour level
-                const naturalOffsetX = Math.sin(time + (contourIndex + 1) * CONFIG.naturalWaveFrequency + pointRatio * Math.PI * 2) * CONFIG.naturalWaveAmplitude;
-                const naturalOffsetY = Math.sin(time * 0.7 + (contourIndex + 1) * CONFIG.naturalWaveFrequency * 0.8 + pointRatio * Math.PI * 1.5) * CONFIG.naturalWaveAmplitude * 0.5;
-                
-                // Apply animation directly to top edge
-                positions[i * 3] = originalPoint.x + naturalOffsetX;
-                positions[i * 3 + 1] = originalPoint.y + naturalOffsetY;
-            }
-        }
-        
-        contour.geometry.attributes.position.needsUpdate = true;
-        
-        // Update the top line for this contour
-        if (contour.userData.topLine) {
-            const topLine = contour.userData.topLine;
-            const linePositions = topLine.geometry.attributes.position.array;
-            const lineOriginalPoints = contour.userData.topLineOriginalPoints;
-            const lineWidth = CONFIG.lineWidth;
-            
-            // Update each pair of vertices in the thick line
-            for (let i = 0; i < lineOriginalPoints.length; i++) {
-                const originalPoint = lineOriginalPoints[i];
-                const pointRatio = i / (lineOriginalPoints.length - 1);
-                
-                // Calculate natural wave animation for this line (same as bottom edge of contour)
-                const naturalOffsetX = Math.sin(time + contourIndex * CONFIG.naturalWaveFrequency + pointRatio * Math.PI * 2) * CONFIG.naturalWaveAmplitude;
-                const naturalOffsetY = Math.sin(time * 0.7 + contourIndex * CONFIG.naturalWaveFrequency * 0.8 + pointRatio * Math.PI * 1.5) * CONFIG.naturalWaveAmplitude * 0.5;
-                
-                // Apply animation to both vertices of this line segment (top and bottom)
-                const animatedX = originalPoint.x + naturalOffsetX;
-                const animatedY = originalPoint.y + naturalOffsetY;
-                const animatedZ = originalPoint.z;
-                
-                // Top vertex
-                linePositions[i * 6] = animatedX;
-                linePositions[i * 6 + 1] = animatedY + lineWidth/2;
-                linePositions[i * 6 + 2] = animatedZ;
-                
-                // Bottom vertex
-                linePositions[i * 6 + 3] = animatedX;
-                linePositions[i * 6 + 4] = animatedY - lineWidth/2;
-                linePositions[i * 6 + 5] = animatedZ;
-            }
-            
-            topLine.geometry.attributes.position.needsUpdate = true;
-        }
+        line.geometry.attributes.position.needsUpdate = true;
     });
 }
 
@@ -303,27 +205,19 @@ window.addEventListener('resize', onWindowResize);
 // Function to update colors dynamically
 function updateWaveColors() {
     // Get new colors from CSS variables
-    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--water-color').trim();
     const lightColor = getComputedStyle(document.documentElement).getPropertyValue('--line-color').trim();
     
-    console.log('Updating wave colors:', { primaryColor, lightColor });
+    console.log('Updating line color:', lightColor);
     
     // Update CONFIG
-    CONFIG.gradientColors = primaryColor;
     CONFIG.lineColor = lightColor;
     
-    // Update all gradient contours
-    gradientContours.forEach((contour) => {
-        // Update contour material color
-        contour.material.color.set(primaryColor);
-        
-        // Update line color if it exists
-        if (contour.userData.topLine) {
-            contour.userData.topLine.material.color.set(lightColor);
-        }
+    // Update all contour lines
+    contourLines.forEach((line) => {
+        line.material.color.set(lightColor);
     });
     
-    console.log('Wave colors updated successfully');
+    console.log('Line colors updated successfully');
 }
 
 // Listen for theme color changes
@@ -334,9 +228,9 @@ window.addEventListener('themeColorsChanged', () => {
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Initializing three.js scene with gradient contours...');
+    console.log('Initializing three.js scene with contour lines...');
     init();
-    console.log('Gradient contours created:', gradientContours.length);
+    console.log('Contour lines created:', contourLines.length);
 });
 
 }

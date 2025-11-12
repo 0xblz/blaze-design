@@ -60,9 +60,8 @@ h1 {
 h2 {
     font-family: var(--font-secondary);
     font-size: 1.1rem;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 1.5em;
-    mix-blend-mode: overlay;
 }
 
 p {
@@ -71,6 +70,10 @@ p {
     font-size: 1.1rem;
     font-weight: 500;
     transition: opacity 0.25s ease-in-out;
+
+    @media (max-width: 800px) {
+        font-size: 1rem;
+    }
 }
 
 small {
