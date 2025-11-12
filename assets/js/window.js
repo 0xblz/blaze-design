@@ -1,7 +1,74 @@
-// Window System - Creates draggable, resizable windows for links with class "window"
-
-class WindowManager {
+// Shared Draggable Base Class
+class DraggableBase {
     constructor() {
+        this.zIndexCounter = 10;
+    }
+
+    isMobile() {
+        return window.innerWidth <= 800;
+    }
+
+    setupDragListeners(obj, element, dragHandle, shouldDrag) {
+        const mouseMoveHandler = (e) => {
+            if (obj.isDragging) {
+                this.drag(obj, e);
+            }
+        };
+
+        const mouseUpHandler = () => {
+            if (obj.isDragging) {
+                this.stopDrag(obj);
+            }
+        };
+
+        dragHandle.addEventListener('mousedown', (e) => {
+            if (shouldDrag && shouldDrag(e)) return;
+            this.startDrag(obj, e);
+        });
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+
+        // Prevent text selection while dragging
+        dragHandle.addEventListener('selectstart', (e) => {
+            if (obj.isDragging) {
+                e.preventDefault();
+            }
+        });
+    }
+
+    drag(obj, e) {
+        if (!obj.isDragging) return;
+
+        let left = e.clientX - obj.dragOffset.x;
+        let top = e.clientY - obj.dragOffset.y;
+
+        // Constrain to viewport
+        const rect = obj.element.getBoundingClientRect();
+        const maxLeft = window.innerWidth - rect.width;
+        const maxTop = window.innerHeight - rect.height;
+
+        left = Math.max(0, Math.min(left, maxLeft));
+        top = Math.max(0, Math.min(top, maxTop));
+
+        obj.element.style.left = `${left}px`;
+        obj.element.style.top = `${top}px`;
+    }
+
+    stopDrag(obj) {
+        obj.isDragging = false;
+        obj.element.style.cursor = obj.cursor || 'move';
+    }
+
+    bringToFront(obj) {
+        obj.element.style.zIndex = ++this.zIndexCounter;
+    }
+}
+
+// Window Manager - Draggable app windows
+class WindowManager extends DraggableBase {
+    constructor() {
+        super();
         this.windows = [];
         this.zIndexCounter = 1000;
         this.init();
@@ -28,7 +95,7 @@ class WindowManager {
 
     createWindow(url, title) {
         const windowId = `window-${Date.now()}`;
-        const isMobile = window.innerWidth <= 800;
+        const isMobile = this.isMobile();
         
         // Create window container
         const windowElement = document.createElement('div');
@@ -60,14 +127,12 @@ class WindowManager {
         const windowObj = {
             id: windowId,
             element: windowElement,
-            isFullscreen: isMobile, // Mobile starts fullscreen
+            isFullscreen: isMobile,
             isDragging: false,
             dragOffset: { x: 0, y: 0 }
         };
         
         this.windows.push(windowObj);
-        
-        // Attach event listeners
         this.attachWindowEvents(windowObj);
         
         // Animate in
@@ -114,33 +179,13 @@ class WindowManager {
         }
         
         // Dragging functionality (desktop only)
-        const isMobile = window.innerWidth <= 800;
-        if (!isMobile) {
-            header.addEventListener('mousedown', (e) => {
-                if (e.target.closest('.window-btn')) return;
-                if (windowObj.isFullscreen) return;
-                
-                this.startDrag(windowObj, e);
-            });
-            
-            document.addEventListener('mousemove', (e) => {
-                if (windowObj.isDragging) {
-                    this.drag(windowObj, e);
-                }
-            });
-            
-            document.addEventListener('mouseup', () => {
-                if (windowObj.isDragging) {
-                    this.stopDrag(windowObj);
-                }
-            });
-            
-            // Prevent text selection while dragging
-            header.addEventListener('selectstart', (e) => {
-                if (windowObj.isDragging) {
-                    e.preventDefault();
-                }
-            });
+        if (!this.isMobile()) {
+            this.setupDragListeners(
+                windowObj,
+                element,
+                header,
+                (e) => e.target.closest('.window-btn') || windowObj.isFullscreen
+            );
         }
     }
 
@@ -155,24 +200,6 @@ class WindowManager {
         };
         
         this.bringToFront(windowObj);
-    }
-
-    drag(windowObj, e) {
-        if (!windowObj.isDragging) return;
-        
-        let left = e.clientX - windowObj.dragOffset.x;
-        let top = e.clientY - windowObj.dragOffset.y;
-        
-        // Constrain to viewport
-        const rect = windowObj.element.getBoundingClientRect();
-        const maxLeft = window.innerWidth - rect.width;
-        const maxTop = window.innerHeight - rect.height;
-        
-        left = Math.max(0, Math.min(left, maxLeft));
-        top = Math.max(0, Math.min(top, maxTop));
-        
-        windowObj.element.style.left = `${left}px`;
-        windowObj.element.style.top = `${top}px`;
     }
 
     stopDrag(windowObj) {
@@ -206,12 +233,109 @@ class WindowManager {
             this.windows = this.windows.filter(w => w.id !== windowObj.id);
         }, 300);
     }
+}
 
-    bringToFront(windowObj) {
-        windowObj.element.style.zIndex = ++this.zIndexCounter;
+// Article Dragger - Draggable article elements
+class ArticleDragger extends DraggableBase {
+    constructor() {
+        super();
+        this.articles = [];
+        this.init();
+    }
+
+    init() {
+        // Don't enable article dragging on mobile
+        if (this.isMobile()) return;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            this.setupDraggableArticles();
+        });
+    }
+
+    setupDraggableArticles() {
+        const articles = document.querySelectorAll('article');
+        
+        articles.forEach(article => {
+            this.makeArticleDraggable(article);
+        });
+    }
+
+    makeArticleDraggable(article) {
+        article.style.cursor = 'move';
+        
+        const articleObj = {
+            element: article,
+            isDragging: false,
+            dragOffset: { x: 0, y: 0 },
+            wasAbsolute: false,
+            placeholder: null,
+            cursor: 'move'
+        };
+        
+        this.articles.push(articleObj);
+        
+        // Bring to front and start drag on mousedown
+        article.addEventListener('mousedown', (e) => {
+            // Don't interfere with link clicks
+            if (e.target.tagName === 'A' || e.target.closest('a')) {
+                return;
+            }
+            
+            this.bringToFront(articleObj);
+            this.startDrag(articleObj, e);
+        });
+        
+        this.setupDragListeners(
+            articleObj,
+            article,
+            article,
+            (e) => e.target.tagName === 'A' || e.target.closest('a')
+        );
+    }
+
+    startDrag(articleObj, e) {
+        // Don't drag if clicking on a link
+        if (e.target.tagName === 'A' || e.target.closest('a')) {
+            return;
+        }
+        
+        articleObj.isDragging = true;
+        articleObj.element.style.cursor = 'grabbing';
+        
+        // Get current position before converting to absolute
+        const rect = articleObj.element.getBoundingClientRect();
+        
+        // Only create placeholder on first drag
+        if (!articleObj.wasAbsolute) {
+            // Create a placeholder to maintain layout
+            articleObj.placeholder = document.createElement('div');
+            articleObj.placeholder.style.width = `${rect.width}px`;
+            articleObj.placeholder.style.height = `${rect.height}px`;
+            articleObj.placeholder.style.visibility = 'hidden';
+            articleObj.element.parentNode.insertBefore(articleObj.placeholder, articleObj.element);
+        }
+        
+        // Convert to absolute positioning
+        articleObj.element.style.position = 'absolute';
+        articleObj.element.style.left = `${rect.left}px`;
+        articleObj.element.style.top = `${rect.top}px`;
+        articleObj.element.style.width = `${rect.width}px`;
+        articleObj.element.style.zIndex = ++this.zIndexCounter;
+        articleObj.wasAbsolute = true;
+        
+        articleObj.dragOffset = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+    }
+
+    bringToFront(articleObj) {
+        if (articleObj.wasAbsolute) {
+            super.bringToFront(articleObj);
+        }
     }
 }
 
-// Initialize the window manager
+// Initialize systems
 const windowManager = new WindowManager();
-
+const articleDragger = new ArticleDragger();
