@@ -15,19 +15,13 @@ h1 {
     span {
         padding: 0.5rem;
         padding-left: 1rem;
-        color: black;
-        mix-blend-mode: screen;
+        color: var(--tertiary-color);
         text-transform: uppercase;
         letter-spacing: 2px;
         font-style: italic;
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         position: relative;
-        text-shadow: 0 2px 0.5rem rgba(0, 0, 0, 0.2);
-        -webkit-text-stroke-width: 1px;
-        -webkit-text-stroke-color: black;
-        // filter: saturate(0.5);
 
-        &:after,
         &:before {
             content: '';
             border-radius: 100%;
@@ -36,21 +30,32 @@ h1 {
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--tertiary-color);
+            filter: blur(1px);
+            background: var(--primary-color);
             mix-blend-mode: overlay;
-            transform: skew(-35deg, -2deg) rotate(-9deg) scale(1.6);
-            border: 2px solid white;
-            box-shadow: 0 -4px 0 white;
+            transform: skew(-65deg, 9deg) rotate(19deg) scale(1.4);
+            background: var(--primary-color);
+            border: 4px solid var(--tertiary-color);
+            box-shadow: 
+                inset 0 0.25rem 0rem var(--secondary-color),
+                0 -0.5rem 0rem var(--primary-color);
         }
 
         &:after {
-            transform: skew(-65deg, 5deg) rotate(9deg) scale(1.4);
-            border-radius: 0;
-            mix-blend-mode: difference;
-            filter: blur(1px);
+            content: '';
+            border-radius: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--secondary-color);
+            transform: skew(-135deg, -2deg) rotate(-9deg) scale(1.6);
+            border: 2px solid var(--primary-color);
             box-shadow: 
-                0 0.25rem 3rem var(--primary-color),
-                0 -0.25rem 3rem var(--tertiary-color);
+                inset 0 1px 0 var(--secondary-color),
+                0 -1px 0 var(--secondary-color);
+            mix-blend-mode: overlay;
         }
     }
 }
