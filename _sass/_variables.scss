@@ -8,9 +8,9 @@
     --tertiary-color: #3db1ff;
 
 
-    --primary-color-dark: #00afce;
-    --secondary-color-dark: #17006a;
-    --tertiary-color-dark: #060b1c;
+    --primary-color-dark: color-mix(in oklab, var(--primary-color) 50%, var(--dark-color));
+    --secondary-color-dark: var(--tertiary-color);
+    --tertiary-color-dark: color-mix(in oklab, var(--tertiary-color) 50%, var(--dark-color));
 
     --dark-color: #060839;
     --font-primary: 'DM Sans', sans-serif;

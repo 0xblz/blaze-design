@@ -15,7 +15,7 @@ h1 {
     span {
         padding: 0.5rem;
         padding-left: 1rem;
-        color: var(--primary-color);
+        color: var(--secondary-color);
         text-transform: uppercase;
         letter-spacing: 2px;
         font-style: italic;
@@ -117,7 +117,7 @@ a {
     &:hover,
     &:focus,
     &:active {
-        color: var(--tertiary-color);
+        color: var(--secondary-color);
     }
 
     &.button {
