@@ -1,10 +1,15 @@
-.window-style {
-    border-radius: 1.5rem;
+.container-layout {
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    gap: 1.5rem;
+}
+
+.window-layout {
     box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(1rem);
     -webkit-backdrop-filter: blur(1rem);
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid transparent;
     transition: 
         opacity 0.3s ease, 
         transform 0.3s ease, 
@@ -12,17 +17,24 @@
         backdrop-filter 0.3s ease-in-out,
         box-shadow 0.3s ease-in-out;
 
+    @media (max-width: 800px) {
+        border: none;
+    }
+
     &:hover {
         transform: scale(1.02);
         border-color: rgba(255, 255, 255, 0.2);
         box-shadow: 0 1rem 3rem 0 rgba(0, 0, 0, 0.2);
+
+        @media (max-width: 800px) {
+            transform: none;
+        }
     }
     
     &:active {
         transition: none;
-        border-color: rgba(255, 255, 255, 0.3);
         box-shadow: 0 1rem 3rem 0 rgba(0, 0, 0, 0.3);
-        background: rgba(0, 0, 0, 0.1);
+        background: rgba(0, 0, 0, 0.2);
         backdrop-filter: blur(2rem);
         -webkit-backdrop-filter: blur(2rem);
     }

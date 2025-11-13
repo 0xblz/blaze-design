@@ -108,7 +108,7 @@ class WindowManager extends DraggableBase {
         // Create window structure
         windowElement.innerHTML = `
             <div class="window-header">
-                <h1 class="window-title">${title}</h1>
+                <h3 class="window-title">${title}</h3>
                 <div class="window-controls">
                     ${!isMobile ? `<button class="window-btn window-fullscreen" title="Toggle Fullscreen">
                         <i class="fa-solid fa-expand"></i>

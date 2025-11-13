@@ -1,7 +1,10 @@
 // Window System Styles
 
 .app-window {
-    @extend .window-style;
+    @extend .window-layout;
+    @extend .container-layout;
+    padding: 0;
+    gap: 0;
     position: fixed;
     width: 90%;
     max-width: 50rem;
