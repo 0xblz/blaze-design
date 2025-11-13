@@ -5,11 +5,11 @@
 }
 
 .window-layout {
-    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(1rem);
     -webkit-backdrop-filter: blur(1rem);
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid transparent;
+    border: 2px solid rgba(255, 255, 255, 0.05);
     transition: 
         opacity 0.3s ease, 
         transform 0.3s ease, 
@@ -19,6 +19,7 @@
 
     @media (max-width: 800px) {
         border: none;
+        box-shadow: none;
     }
 
     &:hover {
@@ -29,13 +30,5 @@
         @media (max-width: 800px) {
             transform: none;
         }
-    }
-    
-    &:active {
-        transition: none;
-        box-shadow: 0 1rem 3rem 0 rgba(0, 0, 0, 0.3);
-        background: rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(2rem);
-        -webkit-backdrop-filter: blur(2rem);
     }
 }

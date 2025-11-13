@@ -12,6 +12,12 @@ body {
     position: relative;
     background-color: var(--dark-color);
 
+    // Prevent text selection
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+
     &:before {
         content: '';
         position: absolute;

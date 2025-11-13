@@ -1,6 +1,9 @@
 // Shared z-index counter across all draggable elements
 let sharedZIndexCounter = 100;
 
+// Global drag state - used to coordinate with other systems like selection
+window.isDraggingAnything = false;
+
 // Shared Draggable Base Class
 class DraggableBase {
     constructor() {
@@ -61,6 +64,7 @@ class DraggableBase {
     stopDrag(obj) {
         obj.isDragging = false;
         obj.element.style.cursor = obj.cursor || 'move';
+        window.isDraggingAnything = false;
     }
 
     bringToFront(obj) {
@@ -163,9 +167,10 @@ class WindowManager extends DraggableBase {
         const closeBtn = element.querySelector('.window-close');
         const fullscreenBtn = element.querySelector('.window-fullscreen');
         
-        // Bring to front on click
-        element.addEventListener('mousedown', () => {
+        // Bring to front on click and stop propagation to prevent interference with selection
+        element.addEventListener('mousedown', (e) => {
             this.bringToFront(windowObj);
+            e.stopPropagation();
         });
         
         // Close button
@@ -193,6 +198,7 @@ class WindowManager extends DraggableBase {
 
     startDrag(windowObj, e) {
         windowObj.isDragging = true;
+        window.isDraggingAnything = true;
         windowObj.element.classList.add('dragging');
         
         const rect = windowObj.element.getBoundingClientRect();
@@ -207,6 +213,7 @@ class WindowManager extends DraggableBase {
     stopDrag(windowObj) {
         windowObj.isDragging = false;
         windowObj.element.classList.remove('dragging');
+        window.isDraggingAnything = false;
     }
 
     toggleFullscreen(windowObj) {
@@ -285,6 +292,7 @@ class ArticleDragger extends DraggableBase {
             
             this.bringToFront(articleObj);
             this.startDrag(articleObj, e);
+            e.stopPropagation();
         });
         
         this.setupDragListeners(
@@ -302,6 +310,7 @@ class ArticleDragger extends DraggableBase {
         }
         
         articleObj.isDragging = true;
+        window.isDraggingAnything = true;
         articleObj.element.style.cursor = 'grabbing';
         
         // Get current position before converting to absolute
