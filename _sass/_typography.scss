@@ -19,8 +19,10 @@ h1 {
         text-transform: uppercase;
         letter-spacing: 2px;
         font-style: italic;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         position: relative;
+        text-shadow: 3px 3px 1px var(--primary-color);
+        -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.2);
 
         &:before {
             content: '';
