@@ -1,3 +1,24 @@
+// Font import
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Zen+Dots&display=swap');
+
+// Variables
+:root {
+    // Overrides
+    --primary-color: color(display-p3 0.278 0.239 1);
+    --secondary-color: color(display-p3 1 0.561 0.502);
+    --tertiary-color: color(display-p3 0.239 0.694 1);
+
+    // Dark mode colors
+    --primary-color-dark: color-mix(in oklab, var(--primary-color) 20%, var(--dark-color));
+    --secondary-color-dark: var(--tertiary-color);
+    --tertiary-color-dark: color-mix(in oklab, var(--tertiary-color) 20%, var(--dark-color));
+
+    // New variables
+    --dark-color: color(display-p3 0.024 0.031 0.224);
+    --font-primary: 'DM Sans', sans-serif;
+    --font-secondary: 'Zen Dots', sans-serif;
+} 
+
 // Body and main layout
 
 html {
@@ -39,6 +60,22 @@ body {
         background-repeat: no-repeat, repeat, no-repeat;
         mix-blend-mode: screen;
         z-index: 1;
+        animation: gradient 10s ease-in-out infinite;
+
+        @keyframes gradient {
+            0% {
+                background-position: 0 0, 0 0, 100% 0;
+                background-size: cover, 1rem 1rem, 200% 200%;
+            }
+            50% {
+                background-position: 0 100%, 0 0, 90% 40%;
+                background-size: cover, 1rem 1rem, 300% 300%;
+            }
+            100% {
+                background-position: 0 0, 0 0, 100% 0;
+                background-size: cover, 1rem 1rem, 200% 200%;
+            }
+        }
 
         @media (max-width: 800px) {
             background-size: cover, 1rem 1rem, 200% 200%;
@@ -73,10 +110,13 @@ header {
     align-items: center;
     flex-wrap: wrap;
     gap: 1.5rem;
-    padding: 1.5rem;
+    padding: 3rem;
     animation: blur-in 0.6s ease-in-out, slide-up 0.4s ease-in-out;
     z-index: 3;
-    // border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+
+    @media (max-width: 800px) {
+        padding: 1.5rem;
+    }
 
     nav {
         display: flex;
@@ -94,7 +134,7 @@ section {
     flex: 1;
     width: 100%;
     gap: 3rem;
-    padding: 1.5rem;
+    padding: 3rem;
     animation: blur-in 0.6s ease-in-out, slide-down 0.4s ease-in-out;
 
     @media (max-width: 1600px) {
@@ -106,24 +146,21 @@ section {
         flex-direction: column;
         align-items: center;
         justify-content: flex-start;
-        padding: 0;
-        gap: 2px;
+        padding: 1.5rem;
     }
 }
 
 article {
-    @extend .window-layout;
-    @extend .container-layout;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 1.5rem;
     width: 100%;
-    max-width: var(--container-width);
+    max-width: 480px;
     z-index: 3;
 
     @media (max-width: 800px) {
-        border-radius: 0;
         max-width: 100%;
     }
 }

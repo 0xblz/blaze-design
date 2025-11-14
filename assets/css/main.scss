@@ -3,10 +3,7 @@
 ---
 
 // Import partials
-@import "variables";
-@import "reset";
-@import "globals";
+@import "https://css.blaze.design/reset.css";
+@import "layout";
 @import "typography";
 @import "animations";
-@import "layout";
-@import "windows";
