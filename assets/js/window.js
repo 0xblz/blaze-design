@@ -49,14 +49,6 @@ class DraggableBase {
         let left = e.clientX - obj.dragOffset.x;
         let top = e.clientY - obj.dragOffset.y;
 
-        // Constrain to viewport
-        const rect = obj.element.getBoundingClientRect();
-        const maxLeft = window.innerWidth - rect.width;
-        const maxTop = window.innerHeight - rect.height;
-
-        left = Math.max(0, Math.min(left, maxLeft));
-        top = Math.max(0, Math.min(top, maxTop));
-
         obj.element.style.left = `${left}px`;
         obj.element.style.top = `${top}px`;
     }
@@ -100,6 +92,14 @@ class WindowManager extends DraggableBase {
     }
 
     createWindow(url, title) {
+        // Check if a window with this URL already exists
+        const existingWindow = this.windows.find(w => w.url === url);
+        if (existingWindow) {
+            // Bring existing window to front instead of creating a new one
+            this.bringToFront(existingWindow);
+            return;
+        }
+        
         const windowId = `window-${Date.now()}`;
         const isMobile = this.isMobile();
         
@@ -125,6 +125,16 @@ class WindowManager extends DraggableBase {
             <div class="window-content">
                 <iframe src="${url}" frameborder="0" allowfullscreen></iframe>
             </div>
+            ${!isMobile ? `
+                <div class="resize-handle resize-n"></div>
+                <div class="resize-handle resize-s"></div>
+                <div class="resize-handle resize-e"></div>
+                <div class="resize-handle resize-w"></div>
+                <div class="resize-handle resize-ne"></div>
+                <div class="resize-handle resize-nw"></div>
+                <div class="resize-handle resize-se"></div>
+                <div class="resize-handle resize-sw"></div>
+            ` : ''}
         `;
         
         document.body.appendChild(windowElement);
@@ -132,10 +142,14 @@ class WindowManager extends DraggableBase {
         // Add window to tracking array
         const windowObj = {
             id: windowId,
+            url: url,
             element: windowElement,
             isFullscreen: isMobile,
             isDragging: false,
-            dragOffset: { x: 0, y: 0 }
+            dragOffset: { x: 0, y: 0 },
+            isResizing: false,
+            resizeDirection: null,
+            resizeStart: { x: 0, y: 0, width: 0, height: 0, left: 0, top: 0 }
         };
         
         this.windows.push(windowObj);
@@ -193,7 +207,105 @@ class WindowManager extends DraggableBase {
                 header,
                 (e) => e.target.closest('.window-btn') || windowObj.isFullscreen
             );
+            this.setupResizeListeners(windowObj);
         }
+    }
+
+    setupResizeListeners(windowObj) {
+        const resizeHandles = windowObj.element.querySelectorAll('.resize-handle');
+        
+        const mouseMoveHandler = (e) => {
+            if (windowObj.isResizing) {
+                this.resize(windowObj, e);
+            }
+        };
+
+        const mouseUpHandler = () => {
+            if (windowObj.isResizing) {
+                this.stopResize(windowObj);
+            }
+        };
+
+        resizeHandles.forEach(handle => {
+            handle.addEventListener('mousedown', (e) => {
+                if (windowObj.isFullscreen) return;
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const direction = handle.className.replace('resize-handle resize-', '');
+                this.startResize(windowObj, e, direction);
+            });
+        });
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+        document.addEventListener('mouseup', mouseUpHandler);
+    }
+
+    startResize(windowObj, e, direction) {
+        windowObj.isResizing = true;
+        windowObj.resizeDirection = direction;
+        window.isDraggingAnything = true;
+        windowObj.element.classList.add('resizing');
+        
+        const rect = windowObj.element.getBoundingClientRect();
+        windowObj.resizeStart = {
+            x: e.clientX,
+            y: e.clientY,
+            width: rect.width,
+            height: rect.height,
+            left: rect.left,
+            top: rect.top
+        };
+        
+        this.bringToFront(windowObj);
+    }
+
+    resize(windowObj, e) {
+        if (!windowObj.isResizing) return;
+        
+        const deltaX = e.clientX - windowObj.resizeStart.x;
+        const deltaY = e.clientY - windowObj.resizeStart.y;
+        const direction = windowObj.resizeDirection;
+        
+        const minWidth = 300;
+        const minHeight = 200;
+        
+        let newWidth = windowObj.resizeStart.width;
+        let newHeight = windowObj.resizeStart.height;
+        let newLeft = windowObj.resizeStart.left;
+        let newTop = windowObj.resizeStart.top;
+        
+        // Handle horizontal resizing
+        if (direction.includes('e')) {
+            newWidth = Math.max(minWidth, windowObj.resizeStart.width + deltaX);
+        } else if (direction.includes('w')) {
+            newWidth = Math.max(minWidth, windowObj.resizeStart.width - deltaX);
+            if (newWidth > minWidth) {
+                newLeft = windowObj.resizeStart.left + deltaX;
+            }
+        }
+        
+        // Handle vertical resizing
+        if (direction.includes('s')) {
+            newHeight = Math.max(minHeight, windowObj.resizeStart.height + deltaY);
+        } else if (direction.includes('n')) {
+            newHeight = Math.max(minHeight, windowObj.resizeStart.height - deltaY);
+            if (newHeight > minHeight) {
+                newTop = windowObj.resizeStart.top + deltaY;
+            }
+        }
+        
+        windowObj.element.style.width = `${newWidth}px`;
+        windowObj.element.style.height = `${newHeight}px`;
+        windowObj.element.style.left = `${newLeft}px`;
+        windowObj.element.style.top = `${newTop}px`;
+    }
+
+    stopResize(windowObj) {
+        windowObj.isResizing = false;
+        windowObj.resizeDirection = null;
+        windowObj.element.classList.remove('resizing');
+        window.isDraggingAnything = false;
     }
 
     startDrag(windowObj, e) {
