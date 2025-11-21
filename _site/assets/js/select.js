@@ -22,7 +22,7 @@
             selectionBox.style.cssText = `
                 position: fixed;
                 border: 1px solid white;
-                background: linear-gradient(to top, rgba(255, 255, 255, 0.4), transparent);
+                background: rgba(255, 255, 255, 0.2);
                 pointer-events: none;
                 z-index: 9999;
                 display: none;
@@ -182,7 +182,7 @@
         const style = document.createElement('style');
         style.textContent = `
             .selected {
-                outline: 2px solid rgba(255, 255, 255, 0.1) !important;
+                outline: 1px solid var(--secondary-color) !important;
                 outline-offset: 1.5rem;
                 position: relative;
                 border-radius: 0.25rem;

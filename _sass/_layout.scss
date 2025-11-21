@@ -1,28 +1,23 @@
 // Font import
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Zen+Dots&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&family=Zen+Dots&display=swap');
 
 // Variables
 :root {
     // Overrides
-    --primary-color: color(display-p3 0.278 0.239 1);
-    --secondary-color: color(display-p3 1 0.561 0.502);
-    --tertiary-color: color(display-p3 0.239 0.694 1);
-
-    // Dark mode colors
-    --primary-color-dark: color-mix(in oklab, var(--primary-color) 20%, var(--dark-color));
-    --secondary-color-dark: var(--tertiary-color);
-    --tertiary-color-dark: color-mix(in oklab, var(--tertiary-color) 20%, var(--dark-color));
+    --primary-color: color(display-p3 0.329 0.329 0.988); // #5454FC, hsl(240, 100%, 65%)
+    --secondary-color: color(display-p3 0.525 0.843 0.988); // #86D7FC, hsl(210, 100%, 75%)
+    --tertiary-color: color(display-p3 0.329 0.729 0.988); // #54BAFC, hsl(205, 100%, 65%)
 
     // New variables
-    --dark-color: color(display-p3 0.024 0.031 0.224);
-    --font-primary: 'DM Sans', sans-serif;
-    --font-secondary: 'Zen Dots', sans-serif;
-} 
+    --dark-color: color(display-p3 0.149 0.149 0.400); // #262666, hsl(240, 40%, 25%)
 
-// Body and main layout
+    // Fonts
+    --font-primary: 'Funnel Sans', sans-serif;
+    --font-secondary: 'Zen Dots', sans-serif;
+}
 
 html {
-    background-color: var(--dark-color);
+    background: var(--dark-color);
     overflow-x: hidden;
 }
 
@@ -31,7 +26,6 @@ body {
     width: 100%;
     min-height: 100vh;
     position: relative;
-    background-color: var(--dark-color);
 
     // Prevent text selection
     user-select: none;
@@ -46,40 +40,21 @@ body {
         left: 0;
         width: 100%;
         height: 100%;
-        background-image:
+        background-image: 
             linear-gradient(to top, transparent 0%, var(--dark-color) 100%),
-            radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px),
+            radial-gradient(circle, rgba(255,255,255,0.2) 1px, transparent 1px),
             radial-gradient(circle, 
                 var(--primary-color) 0%, 
-                var(--secondary-color) 42%,
-                var(--tertiary-color) 52%,
+                var(--secondary-color) 60%, 
+                var(--tertiary-color) 65%, 
                 transparent 100%);
-        background-size: cover, 1rem 1rem, 200% 200%;
-        background-position: 0 0, 0 0, 100% 0;
+        background-size: cover, 1rem 1rem, 300% 300%;
+        background-position: 100% 100%, 0 0, 95% 80%;
         background-attachment: fixed, fixed, fixed;
         background-repeat: no-repeat, repeat, no-repeat;
         mix-blend-mode: screen;
         z-index: 1;
-        animation: gradient 10s ease-in-out infinite;
-
-        @keyframes gradient {
-            0% {
-                background-position: 0 0, 0 0, 100% 0;
-                background-size: cover, 1rem 1rem, 200% 200%;
-            }
-            50% {
-                background-position: 0 100%, 0 0, 90% 40%;
-                background-size: cover, 1rem 1rem, 300% 300%;
-            }
-            100% {
-                background-position: 0 0, 0 0, 100% 0;
-                background-size: cover, 1rem 1rem, 200% 200%;
-            }
-        }
-
-        @media (max-width: 800px) {
-            background-size: cover, 1rem 1rem, 200% 200%;
-        }
+        pointer-events: none;
     }
 
     &:after {
@@ -91,8 +66,8 @@ body {
         height: 100%;
         background: var(--dark-color);
         mix-blend-mode: overlay;
-        opacity: 0.3;
         z-index: 2;
+        pointer-events: none;
     }
 }
 
@@ -105,48 +80,57 @@ main {
 
 header {
     display: flex;
-    width: 100%;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    padding: 3rem;
-    animation: blur-in 0.6s ease-in-out, slide-up 0.4s ease-in-out;
-    z-index: 3;
-
-    @media (max-width: 800px) {
-        padding: 1.5rem;
-    }
+    width: 100%;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-right: 2rem;
+    z-index: 9;
 
     nav {
         display: flex;
-        gap: 1.5rem;
+        gap: 0.75rem;
         align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
+
+        a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            line-height: 1em;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease-in-out;
+
+            &:hover {
+                border-color: white;
+                color: white;
+                text-decoration: none;
+            }
+        }
     }
 }
 
 section {
     display: flex;
-    justify-content: space-around;
     align-items: center;
+    justify-content: space-around;
+    gap: 4rem;
+    padding: 2rem;
     flex: 1;
     width: 100%;
-    gap: 3rem;
-    padding: 3rem;
-    animation: blur-in 0.6s ease-in-out, slide-down 0.4s ease-in-out;
+    z-index: 9;
 
-    @media (max-width: 1600px) {
-        justify-content: space-between;
+    @media (max-width: 1800px) {
         align-items: flex-end;
+        justify-content: space-between;
     }
 
     @media (max-width: 800px) {
         flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 1.5rem;
     }
 }
 
@@ -157,8 +141,7 @@ article {
     align-items: flex-start;
     gap: 1.5rem;
     width: 100%;
-    max-width: 480px;
-    z-index: 3;
+    max-width: 380px;
 
     @media (max-width: 800px) {
         max-width: 100%;
@@ -166,9 +149,83 @@ article {
 }
 
 hr {
-    border: none;
-    border: 1px solid rgba(255, 255, 255, 0.2);
     width: 100%;
-    mix-blend-mode: overlay;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.warp {
+    padding: 0.5rem;
+    padding-left: 2rem;
+    color: var(--secondary-color);
+    font-family: var(--font-secondary);
+    letter-spacing: 1px;
+    font-style: italic;
+    font-size: 1rem;
+    position: relative;
+    transition: color 0.2s ease-in-out;
+    z-index: 2;
+
+    &:before {
+        content: '';
+        border-radius: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        filter: blur(1px);
+        background: var(--primary-color);
+        mix-blend-mode: overlay;
+        transform: skew(-65deg, 9deg) rotate(19deg) scale(1.4);
+        background: var(--primary-color);
+        border: 4px solid var(--tertiary-color);
+        box-shadow: 
+            inset 0 0.25rem 0rem var(--secondary-color),
+            0 -0.5rem 0rem var(--primary-color);
+        animation: skew 10s ease-in-out infinite;
+
+        @keyframes skew {
+            0% {
+                transform: skew(-125deg, -2deg) rotate(-9deg) scale(1.4);
+            }
+            50% {
+                transform: skew(-165deg, -6deg) rotate(-19deg) scale(1.4);
+            }
+            100% {
+                transform: skew(-125deg, -2deg) rotate(-9deg) scale(1.4);
+            }
+        }
+    }
+
+    &:after {
+        content: '';
+        border-radius: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--tertiary-color);
+        transform: skew(-135deg, -2deg) rotate(-9deg) scale(1.6);
+        border: 2px solid var(--primary-color);
+        box-shadow: 
+            inset 0 1px 0 var(--secondary-color),
+            0 -1px 0 var(--secondary-color);
+        mix-blend-mode: overlay;
+
+        animation: warp 20s ease-in-out infinite;
+
+        @keyframes warp {
+            0% {
+                transform: skew(-135deg, -2deg) rotate(-9deg) scale(1.6);
+            }
+            50% {
+                transform: skew(-155deg, -2deg) rotate(-19deg) scale(1.6);
+            }
+            100% {
+                transform: skew(-135deg, -2deg) rotate(-9deg) scale(1.6);
+            }
+        }
+    }
+}
