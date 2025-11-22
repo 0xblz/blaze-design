@@ -86,12 +86,14 @@ class WindowManager extends DraggableBase {
                 e.preventDefault();
                 const url = link.getAttribute('href');
                 const title = link.textContent.trim();
-                this.createWindow(url, title);
+                const img = link.querySelector('img');
+                const imageSrc = img ? img.getAttribute('src') : '';
+                this.createWindow(url, title, imageSrc);
             });
         });
     }
 
-    createWindow(url, title) {
+    createWindow(url, title, image = '') {
         // Check if a window with this URL already exists
         const existingWindow = this.windows.find(w => w.url === url);
         if (existingWindow) {
@@ -112,7 +114,7 @@ class WindowManager extends DraggableBase {
         // Create window structure
         windowElement.innerHTML = `
             <div class="window-header">
-                <h3 class="window-title">${title}</h3>
+                <h3 class="window-title"><img src="${image}" alt="${title}">${title}</h3>
                 <div class="window-controls">
                     ${!isMobile ? `<button class="window-btn window-fullscreen" title="Toggle Fullscreen">
                         <i class="fa-solid fa-expand"></i>

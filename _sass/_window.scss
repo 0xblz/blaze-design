@@ -95,6 +95,12 @@
             cursor: default;
         }
     }
+
+    .window-title {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
 }
 
 .window-controls {
