@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Add click event listeners to each color button
     colorButtons.forEach((button, index) => {
         button.addEventListener('click', function() {
+            // Play click sound
+            if (window.AudioManager) {
+                window.AudioManager.playClick();
+            }
+            
             const colorSet = index + 1; // color-1, color-2, etc.
             applyTheme(colorSet);
             updateActiveButton(colorSet);
