@@ -51,6 +51,7 @@ header {
     padding-bottom: 1rem;
     padding-right: 2rem;
     z-index: 9;
+    animation: slide-down 0.5s ease-in-out; 
 
     nav {
         display: flex;
@@ -87,6 +88,7 @@ section {
     flex: 1;
     width: 100%;
     z-index: 9;
+    animation: slide-up 0.5s ease-in-out;
 
     @media (max-width: 1800px) {
         align-items: flex-end;
@@ -191,5 +193,32 @@ hr {
                 transform: skew(-135deg, -2deg) rotate(-9deg) scale(1.6);
             }
         }
+    }
+}
+
+
+// animations
+
+@keyframes slide-up {
+    0% {
+        transform: translateY(10%);
+        opacity: 0;
+        
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slide-down {
+    0% {
+        transform: translateY(-10%);
+        opacity: 0;
+        
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
