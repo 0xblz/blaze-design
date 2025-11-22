@@ -19,7 +19,7 @@
     --color-set-3-color-1: hsl(230, 100%, 65%);
     --color-set-3-color-2: hsl(160, 100%, 75%);
     --color-set-3-color-3: hsl(340, 100%, 65%);
-    --color-set-3-color-4: hsl(250, 45%, 20%);
+    --color-set-3-color-4: hsl(240, 45%, 15%);
 
 
     // Change these based on selection
@@ -223,11 +223,19 @@ hr {
     justify-content: center;
 
     .color {
-        width: 1rem;
-        height: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5rem;
+        height: 1.5rem;
         border-radius: 100%;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
+
+        i {
+            font-size: 12px;
+            line-height: 12px;
+        }
 
         &:hover {
             transform: scale(1.2);
