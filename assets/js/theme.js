@@ -3,12 +3,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const colorButtons = document.querySelectorAll('.colors .color');
     const root = document.documentElement;
     
-    // Load saved theme from localStorage
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme) {
-        applyTheme(savedTheme);
-        updateActiveButton(savedTheme);
-    }
+    // Load saved theme from localStorage, or default to theme 1
+    const savedTheme = localStorage.getItem('theme') || '1';
+    applyTheme(savedTheme);
+    updateActiveButton(savedTheme);
     
     // Add click event listeners to each color button
     colorButtons.forEach((button, index) => {
