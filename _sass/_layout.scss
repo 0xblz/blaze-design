@@ -231,7 +231,7 @@ hr {
 
         &:hover {
             transform: scale(1.2);
-            border-color: rgba(255, 255, 255, 0.5);
+            border: 2px solid white;
         }
 
         &.active {
