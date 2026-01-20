@@ -1,0 +1,24 @@
+/* ==========================================================================
+   Variables & Fonts
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+:root {
+  --bg: #fff;
+  --text: rgba(0, 0, 0, 0.7);
+  --text-secondary: black;
+  --link: #2b92ff;
+  --border: #f2f2f2;
+  --font: "Funnel Sans", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000;
+    --text: rgba(255, 255, 255, 0.7);
+    --text-secondary: white;
+    --link: #2b92ff;
+    --border: #222;
+  }
+}
