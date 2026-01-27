@@ -5,13 +5,13 @@
 Variables & Fonts
 ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&display=swap');
 
 @mixin light {
    --bg: #fff;
    --text: hsl(211, 40%, 38%);
    --soft: rgba(0, 0, 0, 0.1);
-   --text-secondary: black;
+   --color: hsl(129, 100%, 58%);
    --link: hsl(211, 100%, 58%);
    --border: hsl(211, 40%, 95%);
 }
@@ -20,14 +20,14 @@ Variables & Fonts
    --bg: #000;
    --text: hsl(211, 40%, 58%);
    --soft: rgba(255,255,255,0.1);
-   --text-secondary: white;
+   --color: hsl(129, 100%, 58%);
    --link: hsl(211, 100%, 58%);
    --border: hsl(211, 40%, 13%);
 }
 
 :root {
    @include light;
-   --font: "Google Sans", sans-serif;
+   --font: "DM Mono", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -79,8 +79,12 @@ main {
    > * {
       opacity: 0;
       transform: translateY(10px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      transition-delay: calc(var(--i, 0) * 0.05s);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition-delay: calc(0.5s + (var(--i, 0) * 0.25s));
+   }
+
+   > header {
+      transition-delay: 0s;
    }
 }
 
@@ -97,16 +101,112 @@ header {
    width: 100%;
 }
 
+.about {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   gap: 0.25rem;
+
+   span {
+      font-size: 0.75rem;
+      font-weight: 700;
+      position: relative;
+      padding-left: 1rem;
+      display: flex;
+      align-items: center;
+
+      &:before {
+         content: "";
+         position: absolute;
+         top: 50%;
+         left: 0;
+         transform: translateY(-50%);
+         width: 0.75rem;
+         height: 0.75rem;
+         border-radius: 50%;
+         background: var(--link);
+         animation: pulse 2s ease-in-out infinite;
+      }
+
+      i {
+         font-style: italic;
+         display: inline-block;
+         overflow: hidden;
+         white-space: nowrap;
+         width: 0;
+         animation: typewriter 1.2s steps(16) forwards;
+      }
+
+      em {
+         font-style: italic;
+         animation: dot 1.5s infinite;
+         animation-delay: 1.2s;
+         opacity: 0;
+
+         &:nth-child(2) { animation-delay: 1.5s; }
+         &:nth-child(3) { animation-delay: 1.8s; }
+      }
+
+      &.done {
+         &:before {
+            background: var(--color);
+            animation: none;
+         }
+      }
+   }
+}
+
+@keyframes typewriter {
+   to { width: 16ch; }
+}
+
+@keyframes pulse {
+   0%, 100% { opacity: 1; }
+   50% { opacity: 0.4; }
+}
+
+@keyframes dot {
+   0%, 100% { opacity: 0; }
+   30%, 70% { opacity: 1; }
+}
+
 h1 {
    font-size: 1.25rem;
    font-weight: 700;
-   color: var(--text-secondary);
+   position: relative;
+
+   &:before {
+      content: ">";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0.75rem;
+      height: 100%;
+      transform: translateX(-120%);
+      color: var(--color);
+   }
+
+   &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 0.75rem;
+      height: 100%;
+      background: var(--soft);
+      transform: translateX(100%);
+      animation: blink 1s step-end infinite;
+   }
+}
+
+@keyframes blink {
+   0%, 100% { opacity: 1; }
+   50% { opacity: 0; }
 }
 
 h2 {
    font-size: 1rem;
    font-weight: 700;
-   color: var(--text-secondary);
 }
 
 a {
@@ -120,6 +220,7 @@ a {
 
    &:hover {
       text-decoration: none;
+      color: var(--color);
 
       img {
          transform: scale(1.1) rotate(-5deg);
@@ -147,7 +248,7 @@ p img {
 hr {
    width: 100%;
    border: none;
-   border-top: 1px solid var(--border);
+   border-top: 2px solid var(--border);
    margin: 1.5rem 0;
 }
 

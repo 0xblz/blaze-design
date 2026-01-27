@@ -24,3 +24,12 @@ document.querySelectorAll('main > *').forEach((el, i) => {
 requestAnimationFrame(() => {
    document.body.classList.add('loaded');
 });
+
+// Change status text after 3 seconds
+setTimeout(() => {
+   const status = document.querySelector('.about span');
+   if (status) {
+      status.innerHTML = 'Bio added below&nbsp;<i class="fas fa-check"></i>';
+      status.classList.add('done');
+   }
+}, 4000);
