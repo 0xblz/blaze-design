@@ -39,6 +39,16 @@ Variables & Fonts
 :root[data-theme="dark"] {
    @include dark;
 }
+
+::selection {
+   background: var(--link);
+   color: var(--color);
+}
+
+::-webkit-selection {
+   background: var(--link);
+   color: var(--color);
+}
    
 /* ==========================================================================
 Base Styles
