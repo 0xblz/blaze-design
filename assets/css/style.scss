@@ -5,25 +5,39 @@
 Variables & Fonts
 ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
+
+@mixin light {
+   --bg: #fff;
+   --text: hsl(211, 40%, 38%);
+   --soft: rgba(0, 0, 0, 0.1);
+   --text-secondary: black;
+   --link: hsl(211, 100%, 58%);
+   --border: hsl(211, 40%, 95%);
+}
+
+@mixin dark {
+   --bg: #000;
+   --text: hsl(211, 40%, 58%);
+   --soft: rgba(255,255,255,0.1);
+   --text-secondary: white;
+   --link: hsl(211, 100%, 58%);
+   --border: hsl(211, 40%, 13%);
+}
 
 :root {
-   --bg: #fff;
-   --text: rgba(0, 0, 0, 0.7);
-   --text-secondary: black;
-   --link: #2b92ff;
-   --border: #f2f2f2;
-   --font: "Funnel Sans", sans-serif;
+   @include light;
+   --font: "Google Sans", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
-   :root {
-      --bg: #000;
-      --text: rgba(255, 255, 255, 0.7);
-      --text-secondary: white;
-      --link: #2b92ff;
-      --border: #222;
+   :root:not([data-theme="light"]) {
+      @include dark;
    }
+}
+
+:root[data-theme="dark"] {
+   @include dark;
 }
    
 /* ==========================================================================
@@ -61,6 +75,26 @@ main {
    @media (max-width: 800px) {
       padding: 1.5rem;
    }
+
+   > * {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      transition-delay: calc(var(--i, 0) * 0.05s);
+   }
+}
+
+body.loaded main > * {
+   opacity: 1;
+   transform: translateY(0);
+}
+
+header {
+   display: flex;
+   justify-content: space-between;
+   flex-wrap: wrap;
+   align-items: center;
+   width: 100%;
 }
 
 h1 {
@@ -80,8 +114,16 @@ a {
    text-decoration: underline;
    font-weight: 700;
 
+   img {
+      transition: transform 0.2s ease;
+   }
+
    &:hover {
       text-decoration: none;
+
+      img {
+         transform: scale(1.1) rotate(-5deg);
+      }
    }
 }
 
@@ -99,6 +141,7 @@ p img {
    border-radius: 0.5rem;
    margin-right: 4px;
    margin-bottom: 0.25rem;
+   border: 2px solid var(--soft);
 }
 
 hr {
@@ -110,4 +153,73 @@ hr {
 
 .avatar {
    border-radius: 999px;
+}
+
+/* Toggle Switch */
+.toggle {
+   position: relative;
+   display: inline-block;
+   width: 40px;
+   height: 24px;
+   cursor: pointer;
+
+   input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+   }
+
+   .slider {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 24px;
+      transition: background 0.2s;
+
+      // Knob
+      &::before {
+         content: "";
+         position: absolute;
+         width: 18px;
+         height: 18px;
+         left: 3px;
+         top: 3px;
+         background: var(--bg);
+         border-radius: 50%;
+         transition: transform 0.2s;
+         box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+         z-index: 2;
+      }
+
+      // Icons container
+      &::after {
+         font-family: "Font Awesome 6 Free";
+         font-weight: 900;
+         content: "\f185"; // sun
+         position: absolute;
+         top: 50%;
+         right: 5px;
+         transform: translateY(-50%);
+         font-size: 10px;
+         color: var(--text);
+         opacity: 0.5;
+         transition: opacity 0.2s;
+      }
+   }
+
+   input:checked + .slider {
+      background: var(--link);
+
+      &::before {
+         transform: translateX(16px);
+      }
+
+      &::after {
+         content: "\f186"; // moon
+         right: auto;
+         left: 6px;
+         color: white;
+         opacity: 0.7;
+      }
+   }
 }
