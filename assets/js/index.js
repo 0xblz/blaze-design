@@ -6,21 +6,23 @@ const saved = localStorage.getItem('theme');
 
 if (saved) {
    document.documentElement.dataset.theme = saved;
-   toggle.checked = saved === 'dark';
-} else {
+   if (toggle) toggle.checked = saved === 'dark';
+} else if (toggle) {
    toggle.checked = darkModeQuery.matches;
 }
 
-toggle.addEventListener('change', () => {
-   const theme = toggle.checked ? 'dark' : 'light';
-   document.documentElement.dataset.theme = theme;
-   localStorage.setItem('theme', theme);
-});
+if (toggle) {
+   toggle.addEventListener('change', () => {
+      const theme = toggle.checked ? 'dark' : 'light';
+      document.documentElement.dataset.theme = theme;
+      localStorage.setItem('theme', theme);
+   });
+}
 
 // Listen for system theme changes
 darkModeQuery.addEventListener('change', (e) => {
    // Only auto-switch if user hasn't set a manual preference
-   if (!localStorage.getItem('theme')) {
+   if (!localStorage.getItem('theme') && toggle) {
       toggle.checked = e.matches;
    }
 });
