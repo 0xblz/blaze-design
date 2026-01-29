@@ -1,20 +1,28 @@
 const toggle = document.getElementById('theme-toggle');
+const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
 // Check for saved preference, default to system preference
 const saved = localStorage.getItem('theme');
-const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
 if (saved) {
    document.documentElement.dataset.theme = saved;
    toggle.checked = saved === 'dark';
 } else {
-   toggle.checked = prefersDark;
+   toggle.checked = darkModeQuery.matches;
 }
 
 toggle.addEventListener('change', () => {
    const theme = toggle.checked ? 'dark' : 'light';
    document.documentElement.dataset.theme = theme;
    localStorage.setItem('theme', theme);
+});
+
+// Listen for system theme changes
+darkModeQuery.addEventListener('change', (e) => {
+   // Only auto-switch if user hasn't set a manual preference
+   if (!localStorage.getItem('theme')) {
+      toggle.checked = e.matches;
+   }
 });
 
 // Page load animation
