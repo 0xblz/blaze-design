@@ -239,11 +239,13 @@ a {
 }
 
 /* Inline Images */
-p a:has(img) {
+p a:has(img),
+.projects a:has(img) {
    white-space: nowrap;
 }
 
-p img {
+p img,
+.projects img {
    width: 1.5rem;
    height: 1.5rem;
    object-fit: cover;
@@ -253,6 +255,14 @@ p img {
    margin-right: 4px;
    margin-bottom: 0.25rem;
    border: 2px solid var(--soft);
+}
+
+/* Projects List */
+.projects {
+   list-style: none;
+   display: flex;
+   flex-direction: column;
+   gap: 0.5rem;
 }
 
 hr {
