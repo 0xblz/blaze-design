@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page.title | default: site.title }}</title>
+    <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+    <link rel="icon" type="image/jpg" href="{{ '/assets/images/avatar.jpg' | relative_url }}">
+    {% unless page.standalone %}
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+    {% endunless %}
+    {% if page.css %}
+    <link rel="stylesheet" href="{{ '/assets/css/' | append: page.css | append: '.css' | relative_url }}">
+    {% endif %}
+    {% if page.external_css %}
+    {% for css in page.external_css %}
+    <link rel="stylesheet" href="{{ css }}">
+    {% endfor %}
+    {% endif %}
+    <script src="https://kit.fontawesome.com/a95c2fa36e.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    {% if page.standalone %}
+    {{ content }}
+    {% else %}
+    <main>
+        {{ content }}
+    </main>
+    {% endif %}
+    {% include analytics.html %}
+
+    {% if page.external_js %}
+    {% for js in page.external_js %}
+    <script src="{{ js }}"></script>
+    {% endfor %}
+    {% endif %}
+
+    {% if page.js %}
+    <script src="{{ '/assets/js/' | append: page.js | append: '.js' | relative_url }}"></script>
+    {% endif %}
+</body>
+</html>
