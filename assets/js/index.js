@@ -287,15 +287,40 @@ setTimeout(() => {
       camera.updateProjectionMatrix();
    });
 
-   // ── Render loop ──
-   function animate() {
-      requestAnimationFrame(animate);
-      updateParticles(mouseX, mouseY);
-      geometry.attributes.position.needsUpdate = true;
-      geometry.attributes.alpha.needsUpdate = true;
-      geometry.attributes.size.needsUpdate = true;
-      geometry.attributes.colorMix.needsUpdate = true;
-      renderer.render(scene, camera);
+   // ── FX toggle ──
+   let fxEnabled = true;
+   let animId = null;
+   const fxToggle = document.getElementById('fx-toggle');
+
+   function startFx() {
+      if (animId) return;
+      canvas.style.display = '';
+      function animate() {
+         animId = requestAnimationFrame(animate);
+         updateParticles(mouseX, mouseY);
+         geometry.attributes.position.needsUpdate = true;
+         geometry.attributes.alpha.needsUpdate = true;
+         geometry.attributes.size.needsUpdate = true;
+         geometry.attributes.colorMix.needsUpdate = true;
+         renderer.render(scene, camera);
+      }
+      animate();
    }
-   animate();
+
+   function stopFx() {
+      if (animId) {
+         cancelAnimationFrame(animId);
+         animId = null;
+      }
+      canvas.style.display = 'none';
+   }
+
+   if (fxToggle) {
+      fxToggle.addEventListener('change', function () {
+         fxEnabled = fxToggle.checked;
+         fxEnabled ? startFx() : stopFx();
+      });
+   }
+
+   startFx();
 })();
