@@ -9,7 +9,10 @@
  *    - S-curved path with perspective widening
  *    - Mouse hover: repulsion + color shift
  *    - Click: local scatter / 5x rapid click: full stream burst
- *    - Theme-aware colors + FX toggle
+ *    - Random FA icons (star, rocket) with per-particle rotation
+ *    - Theme-aware colors, blending, and hover colors
+ *    - FX toggle to enable/disable animation
+ *    - Mobile-responsive spread and width
  *    - All tunables in CONFIG object
  */
 
@@ -91,6 +94,12 @@ setTimeout(() => {
       burstWindow:  1500,          // time window for rapid clicks (ms)
       burstForce:   [30, 20],      // explosion velocity [min, random range]
       burstResetDelay: 2000,       // ms before stream reforms
+      icons: [                      // FA icons to scatter in stream
+         { char: '\uf005', font: '900 48px "Font Awesome 6 Free"' },       // star (solid)
+         { char: '\uf135', font: '900 48px "Font Awesome 6 Free"' },        // rocket (solid)
+      ],
+      iconRatio:     0.06,         // fraction of particles that are icons (0-1)
+      iconSize:      3.0,          // icon size multiplier vs normal dots
    };
 
    // ── Theme colors ──
@@ -111,6 +120,32 @@ setTimeout(() => {
          ? new THREE.Color(CONFIG.colorHoverDark)
          : new THREE.Color(CONFIG.colorHoverLight);
    }
+
+   // ── Icon texture atlas ──
+   var iconCount = CONFIG.icons.length;
+   function createIconAtlas() {
+      var size = 64;
+      var c = document.createElement('canvas');
+      c.width = size * iconCount;
+      c.height = size;
+      var ctx = c.getContext('2d');
+      for (var j = 0; j < iconCount; j++) {
+         ctx.font = CONFIG.icons[j].font;
+         ctx.textAlign = 'center';
+         ctx.textBaseline = 'middle';
+         ctx.fillStyle = '#ffffff';
+         ctx.fillText(CONFIG.icons[j].char, size * j + size / 2, size / 2);
+      }
+      var tex = new THREE.CanvasTexture(c);
+      tex.needsUpdate = true;
+      return tex;
+   }
+   var iconTexture = createIconAtlas();
+   // Retry once FA fonts load
+   document.fonts.ready.then(function () {
+      iconTexture = createIconAtlas();
+      material.uniforms.uIconTexture.value = iconTexture;
+   });
 
    // ── Canvas & renderer ──
    const canvas = document.createElement('canvas');
@@ -157,6 +192,8 @@ setTimeout(() => {
    const alphas = new Float32Array(CONFIG.particles);
    const sizes = new Float32Array(CONFIG.particles);
    const colorMix = new Float32Array(CONFIG.particles);
+   const isIcon = new Float32Array(CONFIG.particles);
+   const rotations = new Float32Array(CONFIG.particles);
 
    function isMobile() { return W <= 768; }
 
@@ -175,6 +212,8 @@ setTimeout(() => {
          speed: CONFIG.speed[0] + Math.random() * CONFIG.speed[1],
          offset: gaussRandom() * getSpread(),
          width: getWidth(),
+         icon: Math.random() < CONFIG.iconRatio ? Math.floor(Math.random() * iconCount) + 1 : 0,
+         rotation: Math.random() * Math.PI * 2,
       };
    }
 
@@ -236,7 +275,10 @@ setTimeout(() => {
          alphas[i] = edgeFade * CONFIG.alpha;
 
          // Size: small at top, larger at bottom
-         sizes[i] = CONFIG.sizeRange[0] + p.t * CONFIG.sizeRange[1];
+         var s = CONFIG.sizeRange[0] + p.t * CONFIG.sizeRange[1];
+         isIcon[i] = p.icon > 0 ? p.icon : 0;
+         rotations[i] = p.rotation || 0;
+         sizes[i] = p.icon > 0 ? s * CONFIG.iconSize : s;
       }
    }
 
@@ -246,6 +288,8 @@ setTimeout(() => {
    geometry.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
    geometry.setAttribute('colorMix', new THREE.BufferAttribute(colorMix, 1));
+   geometry.setAttribute('isIcon', new THREE.BufferAttribute(isIcon, 1));
+   geometry.setAttribute('rotation', new THREE.BufferAttribute(rotations, 1));
 
    let particleColor = getParticleColor();
 
@@ -254,17 +298,25 @@ setTimeout(() => {
          uColor: { value: particleColor },
          uHoverColor: { value: getHoverColor() },
          uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+         uIconTexture: { value: iconTexture },
+         uIconCount: { value: iconCount },
       },
       vertexShader: `
          attribute float alpha;
          attribute float size;
          attribute float colorMix;
+         attribute float isIcon;
+         attribute float rotation;
          varying float vAlpha;
          varying float vColorMix;
+         varying float vIsIcon;
+         varying float vRotation;
          uniform float uPixelRatio;
          void main() {
             vAlpha = alpha;
             vColorMix = colorMix;
+            vIsIcon = isIcon;
+            vRotation = rotation;
             vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
             gl_PointSize = size * uPixelRatio;
             gl_Position = projectionMatrix * mvPosition;
@@ -273,14 +325,34 @@ setTimeout(() => {
       fragmentShader: `
          uniform vec3 uColor;
          uniform vec3 uHoverColor;
+         uniform sampler2D uIconTexture;
+         uniform float uIconCount;
          varying float vAlpha;
          varying float vColorMix;
+         varying float vIsIcon;
+         varying float vRotation;
          void main() {
-            float d = length(gl_PointCoord - vec2(0.5));
-            if (d > 0.5) discard;
-            float strength = 1.0 - smoothstep(0.0, 0.5, d);
             vec3 col = mix(uColor, uHoverColor, vColorMix);
-            gl_FragColor = vec4(col, vAlpha * strength);
+            // Rotate point coords around center
+            vec2 pc = gl_PointCoord - 0.5;
+            float cs = cos(vRotation);
+            float sn = sin(vRotation);
+            vec2 rpc = vec2(pc.x * cs - pc.y * sn, pc.x * sn + pc.y * cs) + 0.5;
+            if (vIsIcon > 0.5) {
+               float idx = vIsIcon - 1.0;
+               vec2 uv = vec2(
+                  (idx + rpc.x) / uIconCount,
+                  rpc.y
+               );
+               vec4 texel = texture2D(uIconTexture, uv);
+               if (texel.a < 0.1) discard;
+               gl_FragColor = vec4(col, vAlpha * texel.a);
+            } else {
+               float d = length(pc);
+               if (d > 0.5) discard;
+               float strength = 1.0 - smoothstep(0.0, 0.5, d);
+               gl_FragColor = vec4(col, vAlpha * strength);
+            }
          }
       `,
       transparent: true,
@@ -404,6 +476,8 @@ setTimeout(() => {
          geometry.attributes.alpha.needsUpdate = true;
          geometry.attributes.size.needsUpdate = true;
          geometry.attributes.colorMix.needsUpdate = true;
+         geometry.attributes.isIcon.needsUpdate = true;
+         geometry.attributes.rotation.needsUpdate = true;
          renderer.render(scene, camera);
       }
       animate();
