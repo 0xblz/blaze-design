@@ -34,6 +34,12 @@ if (toggle) {
       const theme = toggle.checked ? 'dark' : 'light';
       document.documentElement.dataset.theme = theme;
       localStorage.setItem('theme', theme);
+      // Turn off FX when switching to light
+      const fxEl = document.getElementById('fx-toggle');
+      if (theme === 'light' && fxEl && fxEl.checked) {
+         fxEl.checked = false;
+         fxEl.dispatchEvent(new Event('change'));
+      }
    });
 }
 
@@ -70,10 +76,10 @@ setTimeout(() => {
    const CONFIG = {
       particles:    800,           // total particle count
       width:        [300, 100],    // river width [base, random range]
-      mobileWidth:  [100, 150],    // river width on mobile (<= 768px)
+      mobileWidth:  [1600, 150],    // river width on mobile (<= 768px)
       speed:        [0.0003, 0.0004], // particle speed [base, random range]
-      spread:       0.3,           // lateral spread (gaussian multiplier)
-      mobileSpread: 2.4,           // lateral spread on mobile (<= 768px)
+      spread:       1.3,           // lateral spread (gaussian multiplier)
+      mobileSpread: 3.4,           // lateral spread on mobile (<= 768px)
       curve:        [0.18, 0.10],  // S-bend amplitudes [primary, secondary]
       widening:     [0.3, 1.4],    // perspective widening [start, quadratic scale]
       sizeRange:    [2.0, 4.0],    // dot size [min at top, added at bottom]
@@ -462,12 +468,15 @@ setTimeout(() => {
    });
 
    // ── FX toggle ──
-   let fxEnabled = true;
+   let fxEnabled = false;
    let animId = null;
    const fxToggle = document.getElementById('fx-toggle');
+   const themeToggle = document.getElementById('theme-toggle');
 
    function startFx() {
       if (animId) return;
+      fxEnabled = true;
+      if (fxToggle) fxToggle.checked = true;
       canvas.style.display = '';
       function animate() {
          animId = requestAnimationFrame(animate);
@@ -484,6 +493,8 @@ setTimeout(() => {
    }
 
    function stopFx() {
+      fxEnabled = false;
+      if (fxToggle) fxToggle.checked = false;
       if (animId) {
          cancelAnimationFrame(animId);
          animId = null;
@@ -493,10 +504,31 @@ setTimeout(() => {
 
    if (fxToggle) {
       fxToggle.addEventListener('change', function () {
-         fxEnabled = fxToggle.checked;
-         fxEnabled ? startFx() : stopFx();
+         if (fxToggle.checked) {
+            // Force dark mode when FX turns on
+            document.documentElement.dataset.theme = 'dark';
+            localStorage.setItem('theme', 'dark');
+            if (themeToggle) themeToggle.checked = true;
+            startFx();
+         } else {
+            stopFx();
+         }
       });
    }
 
-   startFx();
+   // Turn FX off when theme switches to light
+   var fxThemeObserver = new MutationObserver(function (mutations) {
+      for (var m of mutations) {
+         if (m.attributeName === 'data-theme') {
+            if (!isDarkMode() && fxEnabled) stopFx();
+            break;
+         }
+      }
+   });
+   fxThemeObserver.observe(document.documentElement, { attributes: true });
+
+   // Start FX only if already in dark mode
+   if (isDarkMode()) {
+      startFx();
+   }
 })();
