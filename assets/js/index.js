@@ -67,6 +67,9 @@ setTimeout(() => {
       colorHoverLight: 'hsl(211, 100%, 58%)',           // hover color in light mode
       hoverEaseIn:  0.15,          // how fast particles ease to hover color (0-1)
       hoverEaseOut: 0.04,          // how fast particles ease back (0-1)
+      clickRadius:  300,           // click scatter radius (px)
+      clickForce:   [25, 15],      // scatter velocity [min, random range]
+      clickFriction: 0.96,         // scatter velocity decay per frame (0-1)
    };
 
    // ── Theme colors ──
@@ -161,9 +164,17 @@ setTimeout(() => {
             p.t = 0;
          }
 
+         // Scatter decay
+         if (p.sx) {
+            p.sx *= CONFIG.clickFriction;
+            p.sy *= CONFIG.clickFriction;
+            if (Math.abs(p.sx) < 0.01) p.sx = 0;
+            if (Math.abs(p.sy) < 0.01) p.sy = 0;
+         }
+
          const pos = flowPosition(p.t, p.offset, p.width);
-         let px = pos.x;
-         let py = pos.y;
+         let px = pos.x + (p.sx || 0);
+         let py = pos.y + (p.sy || 0);
 
          // Mouse repulsion + hover color
          let hoverTarget = 0;
@@ -254,6 +265,25 @@ setTimeout(() => {
    document.addEventListener('mousemove', function (e) {
       mouseX = e.clientX;
       mouseY = e.clientY;
+   });
+
+   // ── Click scatter ──
+   document.addEventListener('click', function (e) {
+      const cx = e.clientX;
+      const cy = e.clientY;
+      for (let i = 0; i < CONFIG.particles; i++) {
+         const p = pData[i];
+         const pos = flowPosition(p.t, p.offset, p.width);
+         const dx = pos.x - cx;
+         const dy = pos.y - cy;
+         const dist = Math.sqrt(dx * dx + dy * dy);
+         if (dist < CONFIG.clickRadius && dist > 0) {
+            const strength = (1.0 - dist / CONFIG.clickRadius);
+            const vel = CONFIG.clickForce[0] + Math.random() * CONFIG.clickForce[1];
+            p.sx = (p.sx || 0) + (dx / dist) * vel * strength;
+            p.sy = (p.sy || 0) + (dy / dist) * vel * strength;
+         }
+      }
    });
 
    // ── Theme observer ──
