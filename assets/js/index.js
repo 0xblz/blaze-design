@@ -1,3 +1,18 @@
+/**
+ * index.js — Homepage scripts for blaze.design
+ *
+ * 1. Theme toggle (light/dark) with localStorage persistence
+ * 2. Page load entrance animations
+ * 3. Status text typewriter effect
+ * 4. Three.js particle stream background (IIFE at bottom)
+ *    - Diagonal flowing river of particles (top-right → bottom-left)
+ *    - S-curved path with perspective widening
+ *    - Mouse hover: repulsion + color shift
+ *    - Click: local scatter / 5x rapid click: full stream burst
+ *    - Theme-aware colors + FX toggle
+ *    - All tunables in CONFIG object
+ */
+
 const toggle = document.getElementById('theme-toggle');
 const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
 
