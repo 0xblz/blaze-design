@@ -67,8 +67,10 @@ setTimeout(() => {
    const CONFIG = {
       particles:    800,           // total particle count
       width:        [300, 100],    // river width [base, random range]
+      mobileWidth:  [100, 150],    // river width on mobile (<= 768px)
       speed:        [0.0003, 0.0004], // particle speed [base, random range]
       spread:       0.3,           // lateral spread (gaussian multiplier)
+      mobileSpread: 2.4,           // lateral spread on mobile (<= 768px)
       curve:        [0.18, 0.10],  // S-bend amplitudes [primary, secondary]
       widening:     [0.3, 1.4],    // perspective widening [start, quadratic scale]
       sizeRange:    [2.0, 4.0],    // dot size [min at top, added at bottom]
@@ -156,12 +158,23 @@ setTimeout(() => {
    const sizes = new Float32Array(CONFIG.particles);
    const colorMix = new Float32Array(CONFIG.particles);
 
+   function isMobile() { return W <= 768; }
+
+   function getSpread() {
+      return isMobile() ? CONFIG.mobileSpread : CONFIG.spread;
+   }
+
+   function getWidth() {
+      const w = isMobile() ? CONFIG.mobileWidth : CONFIG.width;
+      return w[0] + Math.random() * w[1];
+   }
+
    function initParticle() {
       return {
          t: Math.random(),
          speed: CONFIG.speed[0] + Math.random() * CONFIG.speed[1],
-         offset: gaussRandom() * CONFIG.spread,
-         width: CONFIG.width[0] + Math.random() * CONFIG.width[1],
+         offset: gaussRandom() * getSpread(),
+         width: getWidth(),
       };
    }
 
