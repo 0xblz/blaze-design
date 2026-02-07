@@ -11,7 +11,8 @@
  *    - Click: local scatter / 5x rapid click: full stream burst
  *    - Random FA icons (star, rocket) with per-particle rotation
  *    - Theme-aware colors, blending, and hover colors
- *    - FX toggle to enable/disable animation
+ *    - FX toggle to enable/disable animation (localStorage persistence)
+ *    - FX hidden in light mode, auto-restarts on dark if saved preference
  *    - Mobile-responsive spread and width
  *    - All tunables in CONFIG object
  */
@@ -34,12 +35,6 @@ if (toggle) {
       const theme = toggle.checked ? 'dark' : 'light';
       document.documentElement.dataset.theme = theme;
       localStorage.setItem('theme', theme);
-      // Turn off FX when switching to light
-      const fxEl = document.getElementById('fx-toggle');
-      if (theme === 'light' && fxEl && fxEl.checked) {
-         fxEl.checked = false;
-         fxEl.dispatchEvent(new Event('change'));
-      }
    });
 }
 
@@ -509,26 +504,30 @@ setTimeout(() => {
             document.documentElement.dataset.theme = 'dark';
             localStorage.setItem('theme', 'dark');
             if (themeToggle) themeToggle.checked = true;
+            localStorage.setItem('fx', 'on');
             startFx();
          } else {
+            localStorage.setItem('fx', 'off');
             stopFx();
          }
       });
    }
 
-   // Turn FX off when theme switches to light
+   // Sync FX with theme: stop on light, restart on dark
    var fxThemeObserver = new MutationObserver(function (mutations) {
       for (var m of mutations) {
          if (m.attributeName === 'data-theme') {
-            if (!isDarkMode() && fxEnabled) stopFx();
+            if (isDarkMode() && !fxEnabled && localStorage.getItem('fx') !== 'off') startFx();
+            else if (!isDarkMode() && fxEnabled) stopFx();
             break;
          }
       }
    });
    fxThemeObserver.observe(document.documentElement, { attributes: true });
 
-   // Start FX only if already in dark mode
-   if (isDarkMode()) {
+   // Start FX based on saved preference (default: on in dark mode)
+   const savedFx = localStorage.getItem('fx');
+   if (isDarkMode() && savedFx !== 'off') {
       startFx();
    }
 })();
