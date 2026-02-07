@@ -57,12 +57,16 @@ setTimeout(() => {
       curve:        [0.18, 0.10],  // S-bend amplitudes [primary, secondary]
       widening:     [0.3, 1.4],    // perspective widening [start, quadratic scale]
       sizeRange:    [2.0, 4.0],    // dot size [min at top, added at bottom]
-      alpha:        0.5,           // max particle opacity
+      alpha:        0.8,           // max particle opacity
       fadeEdge:     0.08,          // fade in/out zone at stream ends (0-1)
       mouseRadius:  420,           // cursor repulsion radius (px)
       mouseForce:   60,            // cursor repulsion strength
       colorDark:    'hsl(211, 60%, 55%)',  // particle color in dark mode
-      colorLight:   'hsl(211, 30%, 75%)',  // particle color in light mode
+      colorLight:   'hsl(211, 100%, 90%)',  // particle color in light mode
+      colorHoverDark:  'hsl(129, 100%, 58%)',           // hover color in dark mode
+      colorHoverLight: 'hsl(211, 100%, 58%)',           // hover color in light mode
+      hoverEaseIn:  0.15,          // how fast particles ease to hover color (0-1)
+      hoverEaseOut: 0.04,          // how fast particles ease back (0-1)
    };
 
    // ── Theme colors ──
@@ -76,6 +80,12 @@ setTimeout(() => {
       return isDarkMode()
          ? new THREE.Color(CONFIG.colorDark)
          : new THREE.Color(CONFIG.colorLight);
+   }
+
+   function getHoverColor() {
+      return isDarkMode()
+         ? new THREE.Color(CONFIG.colorHoverDark)
+         : new THREE.Color(CONFIG.colorHoverLight);
    }
 
    // ── Canvas & renderer ──
@@ -122,6 +132,7 @@ setTimeout(() => {
    const positions = new Float32Array(CONFIG.particles * 3);
    const alphas = new Float32Array(CONFIG.particles);
    const sizes = new Float32Array(CONFIG.particles);
+   const colorMix = new Float32Array(CONFIG.particles);
 
    function initParticle() {
       return {
@@ -154,7 +165,8 @@ setTimeout(() => {
          let px = pos.x;
          let py = pos.y;
 
-         // Mouse repulsion (visual only)
+         // Mouse repulsion + hover color
+         let hoverTarget = 0;
          if (mouseX >= 0 && mouseY >= 0) {
             const dx = px - mouseX;
             const dy = py - mouseY;
@@ -163,8 +175,14 @@ setTimeout(() => {
                const force = (1.0 - dist / CONFIG.mouseRadius) * CONFIG.mouseForce;
                px += (dx / dist) * force;
                py += (dy / dist) * force;
+               hoverTarget = 1.0 - dist / CONFIG.mouseRadius;
             }
          }
+         // Ease colorMix toward target
+         if (!p.colorMix) p.colorMix = 0;
+         const easeRate = hoverTarget > p.colorMix ? CONFIG.hoverEaseIn : CONFIG.hoverEaseOut;
+         p.colorMix += (hoverTarget - p.colorMix) * easeRate;
+         colorMix[i] = p.colorMix;
 
          positions[i * 3] = px;
          positions[i * 3 + 1] = py;
@@ -184,21 +202,26 @@ setTimeout(() => {
    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
    geometry.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+   geometry.setAttribute('colorMix', new THREE.BufferAttribute(colorMix, 1));
 
    let particleColor = getParticleColor();
 
    const material = new THREE.ShaderMaterial({
       uniforms: {
          uColor: { value: particleColor },
+         uHoverColor: { value: getHoverColor() },
          uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
       },
       vertexShader: `
          attribute float alpha;
          attribute float size;
+         attribute float colorMix;
          varying float vAlpha;
+         varying float vColorMix;
          uniform float uPixelRatio;
          void main() {
             vAlpha = alpha;
+            vColorMix = colorMix;
             vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
             gl_PointSize = size * uPixelRatio;
             gl_Position = projectionMatrix * mvPosition;
@@ -206,12 +229,15 @@ setTimeout(() => {
       `,
       fragmentShader: `
          uniform vec3 uColor;
+         uniform vec3 uHoverColor;
          varying float vAlpha;
+         varying float vColorMix;
          void main() {
             float d = length(gl_PointCoord - vec2(0.5));
             if (d > 0.5) discard;
             float strength = 1.0 - smoothstep(0.0, 0.5, d);
-            gl_FragColor = vec4(uColor, vAlpha * strength);
+            vec3 col = mix(uColor, uHoverColor, vColorMix);
+            gl_FragColor = vec4(col, vAlpha * strength);
          }
       `,
       transparent: true,
@@ -234,6 +260,7 @@ setTimeout(() => {
    function onThemeChange() {
       particleColor = getParticleColor();
       material.uniforms.uColor.value = particleColor;
+      material.uniforms.uHoverColor.value = getHoverColor();
       material.blending = isDarkMode() ? THREE.AdditiveBlending : THREE.NormalBlending;
       material.needsUpdate = true;
    }
@@ -267,6 +294,7 @@ setTimeout(() => {
       geometry.attributes.position.needsUpdate = true;
       geometry.attributes.alpha.needsUpdate = true;
       geometry.attributes.size.needsUpdate = true;
+      geometry.attributes.colorMix.needsUpdate = true;
       renderer.render(scene, camera);
    }
    animate();
