@@ -70,6 +70,10 @@ setTimeout(() => {
       clickRadius:  300,           // click scatter radius (px)
       clickForce:   [25, 15],      // scatter velocity [min, random range]
       clickFriction: 0.96,         // scatter velocity decay per frame (0-1)
+      burstClicks:  5,             // rapid clicks to break the stream
+      burstWindow:  1500,          // time window for rapid clicks (ms)
+      burstForce:   [30, 20],      // explosion velocity [min, random range]
+      burstResetDelay: 2000,       // ms before stream reforms
    };
 
    // ── Theme colors ──
@@ -268,7 +272,47 @@ setTimeout(() => {
    });
 
    // ── Click scatter ──
+   let clickTimes = [];
+   let isBurst = false;
+
+   function burstStream() {
+      isBurst = true;
+      const cx = W / 2;
+      const cy = H / 2;
+      for (let i = 0; i < CONFIG.particles; i++) {
+         const p = pData[i];
+         const pos = flowPosition(p.t, p.offset, p.width);
+         const angle = Math.atan2(pos.y - cy, pos.x - cx) + (Math.random() - 0.5) * 1.5;
+         const vel = CONFIG.burstForce[0] + Math.random() * CONFIG.burstForce[1];
+         p.sx = Math.cos(angle) * vel;
+         p.sy = Math.sin(angle) * vel;
+      }
+      setTimeout(function () {
+         for (let i = 0; i < CONFIG.particles; i++) {
+            Object.assign(pData[i], initParticle());
+            pData[i].sx = 0;
+            pData[i].sy = 0;
+            pData[i].colorMix = 0;
+         }
+         isBurst = false;
+      }, CONFIG.burstResetDelay);
+   }
+
    document.addEventListener('click', function (e) {
+      if (isBurst) return;
+
+      // Track rapid clicks
+      const now = Date.now();
+      clickTimes.push(now);
+      clickTimes = clickTimes.filter(function (t) { return now - t < CONFIG.burstWindow; });
+
+      if (clickTimes.length >= CONFIG.burstClicks) {
+         clickTimes = [];
+         burstStream();
+         return;
+      }
+
+      // Normal scatter
       const cx = e.clientX;
       const cy = e.clientY;
       for (let i = 0; i < CONFIG.particles; i++) {
