@@ -16,3 +16,6 @@ Thumbs.db
 # Local development
 .env
 .env.local
+
+# Claude
+.claude
