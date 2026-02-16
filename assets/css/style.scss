@@ -1,0 +1,412 @@
+---
+---
+
+/* ==========================================================================
+Variables & Fonts
+========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
+
+@mixin light {
+   --bg: #fff;
+   --text: hsl(211, 40%, 38%);
+   --soft: rgba(0, 0, 0, 0.1);
+   --color: hsl(129, 100%, 58%);
+   --link: hsl(211, 100%, 58%);
+   --border: hsl(211, 40%, 95%);
+}
+
+@mixin dark {
+   --bg: #000;
+   --text: hsl(211, 40%, 68%);
+   --soft: rgba(255,255,255,0.1);
+   --color: hsl(129, 100%, 58%);
+   --link: hsl(211, 100%, 58%);
+   --border: hsl(211, 40%, 13%);
+}
+
+:root {
+   @include light;
+   --font: "Geist Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+   :root:not([data-theme="light"]) {
+      @include dark;
+   }
+}
+
+:root[data-theme="dark"] {
+   @include dark;
+}
+
+::selection {
+   background: var(--link);
+   color: var(--color);
+}
+
+::-webkit-selection {
+   background: var(--link);
+   color: var(--color);
+}
+   
+/* ==========================================================================
+Base Styles
+========================================================================== */
+
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+   
+html {
+   background: var(--bg);
+}
+
+body {
+   font-family: var(--font);
+   font-size: 16px;
+   font-weight: 400;
+   line-height: 1.6em;
+   color: var(--text);
+   background: var(--bg);
+}
+
+#particle-canvas {
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   z-index: 0;
+   pointer-events: none;
+}
+
+main {
+   position: relative;
+   z-index: 1;
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   width: 100%;
+   max-width: 620px;
+   padding: 3rem;
+   gap: 0.75rem;
+   transition: backdrop-filter 0.3s ease, -webkit-backdrop-filter 0.3s ease;
+
+   @media (min-width: 769px) {
+      &:hover {
+         -webkit-backdrop-filter: blur(0.5rem);
+         backdrop-filter: blur(0.5rem);
+      }
+   }
+
+   @media (max-width: 800px) {
+      padding: 1.5rem;
+   }
+
+   > * {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition-delay: calc(2.7s + (var(--i, 0) * 0.25s));
+   }
+
+   > header {
+      transition-delay: 0s;
+   }
+}
+
+body.loaded main > * {
+   opacity: 1;
+   transform: translateY(0);
+}
+
+header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   width: 100%;
+   gap: 0.5rem;
+}
+
+.about {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   gap: 0.25rem;
+   min-width: 0;
+
+   span {
+      font-size: 0.75rem;
+      font-weight: 700;
+      position: relative;
+      padding-left: 1rem;
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+
+      &:before {
+         content: "";
+         position: absolute;
+         top: 50%;
+         left: 0;
+         transform: translateY(-50%);
+         width: 0.5rem;
+         height: 0.5rem;
+         border-radius: 50%;
+         background: var(--link);
+         animation: pulse 2s ease-in-out infinite;
+      }
+
+      i {
+         font-style: italic;
+         display: inline-block;
+         overflow: hidden;
+         white-space: nowrap;
+         width: 0;
+         animation: typewriter 1.2s steps(16) forwards;
+      }
+
+      em {
+         font-style: italic;
+         animation: dot 1.5s infinite;
+         animation-delay: 1.2s;
+         opacity: 0;
+
+         &:nth-child(2) { animation-delay: 1.5s; }
+         &:nth-child(3) { animation-delay: 1.8s; }
+      }
+
+      &.done {
+         &:before {
+            background: var(--color);
+            animation: none;
+         }
+      }
+   }
+}
+
+@keyframes typewriter {
+   to { width: 16ch; }
+}
+
+@keyframes pulse {
+   0%, 100% { opacity: 1; }
+   50% { opacity: 0.4; }
+}
+
+@keyframes dot {
+   0%, 100% { opacity: 0; }
+   30%, 70% { opacity: 1; }
+}
+
+h1 {
+   font-size: 1.25rem;
+   font-weight: 700;
+   position: relative;
+   display: inline-block;
+
+   &:before {
+      content: ">";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0.75rem;
+      height: 100%;
+      transform: translateX(-120%);
+      color: var(--color);
+   }
+
+   &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 0.75rem;
+      height: 100%;
+      background: var(--soft);
+      transform: translateX(100%);
+      animation: blink 1s step-end infinite;
+   }
+}
+
+@keyframes blink {
+   0%, 100% { opacity: 1; }
+   50% { opacity: 0; }
+}
+
+h2 {
+   font-size: 1rem;
+   font-weight: 700;
+}
+
+.small {
+   font-weight: 700;
+   font-size: 13px;
+   color: var(--link);
+}
+
+a {
+   color: var(--link);
+   text-decoration: underline;
+   font-weight: 700;
+
+   img {
+      transition: transform 0.2s ease;
+   }
+
+   &:hover {
+      text-decoration: none;
+      color: var(--color);
+
+      img {
+         transform: scale(1.1) rotate(-5deg);
+      }
+   }
+}
+
+/* Inline Images */
+p a:has(img),
+.projects a:has(img) {
+   white-space: nowrap;
+}
+
+p img,
+.projects img {
+   width: 1.5rem;
+   height: 1.5rem;
+   object-fit: cover;
+   display: inline-block;
+   vertical-align: middle;
+   border-radius: 0.5rem;
+   margin-right: 4px;
+   margin-bottom: 0.25rem;
+   border: 2px solid var(--soft);
+}
+
+/* Projects List */
+.projects {
+   list-style: none;
+   display: flex;
+   flex-direction: column;
+   gap: 0.5rem;
+}
+
+hr {
+   width: 100%;
+   border: none;
+   border-top: 2px solid var(--border);
+   margin: 1.5rem 0;
+}
+
+.avatar {
+   border-radius: 999px;
+}
+
+.toggles {
+   display: flex;
+   gap: 0.5rem;
+   align-items: center;
+   flex-shrink: 0;
+}
+
+/* Toggle Switch */
+.toggle {
+   position: relative;
+   display: inline-block;
+   width: 40px;
+   height: 24px;
+   cursor: pointer;
+
+   input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+   }
+
+   .slider {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 24px;
+      transition: background 0.2s;
+
+      // Knob
+      &::before {
+         content: "";
+         position: absolute;
+         width: 18px;
+         height: 18px;
+         left: 3px;
+         top: 3px;
+         background: var(--bg);
+         border-radius: 50%;
+         transition: transform 0.2s;
+         box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+         z-index: 2;
+      }
+
+      // Icons container
+      &::after {
+         font-family: "Font Awesome 6 Free";
+         font-weight: 900;
+         content: "\f185"; // sun
+         position: absolute;
+         top: 50%;
+         right: 5px;
+         transform: translateY(-50%);
+         font-size: 10px;
+         color: var(--text);
+         opacity: 0.5;
+         transition: opacity 0.2s;
+      }
+   }
+
+   input:checked + .slider {
+      background: var(--link);
+
+      &::before {
+         transform: translateX(16px);
+      }
+
+      &::after {
+         content: "\f186"; // moon
+         right: auto;
+         left: 6px;
+         color: white;
+         opacity: 0.7;
+      }
+   }
+}
+
+// Hide FX toggle in light mode (no reason to show it)
+label[for="fx-toggle"] {
+   display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+   :root:not([data-theme="light"]) label[for="fx-toggle"] {
+      display: inline-block;
+   }
+}
+
+:root[data-theme="dark"] label[for="fx-toggle"] {
+   display: inline-block;
+}
+
+#fx-toggle {
+   & + .slider::after {
+      content: "\f04c"; // pause
+   }
+
+   &:checked + .slider {
+      background: var(--color);
+
+      &::after {
+         content: "\f04b"; // play
+         color: #000;
+      }
+   }
+}
