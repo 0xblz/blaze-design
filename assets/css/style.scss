@@ -292,6 +292,22 @@ p img,
    display: flex;
    flex-direction: column;
    gap: 0.5rem;
+   li {
+      position: relative;
+      padding-left: 1rem;
+
+      &:before {
+         content: "";
+         position: absolute;
+         left: 0;
+         top: 0;
+         width: 0.5rem;
+         height: 0.75em;
+         border-left: 2px solid var(--border);
+         border-bottom: 2px solid var(--border);
+         border-bottom-left-radius: 0.25rem;
+      }
+   }
 }
 
 hr {
