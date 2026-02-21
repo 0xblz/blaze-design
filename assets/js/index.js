@@ -64,16 +64,43 @@ document.querySelectorAll('.image-set').forEach(set => {
 });
 
 // Gallery image blur-up entrance (after parent fades in)
+function revealImageSet(set) {
+   set.querySelectorAll('img').forEach((img, i) => {
+      const reveal = () => setTimeout(() => img.classList.add('img-loaded'), i * 80);
+      if (img.complete) reveal();
+      else img.addEventListener('load', reveal);
+   });
+}
+
 document.querySelectorAll('.image-set').forEach(set => {
+   let revealed = false;
+
+   function tryReveal() {
+      if (revealed) return;
+      revealed = true;
+      revealImageSet(set);
+   }
+
+   // Primary: reveal after parent's CSS transition finishes
    set.addEventListener('transitionend', (e) => {
       if (e.propertyName !== 'opacity') return;
-      set.querySelectorAll('img').forEach((img, i) => {
-         const reveal = () => setTimeout(() => img.classList.add('img-loaded'), i * 80);
-         if (img.complete) reveal();
-         else img.addEventListener('load', reveal);
-      });
+      tryReveal();
    }, { once: true });
+
+   // Fallback: calculate delay from --i to match CSS timing
+   const i = parseFloat(set.style.getPropertyValue('--i') || 0);
+   setTimeout(tryReveal, 2700 + (i * 250) + 700);
 });
+
+// Safety net: reveal everything on first interaction
+const revealAll = () => {
+   document.querySelectorAll('.image-set img:not(.img-loaded)').forEach(img => {
+      img.classList.add('img-loaded');
+   });
+};
+['pointerdown', 'keydown', 'scroll'].forEach(evt =>
+   window.addEventListener(evt, revealAll, { once: true, passive: true })
+);
 
 // Preload sounds
 const successSfx = new Audio('/assets/audio/success.mp3');
