@@ -490,4 +490,47 @@ Lightbox
          transform: scale(1);
       }
    }
+
+   .lightbox-prev,
+   .lightbox-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 1rem;
+      transition: color 0.2s ease;
+
+      &:hover {
+         color: rgba(255, 255, 255, 0.9);
+      }
+
+      @media (max-width: 800px) {
+         display: none;
+      }
+   }
+
+   .lightbox-prev { left: 1rem; }
+   .lightbox-next { right: 1rem; }
+
+   img.slide-next {
+      animation: slideNext 0.2s ease;
+   }
+
+   img.slide-prev {
+      animation: slidePrev 0.2s ease;
+   }
+}
+
+@keyframes slideNext {
+   from { opacity: 0; transform: translateX(2rem) scale(1); }
+   to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes slidePrev {
+   from { opacity: 0; transform: translateX(-2rem) scale(1); }
+   to   { opacity: 1; transform: translateX(0) scale(1); }
 }

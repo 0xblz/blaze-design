@@ -102,12 +102,25 @@ if (aboutH1) {
 const lightbox = document.createElement('div');
 lightbox.className = 'lightbox';
 const lightboxImg = document.createElement('img');
+const lightboxPrev = document.createElement('button');
+lightboxPrev.className = 'lightbox-prev';
+lightboxPrev.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+const lightboxNext = document.createElement('button');
+lightboxNext.className = 'lightbox-next';
+lightboxNext.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+lightbox.appendChild(lightboxPrev);
 lightbox.appendChild(lightboxImg);
+lightbox.appendChild(lightboxNext);
 document.body.appendChild(lightbox);
 
-function openLightbox(src, alt) {
-   lightboxImg.src = src;
-   lightboxImg.alt = alt || '';
+const allImages = Array.from(document.querySelectorAll('.image-set img'));
+let currentIndex = -1;
+
+function openLightbox(index) {
+   currentIndex = index;
+   const img = allImages[index];
+   lightboxImg.src = img.src;
+   lightboxImg.alt = img.alt || '';
    lightbox.classList.add('open');
 }
 
@@ -115,15 +128,53 @@ function closeLightbox() {
    lightbox.classList.remove('open');
 }
 
+function animateImage(cls) {
+   lightboxImg.classList.remove('slide-next', 'slide-prev');
+   void lightboxImg.offsetWidth; // force reflow
+   lightboxImg.classList.add(cls);
+}
+
+function showNext() {
+   if (currentIndex < allImages.length - 1) {
+      animateImage('slide-next');
+      openLightbox(currentIndex + 1);
+   }
+}
+
+function showPrev() {
+   if (currentIndex > 0) {
+      animateImage('slide-prev');
+      openLightbox(currentIndex - 1);
+   }
+}
+
 lightbox.addEventListener('click', closeLightbox);
+lightboxPrev.addEventListener('click', (e) => { e.stopPropagation(); showPrev(); });
+lightboxNext.addEventListener('click', (e) => { e.stopPropagation(); showNext(); });
+
 document.addEventListener('keydown', (e) => {
+   if (!lightbox.classList.contains('open')) return;
    if (e.key === 'Escape') closeLightbox();
+   if (e.key === 'ArrowRight') showNext();
+   if (e.key === 'ArrowLeft') showPrev();
 });
 
-document.querySelectorAll('.image-set img').forEach(img => {
+// Swipe support
+let touchStartX = 0;
+lightbox.addEventListener('touchstart', (e) => {
+   touchStartX = e.touches[0].clientX;
+}, { passive: true });
+lightbox.addEventListener('touchend', (e) => {
+   const delta = e.changedTouches[0].clientX - touchStartX;
+   if (Math.abs(delta) < 40) { closeLightbox(); return; }
+   if (delta < 0) showNext();
+   else showPrev();
+});
+
+allImages.forEach((img, i) => {
    img.addEventListener('click', (e) => {
       e.stopPropagation();
-      openLightbox(img.src, img.alt);
+      openLightbox(i);
    });
 });
 
