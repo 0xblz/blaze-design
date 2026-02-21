@@ -214,7 +214,11 @@ lightbox.addEventListener('touchstart', (e) => {
 }, { passive: true });
 lightbox.addEventListener('touchend', (e) => {
    const delta = e.changedTouches[0].clientX - touchStartX;
-   if (Math.abs(delta) < 40) { closeLightbox(); return; }
+   if (Math.abs(delta) < 40) {
+      e.preventDefault(); // suppress ghost click on elements below
+      closeLightbox();
+      return;
+   }
    if (delta < 0) showNext();
    else showPrev();
 });
