@@ -56,6 +56,13 @@ requestAnimationFrame(() => {
    document.body.classList.add('loaded');
 });
 
+// Randomize image order in each .image-set
+document.querySelectorAll('.image-set').forEach(set => {
+   const imgs = Array.from(set.children);
+   imgs.sort(() => Math.random() - 0.5);
+   imgs.forEach(img => set.appendChild(img));
+});
+
 // Gallery image blur-up entrance (after parent fades in)
 document.querySelectorAll('.image-set').forEach(set => {
    set.addEventListener('transitionend', (e) => {

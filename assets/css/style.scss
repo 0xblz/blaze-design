@@ -434,6 +434,10 @@ Image Set (Thumbnails)
 .image-set {
    display: grid;
    grid-template-columns: repeat(3, 1fr);
+
+   &.smaller {
+      grid-template-columns: repeat(5, 1fr);
+   }
    gap: 0.5rem;
    width: 100%;
 
