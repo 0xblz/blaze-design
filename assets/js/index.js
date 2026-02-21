@@ -122,10 +122,12 @@ function openLightbox(index) {
    lightboxImg.src = img.src;
    lightboxImg.alt = img.alt || '';
    lightbox.classList.add('open');
+   document.body.style.overflow = 'hidden';
 }
 
 function closeLightbox() {
    lightbox.classList.remove('open');
+   document.body.style.overflow = '';
 }
 
 function animateImage(cls) {
