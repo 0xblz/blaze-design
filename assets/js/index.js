@@ -56,6 +56,18 @@ requestAnimationFrame(() => {
    document.body.classList.add('loaded');
 });
 
+// Gallery image blur-up entrance (after parent fades in)
+document.querySelectorAll('.image-set').forEach(set => {
+   set.addEventListener('transitionend', (e) => {
+      if (e.propertyName !== 'opacity') return;
+      set.querySelectorAll('img').forEach((img, i) => {
+         const reveal = () => setTimeout(() => img.classList.add('img-loaded'), i * 80);
+         if (img.complete) reveal();
+         else img.addEventListener('load', reveal);
+      });
+   }, { once: true });
+});
+
 // Preload sounds
 const successSfx = new Audio('/assets/audio/success.mp3');
 successSfx.volume = 0.4;
