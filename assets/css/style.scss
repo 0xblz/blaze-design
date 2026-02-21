@@ -426,3 +426,68 @@ label[for="fx-toggle"] {
       }
    }
 }
+
+/* ==========================================================================
+Image Set (Thumbnails)
+========================================================================== */
+
+.image-set {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   gap: 0.5rem;
+   width: 100%;
+
+
+   img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      border: 2px solid var(--soft);
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+
+      &:hover {
+         transform: scale(1.04);
+         border-color: var(--link);
+      }
+   }
+}
+
+/* ==========================================================================
+Lightbox
+========================================================================== */
+
+.lightbox {
+   position: fixed;
+   inset: 0;
+   z-index: 1000;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   background: rgba(0, 0, 0, 0.88);
+   opacity: 0;
+   pointer-events: none;
+   transition: opacity 0.25s ease;
+   cursor: pointer;
+
+   img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 0.5rem;
+      object-fit: contain;
+      pointer-events: none;
+      box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.6);
+      transform: scale(0.96);
+      transition: transform 0.25s ease;
+   }
+
+   &.open {
+      opacity: 1;
+      pointer-events: all;
+
+      img {
+         transform: scale(1);
+      }
+   }
+}

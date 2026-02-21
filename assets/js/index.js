@@ -98,6 +98,35 @@ if (aboutH1) {
    setTimeout(typeAbout, 400);
 }
 
+// ── Lightbox ──
+const lightbox = document.createElement('div');
+lightbox.className = 'lightbox';
+const lightboxImg = document.createElement('img');
+lightbox.appendChild(lightboxImg);
+document.body.appendChild(lightbox);
+
+function openLightbox(src, alt) {
+   lightboxImg.src = src;
+   lightboxImg.alt = alt || '';
+   lightbox.classList.add('open');
+}
+
+function closeLightbox() {
+   lightbox.classList.remove('open');
+}
+
+lightbox.addEventListener('click', closeLightbox);
+document.addEventListener('keydown', (e) => {
+   if (e.key === 'Escape') closeLightbox();
+});
+
+document.querySelectorAll('.image-set img').forEach(img => {
+   img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLightbox(img.src, img.alt);
+   });
+});
+
 // ── Particle Stream Background ──
 (function () {
    if (typeof THREE === 'undefined') return;
