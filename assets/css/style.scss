@@ -414,14 +414,14 @@ label[for="fx-toggle"] {
 
 #fx-toggle {
    & + .slider::after {
-      content: "\f04c"; // pause
+      content: "\f005"; // star
    }
 
    &:checked + .slider {
       background: var(--color);
 
       &::after {
-         content: "\f04b"; // play
+         content: "\f04c"; // pause
          color: #000;
       }
    }

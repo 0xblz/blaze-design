@@ -623,8 +623,13 @@ allImages.forEach((img, i) => {
 
    if (fxToggle) {
       fxToggle.addEventListener('change', function () {
-         fxSfx.currentTime = 0;
-         fxSfx.play();
+         if (fxToggle.checked) {
+            fxSfx.currentTime = 0;
+            fxSfx.play();
+         } else {
+            toggleSfx.currentTime = 0;
+            toggleSfx.play();
+         }
          if (fxToggle.checked) {
             // Force dark mode when FX turns on
             document.documentElement.dataset.theme = 'dark';
@@ -643,7 +648,7 @@ allImages.forEach((img, i) => {
    var fxThemeObserver = new MutationObserver(function (mutations) {
       for (var m of mutations) {
          if (m.attributeName === 'data-theme') {
-            if (isDarkMode() && !fxEnabled && localStorage.getItem('fx') !== 'off') startFx();
+            if (isDarkMode() && !fxEnabled && localStorage.getItem('fx') === 'on') startFx();
             else if (!isDarkMode() && fxEnabled) stopFx();
             break;
          }
@@ -653,7 +658,7 @@ allImages.forEach((img, i) => {
 
    // Start FX based on saved preference (default: on in dark mode)
    const savedFx = localStorage.getItem('fx');
-   if (isDarkMode() && savedFx !== 'off') {
+   if (isDarkMode() && savedFx === 'on') {
       startFx();
    }
 })();
