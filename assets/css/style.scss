@@ -73,6 +73,11 @@ body {
    background: var(--bg);
 }
 
+p, li {
+   font-size: 15px;
+   line-height: 1.5em;
+}
+
 #particle-canvas {
    position: fixed;
    top: 0;
