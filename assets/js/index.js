@@ -230,6 +230,84 @@ allImages.forEach((img, i) => {
    });
 });
 
+// ── Link Preview on Hover ──
+(function () {
+   const preview = document.createElement('div');
+   preview.className = 'link-preview';
+   preview.innerHTML = '<div class="link-preview-spinner"><i class="fa fa-spinner fa-spin"></i></div><img>';
+   document.body.appendChild(preview);
+
+   const previewImg = preview.querySelector('img');
+   const spinner = preview.querySelector('.link-preview-spinner');
+   let hoverTimeout = null;
+   let currentLink = null;
+
+   function positionPreview(link) {
+      const rect = link.getBoundingClientRect();
+      let top = rect.bottom + 8;
+      let left = rect.left;
+
+      // Keep within viewport
+      if (left + 280 > window.innerWidth) left = window.innerWidth - 290;
+      if (left < 10) left = 10;
+      if (top + 200 > window.innerHeight) top = rect.top - 200;
+
+      preview.style.top = top + 'px';
+      preview.style.left = left + 'px';
+   }
+
+   function showPreview(link) {
+      const url = link.href;
+      if (!url) return;
+
+      currentLink = link;
+      spinner.classList.remove('hidden');
+      previewImg.style.opacity = '0';
+      previewImg.src = '';
+      positionPreview(link);
+      preview.classList.add('visible');
+
+      previewImg.onload = function () {
+         spinner.classList.add('hidden');
+         previewImg.style.opacity = '1';
+      };
+      previewImg.onerror = function () {
+         spinner.classList.add('hidden');
+      };
+      previewImg.src = screenshotUrl(url);
+   }
+
+   function hidePreview() {
+      clearTimeout(hoverTimeout);
+      preview.classList.remove('visible');
+      currentLink = null;
+   }
+
+   function screenshotUrl(url) {
+      return 'https://api.microlink.io/?url=' + encodeURIComponent(url) + '&screenshot=true&meta=false&embed=screenshot.url';
+   }
+
+   // Preload all screenshots in background so they're cached on hover
+   // Skip on mobile — no real hover, previews just flash before navigation
+   if (window.matchMedia('(hover: none)').matches) return;
+
+   var links = document.querySelectorAll('.projects a[href^="http"]');
+   links.forEach(function (link) {
+      var img = new Image();
+      img.src = screenshotUrl(link.href);
+   });
+
+   links.forEach(function (link) {
+
+      link.addEventListener('mouseenter', function () {
+         hoverTimeout = setTimeout(function () { showPreview(link); }, 300);
+      });
+      link.addEventListener('mouseleave', function () {
+         hidePreview();
+      });
+   });
+})();
+
 // ── Particle Stream Background ──
 (function () {
    if (typeof THREE === 'undefined') return;
