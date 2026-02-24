@@ -257,12 +257,11 @@ h2 {
 .small {
    font-weight: 700;
    font-size: 13px;
-   color: var(--link);
 }
 
 a {
    color: var(--link);
-   text-decoration: underline;
+   text-decoration: none;
    font-weight: 700;
 
    img {
@@ -270,7 +269,7 @@ a {
    }
 
    &:hover {
-      text-decoration: none;
+      text-decoration: underline;
       color: var(--color);
 
       img {
