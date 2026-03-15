@@ -235,6 +235,46 @@ document.addEventListener('keydown', (e) => {
    if (e.key === 'Escape' && contactModal.classList.contains('open')) closeContactModal();
 });
 
+// ── Video Modal ──
+const videoModal = document.createElement('div');
+videoModal.className = 'video-modal';
+videoModal.innerHTML = '<div class="video-modal-content"><button class="modal-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button><div class="video-modal-spinner"><i class="fa fa-spinner fa-spin"></i></div><video controls playsinline></video></div>';
+document.body.appendChild(videoModal);
+
+const videoEl = videoModal.querySelector('video');
+const videoSpinner = videoModal.querySelector('.video-modal-spinner');
+
+videoEl.addEventListener('canplay', () => {
+   videoSpinner.classList.add('hidden');
+});
+
+function closeVideoModal() {
+   videoModal.classList.remove('open');
+   document.body.style.overflow = '';
+   videoEl.pause();
+   videoEl.src = '';
+   videoSpinner.classList.remove('hidden');
+}
+
+document.querySelectorAll('.video-demo-link').forEach(link => {
+   link.addEventListener('click', (e) => {
+      e.preventDefault();
+      videoEl.src = link.dataset.video;
+      videoModal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      videoEl.play();
+   });
+});
+
+videoModal.querySelector('.modal-close').addEventListener('click', closeVideoModal);
+videoModal.addEventListener('click', (e) => {
+   if (e.target === videoModal) closeVideoModal();
+});
+
+document.addEventListener('keydown', (e) => {
+   if (e.key === 'Escape' && videoModal.classList.contains('open')) closeVideoModal();
+});
+
 // ── Link Preview on Hover ──
 (function () {
    const preview = document.createElement('div');
