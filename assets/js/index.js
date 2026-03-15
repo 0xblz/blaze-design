@@ -256,14 +256,14 @@ function closeVideoModal() {
    videoSpinner.classList.remove('hidden');
 }
 
-document.querySelectorAll('.video-demo-link').forEach(link => {
-   link.addEventListener('click', (e) => {
-      e.preventDefault();
-      videoEl.src = link.dataset.video;
-      videoModal.classList.add('open');
-      document.body.style.overflow = 'hidden';
-      videoEl.play().catch(() => {});
-   });
+document.addEventListener('click', (e) => {
+   const link = e.target.closest('.video-demo-link');
+   if (!link) return;
+   e.preventDefault();
+   videoEl.src = link.dataset.video;
+   videoModal.classList.add('open');
+   document.body.style.overflow = 'hidden';
+   videoEl.play().catch(() => {});
 });
 
 videoModal.querySelector('.modal-close').addEventListener('click', closeVideoModal);
