@@ -262,7 +262,7 @@ document.querySelectorAll('.video-demo-link').forEach(link => {
       videoEl.src = link.dataset.video;
       videoModal.classList.add('open');
       document.body.style.overflow = 'hidden';
-      videoEl.play();
+      videoEl.play().catch(() => {});
    });
 });
 
