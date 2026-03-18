@@ -202,39 +202,6 @@ allImages.forEach((img, i) => {
    });
 });
 
-// ── Contact Modal ──
-const contactModal = document.createElement('div');
-contactModal.className = 'contact-modal';
-const contactFormUrl = 'https://forms.gle/qe6LpkJzjoivLznq6';
-contactModal.innerHTML = '<div class="contact-modal-content"><button class="modal-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button><iframe frameborder="0"></iframe></div>';
-document.body.appendChild(contactModal);
-
-const contactIframe = contactModal.querySelector('iframe');
-
-function closeContactModal() {
-   contactModal.classList.remove('open');
-   document.body.style.overflow = '';
-   contactIframe.src = '';
-}
-
-const contactBtn = document.getElementById('contact-btn');
-if (contactBtn) {
-   contactBtn.addEventListener('click', () => {
-      contactIframe.src = contactFormUrl;
-      contactModal.classList.add('open');
-      document.body.style.overflow = 'hidden';
-   });
-}
-
-contactModal.querySelector('.modal-close').addEventListener('click', closeContactModal);
-contactModal.addEventListener('click', (e) => {
-   if (e.target === contactModal) closeContactModal();
-});
-
-document.addEventListener('keydown', (e) => {
-   if (e.key === 'Escape' && contactModal.classList.contains('open')) closeContactModal();
-});
-
 // ── Link Preview on Hover ──
 (function () {
    const preview = document.createElement('div');
