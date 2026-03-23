@@ -1,0 +1,22 @@
+# Blaze Pollard
+
+> Product Designer & Creative Technologist
+
+## About
+
+Blaze Pollard is a product designer and creative technologist focused on product design, browser-based 3D experiments, and spatial data tools.
+
+## Links
+
+- Website: https://blaze.design
+- LinkedIn: https://www.linkedin.com/in/blazepollard/
+- X: https://x.com/0xblz
+
+## Projects
+
+- UNO (https://world.org/ecosystem/app_a4f7f3e62c1de0b9490a5260cb390b56) — Designed for PartyDAO, 2026. The #1 wallet on World with 4M+ users.
+- Wind Vector (https://wind-vector.blaze.design/) — Creator, 2026. Real-time 3D wind patterns with live forecast data, flight levels, and storm simulations.
+- How's the Roads? (https://apps.apple.com/us/app/hows-the-roads/id6742173400) — Creator, 2025. Live traffic cameras, road conditions, and weather for iOS.
+- Earth Data (https://earthdatafeed.com/) — Creator, 2025. Live weather, air quality, UV, tides, moon phases, solar weather, quakes, and aurora forecasts.
+- 3D Viewer (https://3d.blaze.design/) — Creator, 2025. Browser-based 3D model viewer.
+- Flight Dashboard (https://exploration.blaze.design/dashboard/) — Creator, 2025. Interactive flight instrument experiment with realistic gauges and dials.
