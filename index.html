@@ -1,111 +1,36 @@
 ---
 layout: default
-title: "Blaze Pollard - Product Designer & Creative Technologist"
-description: "Designer building scalable systems and interactive experiences."
+title: "Blaze Pollard"
+description: "Product Designer & Creative Technologist"
 permalink: /
-external_js:
-  - https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js
-js: index
+js: gallery
 ---
 
-<header>
-    <div class="header-links">
-        <a href="https://x.com/0xblz" target="_blank" class="contact-btn" aria-label="X">
-            <i class="fa-brands fa-x-twitter"></i>
-        </a>
-        <a href="https://www.linkedin.com/in/blazepollard/" target="_blank" class="contact-btn" aria-label="LinkedIn">
-            <i class="fa-brands fa-linkedin"></i>
-        </a>
-    </div>
-    <div class="toggles">
-        <label class="toggle" for="fx-toggle">
-            <input type="checkbox" id="fx-toggle">
-            <span class="slider"></span>
-        </label>
-        <label class="toggle" for="theme-toggle">
-            <input type="checkbox" id="theme-toggle">
-            <span class="slider"></span>
-        </label>
-    </div>
-</header>
+<h1>{{ page.title }}</h1>
+<p>{{ page.description }}</p>
+<div class="social">
+    <a href="https://www.linkedin.com/in/blazepollard/" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+    <a href="https://x.com/0xblz" target="_blank"><i class="fa-brands fa-x-twitter"></i> @0xblz</a>
+</div>
 <hr>
-<h1>
-    I'm <a href="https://x.com/0xblz" target="_blank"><img src="/assets/images/me.jpg" class="avatar" alt="Blaze">Blaze</a>, a {{ page.description | downcase }}
-</h1>
-<p>I focus on product design, browser-based 3D experiments, and spatial data tools.</p>
-<hr>
-<h2><i class="fa fa-briefcase"></i> Experience</h2>
-<ul class="projects">
-    <li>
-        <div class="image-set">
-            <img src="/assets/images/uno-1.jpg" alt="UNO">
-            <img src="/assets/images/uno-2.jpg" alt="UNO">
-            <img src="/assets/images/uno-3.jpg" alt="UNO">
-            <img src="/assets/images/uno-4.jpg" alt="UNO">
-            <img src="/assets/images/uno-5.jpg" alt="UNO">
-            <img src="/assets/images/party-1.jpg" alt="PartyDAO">
-            <img src="/assets/images/party-2.jpg" alt="PartyDAO">
-            <img src="/assets/images/party-3.jpg" alt="PartyDAO">
-        </div>
-        <div class="project-text"><a href="https://x.com/prtyDAO" target="_blank"><img src="/assets/images/partydao.jpg" alt="PartyDAO">PartyDAO</a> (a16z-backed) from 2022–26, I led the design on projects including <a href="https://world.org/ecosystem/app_a4f7f3e62c1de0b9490a5260cb390b56" target="_blank"><img src="/assets/images/uno.png" alt="UNO">UNO</a>, the #1 wallet on <a href="https://world.org/ecosystem" target="_blank">World</a> with 4M+ users</div>
-    </li>
-    <li>
-        <div class="image-set">
-            <img src="/assets/images/showtime-1.jpg" alt="Showtime">
-            <img src="/assets/images/showtime-2.jpg" alt="Showtime">
-            <img src="/assets/images/showtime-3.jpg" alt="Showtime">
-            <img src="/assets/images/showtime-4.jpg" alt="Showtime">
-        </div>
-        <div class="project-text"><a href="https://www.linkedin.com/company/showtime-technologies/" target="_blank"><img src="/assets/images/showtime.jpg" alt="Showtime">Showtime</a> (Paradigm-backed, $7.6M) Founding designer; designed the app and created the design system from 0→1 across iOS, Android, and web</div>
-    </li>
-    <li><div class="project-text"><a href="https://workos.com" target="_blank"><img src="/assets/images/workos.png" alt="WorkOS">WorkOS</a> collaborated on marketing site and digital presence for a $100M-funded API platform used by OpenAI, Cursor, and others</div></li>
-    <li><div class="project-text"><a href="https://bitovi.com" target="_blank"><img src="/assets/images/bitovi.jpg" alt="Bitovi">Bitovi</a> delivered production web experiences for Fortune 500 brands including <a href="https://lowes.com" target="_blank">Lowe's</a> and <a href="https://www.levi.com/US/en_US/" target="_blank">Levi's</a></div></li>
-    <li><div class="project-text"><a href="https://scribd.com" target="_blank"><img src="/assets/images/scribd.jpg" alt="Scribd">Scribd</a> UX across web and mobile for one of the web's largest document platforms</div></li>
+<p class="intro">I focus on product design, browser-based 3D experiments, and spatial data tools.</p>
+
+<h2>Projects</h2>
+<ul>
+    <li><a href="https://world.org/ecosystem/app_a4f7f3e62c1de0b9490a5260cb390b56" target="_blank"><img src="/assets/images/uno.png" alt="UNO"> UNO</a>, designed for PartyDAO, 2026</li>
+    <li><a href="https://wind-vector.blaze.design/" target="_blank"><img src="https://windvector.app/assets/images/app-icon.jpg" alt="Wind Vector"> Wind Vector</a>, creator, 2026</li>
+    <li><a href="https://apps.apple.com/us/app/hows-the-roads/id6742173400" target="_blank"><img src="/assets/images/roads.png" alt="How's the Roads?"> How's the Roads?</a>, creator, 2025</li>
+    <li><a href="https://earthdatafeed.com/" target="_blank"><i class="fa-solid fa-earth-americas"></i> Earth Data</a>, creator, 2025</li>
+    <li><a href="https://3d.blaze.design/" target="_blank"><i class="fa-solid fa-cube"></i> 3D Viewer</a>, creator, 2025</li>
+    <li><a href="https://exploration.blaze.design/dashboard/" target="_blank"><i class="fa-solid fa-gauge"></i> Flight Dashboard</a>, creator, 2025</li>
 </ul>
+
 <hr>
-<h2><i class="fa fa-folder-open"></i> Side Projects</h2>
-<ul class="projects">
-    <li>
-        <div class="image-set">
-            <img src="/assets/images/windvector-1.jpg" alt="Wind Vector">
-            <img src="/assets/images/windvector-2.jpg" alt="Wind Vector">
-            <img src="/assets/images/windvector-3.jpg" alt="Wind Vector">
-            <img src="/assets/images/windvector-4.jpg" alt="Wind Vector">
-        </div>
-        <div class="project-text"><a href="https://wind-vector.blaze.design/" target="_blank"><i class="fa-solid fa-wind"></i> Wind Vector</a> Explore real-time 3D wind patterns across the world with live forecast data, flight levels, and storm simulations</div>
-    </li>
-    <li>
-        <div class="image-set">
-            <img src="/assets/images/dial-1.jpg" alt="Dials">
-            <img src="/assets/images/dial-2.jpg" alt="Dials">
-            <img src="/assets/images/dial-3.jpg" alt="Dials">
-            <img src="/assets/images/dial-4.jpg" alt="Dials">
-        </div>
-        <div class="project-text"><a href="https://exploration.blaze.design/dashboard/" target="_blank"><i class="fa-solid fa-gauge"></i> Flight Dashboard</a> Interactive flight instrument experiment with realistic gauges and dials</div>
-    </li>
-    <li>
-        <div class="image-set">
-            <img src="/assets/images/earth-data-1.jpg" alt="Earth Data">
-            <img src="/assets/images/earth-data-2.jpg" alt="Earth Data">
-            <img src="/assets/images/earth-data-3.jpg" alt="Earth Data">
-            <img src="/assets/images/earth-data-4.jpg" alt="Earth Data">
-        </div>
-        <div class="project-text"><a href="https://earthdatafeed.com/" target="_blank"><i class="fa-solid fa-earth-americas"></i> Earth Data</a> Live weather, air quality, UV, tides, moon phases, solar weather, quakes, and aurora forecasts</div>
-    </li>
-    <li>
-        <div class="image-set">
-            <img src="/assets/images/howstheroads-1.jpg" alt="How's the Roads?">
-            <img src="/assets/images/howstheroads-2.jpg" alt="How's the Roads?">
-            <img src="/assets/images/howstheroads-3.jpg" alt="How's the Roads?">
-        </div>
-        <div class="project-text"><a href="https://apps.apple.com/us/app/hows-the-roads/id6742173400" target="_blank"><img src="/assets/images/roads.png" alt="How's the Roads?">How's the Roads?</a> Live traffic cameras, road conditions, weather, and more for iOS</div>
-    </li>
-    <li>
-        <div class="image-set">
-            <img src="/assets/images/3d-viewer-1.jpg" alt="3D Viewer">
-            <img src="/assets/images/3d-viewer-2.jpg" alt="3D Viewer">
-            <img src="/assets/images/3d-viewer-3.jpg" alt="3D Viewer">
-        </div>
-        <div class="project-text"><a href="https://3d.blaze.design/" target="_blank"><i class="fa-solid fa-cube"></i> 3D Viewer</a> Browser-based 3D model viewer for engineers, architects, designers, and developers.</div>
-    </li>
-</ul>
+<a href="#" id="gallery-link"><i class="fa-solid fa-image"></i> Graphics & UI Gallery</a>
+
+<div class="lightbox" id="lightbox">
+    <button class="lightbox-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <button class="lightbox-prev" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button>
+    <img src="" alt="">
+    <button class="lightbox-next" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button>
+</div>
