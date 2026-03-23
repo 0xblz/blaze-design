@@ -50,12 +50,24 @@ function close() {
     document.body.style.overflow = '';
 }
 
+function animate(cls) {
+    lightboxImg.classList.remove('slide-next', 'slide-prev');
+    void lightboxImg.offsetWidth;
+    lightboxImg.classList.add(cls);
+}
+
 function next() {
-    if (current < images.length - 1) show(current + 1);
+    if (current < images.length - 1) {
+        animate('slide-next');
+        show(current + 1);
+    }
 }
 
 function prev() {
-    if (current > 0) show(current - 1);
+    if (current > 0) {
+        animate('slide-prev');
+        show(current - 1);
+    }
 }
 
 document.getElementById('gallery-link').addEventListener('click', function (e) {
@@ -66,6 +78,10 @@ document.getElementById('gallery-link').addEventListener('click', function (e) {
 btnClose.addEventListener('click', function (e) { e.stopPropagation(); close(); });
 btnPrev.addEventListener('click', function (e) { e.stopPropagation(); prev(); });
 btnNext.addEventListener('click', function (e) { e.stopPropagation(); next(); });
+
+[btnClose, btnPrev, btnNext].forEach(function (btn) {
+    btn.addEventListener('touchend', function (e) { e.stopPropagation(); });
+});
 
 document.addEventListener('keydown', function (e) {
     if (!lightbox.classList.contains('open')) return;
