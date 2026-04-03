@@ -4,4 +4,7 @@ _site/
 .DS_Store
 vendor/
 node_modules/
-.claude
+.claude/agent-memory/
+.claude/memory/
+.claude/settings.local.json
+.claude/todos.json

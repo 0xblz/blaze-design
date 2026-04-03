@@ -1,37 +1,11 @@
-const images = [
-    '/assets/images/uno-1.jpg',
-    '/assets/images/uno-2.jpg',
-    '/assets/images/uno-3.jpg',
-    '/assets/images/uno-4.jpg',
-    '/assets/images/uno-5.jpg',
-    '/assets/images/windvector-1.jpg',
-    '/assets/images/windvector-2.jpg',
-    '/assets/images/windvector-3.jpg',
-    '/assets/images/windvector-4.jpg',
-    '/assets/images/earth-data-1.jpg',
-    '/assets/images/earth-data-2.jpg',
-    '/assets/images/earth-data-3.jpg',
-    '/assets/images/earth-data-4.jpg',
-    '/assets/images/howstheroads-1.jpg',
-    '/assets/images/howstheroads-2.jpg',
-    '/assets/images/howstheroads-3.jpg',
-    '/assets/images/3d-viewer-1.jpg',
-    '/assets/images/3d-viewer-2.jpg',
-    '/assets/images/3d-viewer-3.jpg',
-    '/assets/images/party-1.jpg',
-    '/assets/images/party-2.jpg',
-    '/assets/images/party-3.jpg',
-    '/assets/images/showtime-1.jpg',
-    '/assets/images/showtime-2.jpg',
-    '/assets/images/showtime-3.jpg',
-    '/assets/images/showtime-4.jpg',
-];
+var images = window.galleryImages || [];
 
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = lightbox.querySelector('img');
 const btnClose = lightbox.querySelector('.lightbox-close');
 const btnPrev = lightbox.querySelector('.lightbox-prev');
 const btnNext = lightbox.querySelector('.lightbox-next');
+const spinner = lightbox.querySelector('.lightbox-spinner');
 let current = 0;
 
 function show(i) {
@@ -46,23 +20,30 @@ function close() {
     document.body.style.overflow = '';
 }
 
-function animate(cls) {
-    lightboxImg.classList.remove('slide-next', 'slide-prev');
-    void lightboxImg.offsetWidth;
-    lightboxImg.classList.add(cls);
+function crossfade(i) {
+    lightboxImg.style.opacity = 0;
+    setTimeout(function () {
+        current = i;
+        spinner.classList.add('visible');
+        var img = new Image();
+        img.onload = function () {
+            lightboxImg.src = images[current];
+            lightboxImg.style.opacity = 1;
+            spinner.classList.remove('visible');
+        };
+        img.src = images[i];
+    }, 150);
 }
 
 function next() {
     if (current < images.length - 1) {
-        animate('slide-next');
-        show(current + 1);
+        crossfade(current + 1);
     }
 }
 
 function prev() {
     if (current > 0) {
-        animate('slide-prev');
-        show(current - 1);
+        crossfade(current - 1);
     }
 }
 
@@ -104,5 +85,5 @@ lightbox.addEventListener('touchend', function (e) {
 
 lightbox.addEventListener('click', function (e) {
     if (swiped) { swiped = false; return; }
-    close();
+    if (e.target === lightbox) close();
 });
