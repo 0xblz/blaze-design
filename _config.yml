@@ -9,7 +9,7 @@ baseurl: ""
 source: .
 destination: ./_site
 include: ['.htaccess']
-exclude: ['Gemfile', 'Gemfile.lock', 'node_modules', '.git', '.gitignore', 'README.md', '.ruby-version', '.claude']
+exclude: ['Gemfile', 'Gemfile.lock', 'node_modules', '.git', '.gitignore', 'README.md', 'CLAUDE.md', '.ruby-version', '.claude']
 encoding: utf-8
 keep_files: []
 permalink: pretty
