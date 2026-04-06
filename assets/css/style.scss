@@ -38,6 +38,7 @@ html, body {
 }
 
 main {
+   max-width: 640px;
    padding: 3rem;
 
    @media (max-width: 800px) {
