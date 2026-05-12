@@ -6,33 +6,53 @@ permalink: /
 js: gallery
 ---
 
-<div class="header">
-    <img src="/assets/images/avatar.jpg" class="avatar" alt="Blaze Pollard">
-    <div>
-        <h1>{{ page.title }}</h1>
-        <p>Designer, Software & Agents</p>
+<div class="page">
+    <div class="card-frame">
+        <div class="guide guide--v-left"></div>
+        <div class="guide guide--v-right"></div>
+        <div class="guide guide--h-top"></div>
+        <div class="guide guide--h-bottom"></div>
+
+        <div class="card" id="card">
+            <div class="card-face card-front">
+                <div class="card-front-content">
+                    <div class="card-header">
+                        <img src="/assets/images/avatar.jpg" class="avatar" alt="Blaze Pollard">
+                        <div class="card-identity">
+                            <h1>{{ page.title }}</h1>
+                            <p class="subtitle">Designer, Software & Agents</p>
+                        </div>
+                    </div>
+                    <p class="card-url">blaze.design</p>
+                </div>
+            </div>
+
+            <div class="card-face card-back">
+                <div class="card-back-content">
+                    <div class="card-section">
+                        <h2>Recent Projects</h2>
+                        <ul>
+                            <li><a href="https://windvector.app" target="_blank">Wind Vector</a> <span class="year">2026</span></li>
+                            <li><a href="https://world.org/ecosystem/app_a4f7f3e62c1de0b9490a5260cb390b56" target="_blank">UNO</a>, for <a href="https://x.com/prtyDAO" target="_blank">PartyDAO</a> <span class="year">2026</span></li>
+                            <li><a href="https://apps.apple.com/us/app/hows-the-roads/id6742173400" target="_blank">How's the Roads?</a> <span class="year">2025</span></li>
+                            <li><a href="https://3d.blaze.design/" target="_blank">3D Viewer</a> <span class="year">2025</span></li>
+                        </ul>
+                    </div>
+                    <div class="card-back-footer">
+                        <div class="social-links">
+                            <a href="https://www.linkedin.com/in/blazepollard/" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+                            <span class="sep">&middot;</span>
+                            <a href="https://x.com/0xblz" target="_blank"><i class="fa-brands fa-x-twitter"></i> @0xblz</a>
+                            <span class="sep">&middot;</span>
+                            <a href="mailto:hello@blaze.design"><i class="fa-solid fa-envelope"></i> Email</a>
+                            <span class="sep">&middot;</span>
+                            <a href="#" id="gallery-link" class="gallery-link"><i class="fa-solid fa-images"></i> Gallery</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<div class="social">
-    <a href="https://www.linkedin.com/in/blazepollard/" target="_blank"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
-    <a href="https://x.com/0xblz" target="_blank"><i class="fa-brands fa-x-twitter"></i> @0xblz</a>
-    <a href="mailto:hello@blaze.design" target="_blank"><i class="fa-solid fa-envelope"></i> Email</a>
-</div>
-<hr>
-
-<h2>Recent Projects</h2>
-<ul>
-    <li><a href="https://windvector.app" target="_blank"><img src="https://windvector.app/assets/images/app-icon.jpg" alt="Wind Vector"> Wind Vector</a>, 2026</li>
-    <li><a href="https://world.org/ecosystem/app_a4f7f3e62c1de0b9490a5260cb390b56" target="_blank"><img src="/assets/images/uno.png" alt="UNO"> UNO</a>, designed for <a href="https://x.com/prtyDAO" target="_blank">PartyDAO</a>, 2026</li>
-    <li><a href="https://apps.apple.com/us/app/hows-the-roads/id6742173400" target="_blank"><img src="/assets/images/roads.png" alt="How's the Roads?"> How's the Roads?</a>, 2025</li>
-    <li><a href="https://3d.blaze.design/" target="_blank"><i class="fa-solid fa-cube"></i> 3D Viewer</a>, 2025</li>
-</ul>
-
-<hr>
-
-<a href="#" id="gallery-link"><i class="fa-solid fa-images"></i> Gallery</a>
-
-<hr>
-<h3>{{ page.description }}</h3>
 
 {% include gallery.html folder="/assets/images/gallery/" %}

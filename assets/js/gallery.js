@@ -1,5 +1,13 @@
 var images = window.galleryImages || [];
 
+// ─── Card flip ───────────────────────────────────────────────────────────────
+var card = document.getElementById('card');
+card.addEventListener('click', function (e) {
+    if (e.target.closest('a')) return;
+    card.classList.toggle('flipped');
+});
+
+// ─── Lightbox ────────────────────────────────────────────────────────────────
 const lightbox = document.getElementById('lightbox');
 const lightboxImg = lightbox.querySelector('img');
 const btnClose = lightbox.querySelector('.lightbox-close');
@@ -49,6 +57,7 @@ function prev() {
 
 document.getElementById('gallery-link').addEventListener('click', function (e) {
     e.preventDefault();
+    e.stopPropagation();
     show(0);
 });
 

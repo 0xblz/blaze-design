@@ -1,246 +1,414 @@
 ---
 ---
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+// ─── Design tokens ───────────────────────────────────────────────────────────
 :root {
-   --bg: #fff;
-   --text: hsl(211, 40%, 38%);
-   --link: hsl(211, 100%, 58%);
-   --font: "DM Sans", sans-serif;
+  --font: "Inter", system-ui, -apple-system, sans-serif;
+
+  --bg:            #fafafa;
+  --card-bg:       #ffffff;
+  --text:          #171717;
+  --text-muted:    #737373;
+  --border:        #e5e5e5;
+  --guide:         rgba(0, 0, 0, 0.08);
+  --selection-bg:  #d4d4d4;
+  --selection-fg:  #171717;
 }
 
 @media (prefers-color-scheme: dark) {
-   :root {
-      --bg: hsl(211, 100%, 5%);
-      --text: hsl(211, 40%, 68%);
-      --link: hsl(211, 100%, 58%);
-   }
+  :root {
+    --bg:            #0a0a0a;
+    --card-bg:       #111111;
+    --text:          #ededed;
+    --text-muted:    #737373;
+    --border:        #2e2e2e;
+    --guide:         rgba(255, 255, 255, 0.06);
+    --selection-bg:  #404040;
+    --selection-fg:  #ededed;
+  }
+}
+
+// ─── Reset ───────────────────────────────────────────────────────────────────
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// ─── Base ────────────────────────────────────────────────────────────────────
+html, body {
+  height: 100%;
+  background: var(--bg);
+  font-family: var(--font);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 
 ::selection {
-   background: var(--link);
-   color: var(--bg);
+  background: var(--selection-bg);
+  color: var(--selection-fg);
 }
 
-* {
-   margin: 0;
-   padding: 0;
-   box-sizing: border-box;
-   -webkit-font-smoothing: antialiased;
-   -moz-osx-font-smoothing: grayscale;
+// ─── Page ────────────────────────────────────────────────────────────────────
+.page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 2rem;
 }
 
-html, body {
-   background: var(--bg);
-   font-family: var(--font);
-   color: var(--text);
+// ─── Card frame (positioning context for guides) ────────────────────────────
+.card-frame {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 1.75;
+  perspective: 1200px;
 }
 
-main {
-   max-width: 640px;
-   padding: 3rem;
-
-   @media (max-width: 800px) {
-      padding: 1.5rem;
-   }
+// ─── Guide lines (4 lines at card edges, extending to viewport) ─────────────
+.guide {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
 }
 
-.header {
-   display: flex;
-   align-items: center;
-   gap: 0.75rem;
+// Vertical guides — aligned to left and right edges of card, extending to viewport top/bottom
+.guide--v-left,
+.guide--v-right {
+  width: 1px;
+  top: -50vh;
+  bottom: -50vh;
+  background: var(--guide);
+}
+
+.guide--v-left  { left: 0; }
+.guide--v-right { right: 0; }
+
+// Horizontal guides — aligned to top and bottom edges of card, extending to viewport left/right
+.guide--h-top,
+.guide--h-bottom {
+  height: 1px;
+  left: -50vw;
+  right: -50vw;
+  background: var(--guide);
+}
+
+.guide--h-top    { top: 0; }
+.guide--h-bottom { bottom: 0; }
+
+// ─── Card (3D flip container) ────────────────────────────────────────────────
+.card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+
+  &.flipped {
+    transform: rotateY(180deg);
+  }
+}
+
+// ─── Card faces ──────────────────────────────────────────────────────────────
+.card-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  transition: border-color 200ms ease;
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--border) 50%, var(--text));
+  }
+}
+
+.card-back {
+  transform: rotateY(180deg);
+}
+
+// ─── Front face layout ──────────────────────────────────────────────────────
+.card-front-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 1.75rem;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .avatar {
-   width: 2.5rem;
-   height: 2.5rem;
-   border-radius: 50%;
-   object-fit: cover;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.card-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
 }
 
 h1 {
-   font-size: 1.2rem;
-   font-weight: 700;
-   line-height: 1.4;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.card-url {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+// ─── Back face layout ───────────────────────────────────────────────────────
+.card-back-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 1.75rem;
 }
 
 h2 {
-   font-size: 0.65rem;
-   font-weight: 900;
-   text-transform: uppercase;
-   letter-spacing: 0.05rem;
-   margin-bottom: 1rem;
-   opacity: 0.5;
-}
-
-h3 {
-   font-size: 0.75rem;
-   font-weight: 700;
-   opacity: 0.5;
-}
-
-p {
-   font-size: 1rem;
-   font-weight: 400;
-}
-
-.social {
-   display: flex;
-   gap: 0.5rem;
-   margin: 1rem 0;
-
-   a {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.75rem;
-      border: none;
-      border-radius: 2rem;
-      background: rgba(0, 0, 0, 0.05);
-      transition: background 0.2s;
-
-      &:hover {
-         background: rgba(0, 0, 0, 0.1);
-         text-decoration: none;
-      }
-   }
-
-   @media (prefers-color-scheme: dark) {
-      a {
-         background: rgba(255, 255, 255, 0.05);
-
-         &:hover {
-            background: rgba(255, 255, 255, 0.1);
-         }
-      }
-   }
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
 }
 
 ul {
-   list-style: none;
-   padding-left: 0;
-   display: flex;
-   flex-direction: column;
-   gap: 0.5rem;
-
-   li::marker {
-      color: var(--link);
-   }
-
-   li img {
-      width: 1.25rem;
-      height: 1.25rem;
-      object-fit: cover;
-      display: inline-block;
-      vertical-align: middle;
-      border-radius: 0.25rem;
-      margin-bottom: 0.25rem;
-   }
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
-hr {
-   border: none;
-   border-top: 1px solid var(--text);
-   margin: 1.5rem 0;
-   opacity: 0.1;
+ul li {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--text-muted);
 }
 
+.year {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  opacity: 0.5;
+  margin-left: 0.15rem;
+  font-variant-numeric: tabular-nums;
+}
+
+// ─── Links ───────────────────────────────────────────────────────────────────
 a {
-   color: var(--link);
-   text-decoration: none;
-   font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
 
-   &:hover {
-      text-decoration: underline;
-   }
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
 }
 
+// ─── Back footer ─────────────────────────────────────────────────────────────
+.card-back-footer {
+  display: flex;
+  align-items: center;
+}
+
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  a {
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--text-muted);
+
+    &:hover {
+      color: var(--text);
+    }
+  }
+}
+
+.sep {
+  font-size: 0.7rem;
+  color: var(--border);
+  user-select: none;
+}
+
+.gallery-link {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--text-muted);
+
+  &:hover {
+    color: var(--text);
+  }
+}
+
+// ─── Lightbox ────────────────────────────────────────────────────────────────
 .lightbox {
-   position: fixed;
-   inset: 0;
-   z-index: 1000;
-   display: flex;
-   align-items: center;
-   justify-content: center;
-   background: rgba(0, 0, 0, 0.9);
-   opacity: 0;
-   pointer-events: none;
-   transition: opacity 0.25s ease;
-   cursor: pointer;
-   touch-action: manipulation;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  cursor: pointer;
+  touch-action: manipulation;
 
-   &.open {
+  &.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .lightbox-spinner {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-top-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+
+    &.visible {
       opacity: 1;
-      pointer-events: all;
-   }
+    }
+  }
 
-   .lightbox-spinner {
-      position: absolute;
-      width: 2rem;
-      height: 2rem;
-      border: 2px solid rgba(255, 255, 255, 0.15);
-      border-top-color: rgba(255, 255, 255, 0.6);
-      border-radius: 50%;
-      animation: spin 0.6s linear infinite;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s ease;
+  img {
+    max-width: 90vw;
+    max-height: 90vh;
+    border-radius: 0.5rem;
+    object-fit: contain;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.6);
+    transition: opacity 0.15s ease;
+  }
 
-      &.visible {
-         opacity: 1;
-      }
-   }
+  .lightbox-close,
+  .lightbox-prev,
+  .lightbox-next {
+    position: absolute;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: color 0.2s;
+    font-family: var(--font);
 
-   img {
-      max-width: 90vw;
-      max-height: 90vh;
-      border-radius: 0.5rem;
-      object-fit: contain;
-      box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.6);
-      transition: opacity 0.15s ease;
-   }
+    &:hover {
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
 
-   .lightbox-close,
-   .lightbox-prev,
-   .lightbox-next {
-      position: absolute;
-      background: none;
-      border: none;
-      color: rgba(255, 255, 255, 0.4);
-      cursor: pointer;
-      transition: color 0.2s;
-      font-family: var(--font);
+  .lightbox-close {
+    top: 1rem;
+    right: 1rem;
+    font-size: 2rem;
+  }
 
-      &:hover {
-         color: rgba(255, 255, 255, 0.9);
-      }
-   }
+  .lightbox-prev,
+  .lightbox-next {
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    padding: 1rem;
 
-   .lightbox-close {
-      top: 1rem;
-      right: 1rem;
+    @media (max-width: 800px) {
+      top: auto;
+      bottom: 2rem;
+      transform: none;
       font-size: 2rem;
-   }
+    }
+  }
 
-   .lightbox-prev,
-   .lightbox-next {
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 3rem;
-      padding: 1rem;
-
-      @media (max-width: 800px) {
-         top: auto;
-         bottom: 2rem;
-         transform: none;
-         font-size: 2rem;
-      }
-   }
-
-   .lightbox-prev { left: 1rem; }
-   .lightbox-next { right: 1rem; }
-
+  .lightbox-prev { left: 1rem; }
+  .lightbox-next { right: 1rem; }
 }
 
 @keyframes spin {
-   to { transform: rotate(360deg); }
+  to { transform: rotate(360deg); }
+}
+
+// ─── Responsive ──────────────────────────────────────────────────────────────
+@media (max-width: 540px) {
+  .page {
+    padding: 1rem;
+  }
+
+  .card-frame {
+    max-width: 100%;
+    aspect-ratio: auto;
+    perspective: 800px;
+  }
+
+  .card {
+    min-height: 260px;
+  }
+
+  .card-face {
+    position: relative;
+    border-radius: 0.5rem;
+  }
+
+  .card-back {
+    position: absolute;
+    inset: 0;
+  }
+
+  .card-front-content,
+  .card-back-content {
+    padding: 1.25rem;
+  }
+
+  .guide--h-top,
+  .guide--h-bottom {
+    display: none;
+  }
+
+  h1 {
+    font-size: 1rem;
+  }
+
+  .avatar {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
 }
