@@ -32,6 +32,7 @@ card.addEventListener('transitionend', function (e) {
 
 // ─── Color picker ────────────────────────────────────────────────────────────
 var colorMap = { blue: '#2563eb', pink: '#db2777', purple: '#7c3aed' };
+card.style.setProperty('--accent', colorMap.blue);
 document.querySelector('.color-picker').addEventListener('click', function (e) {
     var dot = e.target.closest('.color-dot');
     if (!dot) return;

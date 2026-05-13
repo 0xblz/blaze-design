@@ -300,7 +300,7 @@ html, body {
 // ─── Front face — dark surface ───────────────────────────────────────────────
 .card-front {
   background: #111111;
-  border: 2px solid var(--accent, #2563eb);
+  border: 2px solid var(--accent);
   transition: border-color 0.3s ease;
 
   // Holographic foil layer — soft iridescent glow that tracks the cursor.
@@ -482,8 +482,8 @@ h1 {
 }
 
 .color-dot {
-  width: 0.6rem;
-  height: 0.6rem;
+  width: 0.85rem;
+  height: 0.85rem;
   border-radius: 50%;
   border: 1.5px solid rgba(255, 255, 255, 0.4);
   cursor: pointer;
@@ -577,7 +577,7 @@ a {
   font-weight: 700;
 
   &:hover {
-    opacity: 0.7;
+    color: var(--accent);
   }
 }
 
