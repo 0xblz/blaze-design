@@ -18,6 +18,17 @@
   --selection-fg:  #171717;
 }
 
+// ─── Dark mode — page chrome only (card faces are hardcoded, untouched) ──────
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:           #0f0f0f;
+    --guide:        rgba(255, 255, 255, 0.06);
+    --card-shadow:  0 4px 24px rgba(0, 0, 0, 0.3);
+    --selection-bg: #404040;
+    --selection-fg: #ededed;
+  }
+}
+
 // ─── Reset ───────────────────────────────────────────────────────────────────
 *, *::before, *::after {
   margin: 0;
