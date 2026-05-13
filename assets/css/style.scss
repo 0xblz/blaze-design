@@ -34,6 +34,31 @@
   }
 }
 
+// ─── Manual theme overrides (data-theme attribute set by JS toggle) ───────────
+html[data-theme="dark"] {
+  --bg:           #0f0f0f;
+  --card-bg:      #111111;
+  --text:         #ededed;
+  --text-muted:   #888888;
+  --border:       #2a2a2a;
+  --guide:        rgba(255, 255, 255, 0.06);
+  --card-shadow:  0 4px 24px rgba(0, 0, 0, 0.3);
+  --selection-bg: #404040;
+  --selection-fg: #ededed;
+}
+
+html[data-theme="light"] {
+  --bg:            #ebebeb;
+  --card-bg:       #ffffff;
+  --text:          #171717;
+  --text-muted:    #737373;
+  --border:        #e5e5e5;
+  --guide:         rgba(0, 0, 0, 0.08);
+  --card-shadow:   0 4px 24px rgba(0, 0, 0, 0.08);
+  --selection-bg:  #d4d4d4;
+  --selection-fg:  #171717;
+}
+
 // ─── Reset ───────────────────────────────────────────────────────────────────
 *, *::before, *::after {
   margin: 0;
@@ -387,6 +412,32 @@ html, body {
       mix-blend-mode: screen;
     }
   }
+
+  // Manual dark theme override (mirrors @media block above)
+  html[data-theme="dark"] & {
+    border-color: var(--accent);
+
+    &::after {
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+    }
+
+    &::before {
+      mix-blend-mode: screen;
+    }
+  }
+
+  // Manual light theme override — resets dark @media styles when toggled to light
+  html[data-theme="light"] & {
+    border-color: var(--border);
+
+    &::after {
+      background-image: radial-gradient(circle, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    }
+
+    &::before {
+      mix-blend-mode: multiply;
+    }
+  }
 }
 
 // ─── Front face layout ──────────────────────────────────────────────────────
@@ -423,6 +474,37 @@ html, body {
     &:hover {
       color: rgba(255, 255, 255, 0.8);
     }
+  }
+}
+
+// ─── Theme toggle ─────────────────────────────────────────────────────────────
+.theme-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.25rem;
+  transition: color 0.2s var(--ease-out);
+
+  &:hover {
+    color: var(--text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--text-muted);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle {
+    transition: none;
   }
 }
 

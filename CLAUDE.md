@@ -50,8 +50,11 @@ Four 1px lines (`.guide` elements) positioned absolutely on `.card-frame`, exten
 - Creates a print/architectural crop-mark aesthetic
 
 ### Theming
-- Light/dark mode via `prefers-color-scheme` — affects page bg, guides, shadows, selection, and card front appearance
+- Light/dark mode via `prefers-color-scheme` + manual toggle via `data-theme` attribute on `<html>`
+- Theme toggle button (`.theme-toggle`) fixed top-right, swaps sun/moon FA icon
+- `data-theme="light|dark"` overrides system preference — token blocks in CSS mirror the `@media` blocks
 - Card front: white (`--card-bg`) in light, dark (`#111`) in dark. Text uses `--text`/`--text-muted` tokens
+- Card front effects adapt: dark dots + multiply blend in light, white dots + screen blend in dark
 - Card back: colored surface (blue/pink/purple) — same in both modes
 - Front accent border uses `--accent` (from color picker) in dark mode, `--border` in light
 - Description tagline (`.page-tagline`) sits at page bottom as fine print

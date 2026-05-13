@@ -1,5 +1,30 @@
 var images = window.galleryImages || [];
 
+// ─── Theme toggle ─────────────────────────────────────────────────────────────
+(function () {
+    var btn = document.querySelector('.theme-toggle');
+    if (!btn) return;
+
+    var icon = btn.querySelector('i');
+
+    function setIcon(theme) {
+        icon.classList.toggle('fa-sun',  theme === 'light');
+        icon.classList.toggle('fa-moon', theme === 'dark');
+    }
+
+    // Set initial icon based on current theme attribute or system preference.
+    var initial = document.documentElement.dataset.theme ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.dataset.theme = initial;
+    setIcon(initial);
+
+    btn.addEventListener('click', function () {
+        var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        setIcon(next);
+    });
+}());
+
 // ─── Card flip ───────────────────────────────────────────────────────────────
 var card = document.getElementById('card');
 var isFlipped = false;
