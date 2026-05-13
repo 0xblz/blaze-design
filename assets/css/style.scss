@@ -56,17 +56,39 @@ html, body {
 // ─── Page ────────────────────────────────────────────────────────────────────
 .page {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   min-height: 100dvh;
   padding: 2rem;
 }
 
+// ─── Page tagline ─────────────────────────────────────────────────────────────
+// Fine-print line that sits at the page bottom. margin-top: auto consumes all
+// remaining space in the flex column, pinning the tagline to the bottom.
+// margin-bottom keeps it off the viewport edge.
+.page-tagline {
+  margin-top: auto;
+  margin-bottom: 1rem;
+  max-width: 480px;
+  width: 100%;
+  font-size: 0.6rem;
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--text-muted);
+  text-align: center;
+  opacity: 0.6;
+  letter-spacing: 0.02em;
+}
+
 // ─── Card frame (positioning context for guides) ────────────────────────────
+// margin-block: auto keeps the card vertically centered in the flex column
+// while margin-top: auto on .page-tagline claims the remaining bottom space.
 .card-frame {
   position: relative;
   width: 100%;
   max-width: 480px;
+  margin-block: auto;
   aspect-ratio: 1.75;
   perspective: 1200px;
 }
