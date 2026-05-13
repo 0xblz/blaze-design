@@ -348,11 +348,28 @@ h1 {
 
 // ─── Back face layout ───────────────────────────────────────────────────────
 .card-back-content {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
   padding: 1.75rem;
+}
+
+.gallery-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.85rem;
+  padding: 0.4rem;
+  transition: color 0.2s ease;
+  z-index: 2;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+  }
 }
 
 h2 {
