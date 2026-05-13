@@ -156,6 +156,30 @@ html, body {
   background: #111111;
   border-color: #2e2e2e;
 
+  // Holographic foil layer — soft iridescent glow that tracks the cursor.
+  // mix-blend-mode: screen on a near-black base adds color luminance without
+  // ever blowing out to white, reproducing the look of reflective foil at
+  // low incident angles. z-index: 1 keeps it above the #111 base but below
+  // card content which establishes its own stacking context via position.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(
+      circle 220px at var(--mx, 50%) var(--my, 50%),
+      rgba(120, 110, 255, 0.08),
+      rgba(190,  90, 255, 0.05) 35%,
+      rgba( 80, 200, 255, 0.03) 60%,
+      transparent 80%
+    );
+    mix-blend-mode: screen;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
   &::after {
     content: '';
     position: absolute;
@@ -170,7 +194,11 @@ html, body {
     transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  .card:hover & {
+  .card:not(.flipped):hover & {
+    &::before {
+      opacity: 1;
+    }
+
     &::after {
       opacity: 1;
     }
@@ -235,6 +263,12 @@ h1 {
   font-size: 0.75rem;
   font-weight: 400;
   color: var(--text-muted);
+}
+
+.card-front-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .card-url {

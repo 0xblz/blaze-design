@@ -55,6 +55,7 @@ card.addEventListener('transitionend', function (e) {
 
         var nx = rotY / MAX_TILT;
         var ny = -rotX / MAX_TILT;
+        card.style.setProperty('--angle', (Math.atan2(ny, nx) * (180 / Math.PI) + 90).toFixed(2) + 'deg');
         var sx = -nx * MAX_SHADOW;
         var sy = -ny * MAX_SHADOW;
         var dist = Math.sqrt(nx * nx + ny * ny);
