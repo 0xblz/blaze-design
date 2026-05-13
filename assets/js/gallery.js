@@ -18,7 +18,10 @@ var images = window.galleryImages || [];
     document.documentElement.dataset.theme = initial;
     setIcon(initial);
 
+    var toggleSound = new Audio('/assets/audio/toggle.mp3');
     btn.addEventListener('click', function () {
+        toggleSound.currentTime = 0;
+        toggleSound.play();
         var next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
         document.documentElement.dataset.theme = next;
         setIcon(next);
@@ -33,8 +36,11 @@ var isFlipped = false;
 var cancelSpringBack = function () {};
 
 // ─── Share button ────────────────────────────────────────────────────────────
+var popSound = new Audio('/assets/audio/pop.mp3');
 document.querySelector('.share-btn').addEventListener('click', function (e) {
     e.stopPropagation();
+    popSound.currentTime = 0;
+    popSound.play();
     if (navigator.share) {
         navigator.share({ title: 'Blaze Pollard', url: 'https://blaze.design' });
     } else {
@@ -42,8 +48,12 @@ document.querySelector('.share-btn').addEventListener('click', function (e) {
     }
 });
 
+var swooshSound = new Audio('/assets/audio/swoosh.mp3');
+swooshSound.playbackRate = 1.5;
 card.addEventListener('click', function (e) {
     if (e.target.closest('a') || e.target.closest('.share-btn')) return;
+    swooshSound.currentTime = 0;
+    swooshSound.play();
     cancelSpringBack();
     card.style.transition = '';
     card.style.transform = '';
