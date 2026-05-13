@@ -40,14 +40,18 @@ card.addEventListener('transitionend', function (e) {
     var rafId      = null;
     var targetRotX = 0;
     var targetRotY = 0;
+    var targetMx   = 50;
+    var targetMy   = 50;
     var active     = false;
 
     function getFlipY() {
         return isFlipped ? 180 : 0;
     }
 
-    function applyTilt(rotX, rotY) {
+    function applyTilt(rotX, rotY, mx, my) {
         card.style.transform = 'rotateX(' + rotX + 'deg) rotateY(' + (getFlipY() + rotY) + 'deg)';
+        card.style.setProperty('--mx', mx.toFixed(2) + '%');
+        card.style.setProperty('--my', my.toFixed(2) + '%');
 
         var nx = rotY / MAX_TILT;
         var ny = -rotX / MAX_TILT;
@@ -86,7 +90,7 @@ card.addEventListener('transitionend', function (e) {
     function tick() {
         rafId = null;
         if (!active) return;
-        applyTilt(targetRotX, targetRotY);
+        applyTilt(targetRotX, targetRotY, targetMx, targetMy);
     }
 
     frame.addEventListener('mousemove', function (e) {
@@ -98,6 +102,8 @@ card.addEventListener('transitionend', function (e) {
 
         targetRotY =  nx * MAX_TILT;
         targetRotX = -ny * MAX_TILT;
+        targetMx   = (nx * 0.5 + 0.5) * 100;
+        targetMy   = (ny * 0.5 + 0.5) * 100;
 
         if (!active) {
             active = true;
