@@ -31,12 +31,14 @@ card.addEventListener('transitionend', function (e) {
 });
 
 // ─── Color picker ────────────────────────────────────────────────────────────
+var colorMap = { blue: '#2563eb', pink: '#db2777', purple: '#7c3aed' };
 document.querySelector('.color-picker').addEventListener('click', function (e) {
     var dot = e.target.closest('.color-dot');
     if (!dot) return;
     e.stopPropagation();
-    var cardBack = document.querySelector('.card-back');
-    cardBack.dataset.color = dot.dataset.color;
+    var color = dot.dataset.color;
+    document.querySelector('.card-back').dataset.color = color;
+    card.style.setProperty('--accent', colorMap[color]);
     var dots = this.querySelectorAll('.color-dot');
     for (var i = 0; i < dots.length; i++) dots[i].classList.remove('active');
     dot.classList.add('active');
