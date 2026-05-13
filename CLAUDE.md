@@ -30,7 +30,7 @@ llms.txt             — LLM-readable site summary
 
 ### Business Card UI
 The site is a single-page centered business card with a 3D flip interaction:
-- **Front face** (`.card-front`): dark surface (`#111`) with holographic color glow (`::before`) and dot pattern (`::after`) on hover, share button top-right
+- **Front face** (`.card-front`): white in light mode, dark (`#111`) in dark mode. Holographic glow (`::before`, multiply/screen blend) and dot pattern (`::after`, dark/white dots) adapt per theme. Share button top-right
 - **Back face** (`.card-back`): colored surface with soft white glow (`::after`) on hover, paper grain texture (`::before`), gallery button top-right, color picker on right edge
 - **Color picker** (`.color-picker`): 3 dot buttons on the card back right edge — blue (`#2563eb`), pink (`#db2777`), purple (`#7c3aed`). Sets `data-color` attribute on `.card-back`, CSS applies colors via `[data-color]` selectors
 - Clicking the card toggles `.flipped` class (rotateY 180deg)
@@ -50,8 +50,10 @@ Four 1px lines (`.guide` elements) positioned absolutely on `.card-frame`, exten
 - Creates a print/architectural crop-mark aesthetic
 
 ### Theming
-- Light/dark mode via `prefers-color-scheme` — only affects page background, guide lines, shadows, and selection colors
-- Card faces have hardcoded colors that don't change between modes
+- Light/dark mode via `prefers-color-scheme` — affects page bg, guides, shadows, selection, and card front appearance
+- Card front: white (`--card-bg`) in light, dark (`#111`) in dark. Text uses `--text`/`--text-muted` tokens
+- Card back: colored surface (blue/pink/purple) — same in both modes
+- Front accent border uses `--accent` (from color picker) in dark mode, `--border` in light
 - Description tagline (`.page-tagline`) sits at page bottom as fine print
 
 ### Lightbox Gallery

@@ -19,10 +19,14 @@
   --ease-out:      cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-// ─── Dark mode — page chrome only (card faces are hardcoded, untouched) ──────
+// ─── Dark mode tokens ─────────────────────────────────────────────────────────
 @media (prefers-color-scheme: dark) {
   :root {
     --bg:           #0f0f0f;
+    --card-bg:      #111111;
+    --text:         #ededed;
+    --text-muted:   #888888;
+    --border:       #2a2a2a;
     --guide:        rgba(255, 255, 255, 0.06);
     --card-shadow:  0 4px 24px rgba(0, 0, 0, 0.3);
     --selection-bg: #404040;
@@ -255,7 +259,7 @@ html, body {
   }
 
   .project-icon {
-    color: var(--card-bg);
+    color: #ffffff;
     opacity: 1;
   }
 
@@ -293,17 +297,20 @@ html, body {
   }
 }
 
-// ─── Front face — dark surface ───────────────────────────────────────────────
+// ─── Front face ───────────────────────────────────────────────────────────────
+// Light mode: white card, dark text. Dark mode: near-black card, light text.
+// Color values come from design tokens so both themes are handled via :root.
 .card-front {
-  background: #111111;
-  border: 2px solid var(--accent);
+  background: var(--card-bg);
+  border: 2px solid var(--border);
   transition: border-color 0.3s ease;
 
   // Holographic foil layer — soft iridescent glow that tracks the cursor.
-  // mix-blend-mode: screen on a near-black base adds color luminance without
-  // ever blowing out to white, reproducing the look of reflective foil at
-  // low incident angles. z-index: 1 keeps it above the #111 base but below
-  // card content which establishes its own stacking context via position.
+  // Light mode: mix-blend-mode: multiply darkens the white base, giving a
+  // watercolor-tinted iridescence. Dark mode: mix-blend-mode: screen adds
+  // luminance to the near-black base, reproducing reflective foil. Both share
+  // the same gradient; the blend mode does the heavy lifting.
+  // z-index: 1 keeps it above the base but below card content.
   &::before {
     content: '';
     position: absolute;
@@ -313,23 +320,24 @@ html, body {
     z-index: 1;
     background: radial-gradient(
       circle 220px at var(--mx, 50%) var(--my, 50%),
-      rgba(120, 110, 255, 0.08),
-      rgba(190,  90, 255, 0.05) 35%,
-      rgba( 80, 200, 255, 0.03) 60%,
+      rgba(120, 110, 255, 0.12),
+      rgba(190,  90, 255, 0.08) 35%,
+      rgba( 80, 200, 255, 0.05) 60%,
       transparent 80%
     );
-    mix-blend-mode: screen;
+    mix-blend-mode: multiply;
     opacity: 0;
     transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
+  // Dot pattern — dark dots on white in light mode so they're visible.
   &::after {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: inherit;
     pointer-events: none;
-    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+    background-image: radial-gradient(circle, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
     background-size: 14px 14px;
     -webkit-mask-image: radial-gradient(circle 120px at var(--mx, 50%) var(--my, 50%), black 0%, transparent 100%);
     mask-image: radial-gradient(circle 120px at var(--mx, 50%) var(--my, 50%), black 0%, transparent 100%);
@@ -347,20 +355,36 @@ html, body {
     }
   }
 
+  // Light mode text — inherits from tokens (--text: #171717, --text-muted: #737373)
   h1 {
-    color: #ededed;
+    color: var(--text);
   }
 
   .subtitle,
   .card-url {
-    color: #888888;
+    color: var(--text-muted);
 
     a {
-      color: #888888;
+      color: var(--text-muted);
 
       &:hover {
-        color: #ededed;
+        color: var(--text);
       }
+    }
+  }
+
+  // Dark mode overrides — flip to light-on-dark surface
+  @media (prefers-color-scheme: dark) {
+    border-color: var(--accent);
+
+    // Dot pattern switches to white dots on dark background
+    &::after {
+      background-image: radial-gradient(circle, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+    }
+
+    // Holographic foil: screen mode adds luminance to near-black base
+    &::before {
+      mix-blend-mode: screen;
     }
   }
 }
@@ -380,14 +404,25 @@ html, body {
   right: 1rem;
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.3);
+  color: var(--text-muted);
   font-size: 0.85rem;
   cursor: pointer;
   padding: 0.4rem;
   transition: color 0.2s ease;
+  opacity: 0.5;
 
   &:hover {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text);
+    opacity: 1;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    color: rgba(255, 255, 255, 0.3);
+    opacity: 1;
+
+    &:hover {
+      color: rgba(255, 255, 255, 0.8);
+    }
   }
 }
 
