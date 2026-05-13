@@ -1,11 +1,11 @@
 ---
 ---
 
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Rubik:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@200..800&display=swap');
 
 // ─── Design tokens ───────────────────────────────────────────────────────────
 :root {
-  --font: "Rubik", sans-serif;
+  --font: "Manrope", sans-serif;
 
   --bg:            #ebebeb;
   --card-bg:       #ffffff;
@@ -16,6 +16,7 @@
   --card-shadow:   0 4px 24px rgba(0, 0, 0, 0.08);
   --selection-bg:  #d4d4d4;
   --selection-fg:  #171717;
+  --ease-out:      cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 // ─── Dark mode — page chrome only (card faces are hardcoded, untouched) ──────
@@ -41,7 +42,7 @@ html, body {
   height: 100%;
   background: var(--bg);
   font-family: var(--font);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -158,8 +159,22 @@ html, body {
 
 .card-back {
   transform: rotateY(180deg);
-  background: #1e40af;
-  border-color: #2550c5;
+  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
+
+  &[data-color="blue"] {
+    background: #2563eb;
+    border-color: #3b82f6;
+  }
+
+  &[data-color="pink"] {
+    background: #db2777;
+    border-color: #ec4899;
+  }
+
+  &[data-color="purple"] {
+    background: #7c3aed;
+    border-color: #8b5cf6;
+  }
 
   // Paper grain texture — reduced opacity on the dark blue; at 0.2 the noise
   // reads as noise, at 0.08 it reads as texture — the difference matters.
@@ -371,14 +386,14 @@ html, body {
 h1 {
   font-family: "Archivo Black", sans-serif;
   font-size: 1.125rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.02em;
 }
 
 .subtitle {
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-muted);
 }
 
@@ -390,7 +405,7 @@ h1 {
 
 .card-url {
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-muted);
   letter-spacing: 0.02em;
 }
@@ -421,10 +436,60 @@ h1 {
   }
 }
 
+// ─── Card back color picker ──────────────────────────────────────────────────
+.color-picker {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  z-index: 2;
+}
+
+.color-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  padding: 0;
+  box-shadow: none;
+  transition: transform 0.15s var(--ease-out), border-color 0.15s var(--ease-out);
+
+  &[data-color="blue"]    { background: #2563eb; }
+  &[data-color="pink"]    { background: #db2777; }
+  &[data-color="purple"]  { background: #7c3aed; }
+
+  &:hover {
+    transform: scale(1.25);
+  }
+
+  &.active {
+    border-color: rgba(255, 255, 255, 0.9);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.9);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .color-dot {
+    transition: none;
+  }
+
+  .card-back {
+    transition: none;
+  }
+}
+
 h2 {
   font-family: "Archivo Black", sans-serif;
   font-size: 0.6rem;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--text-muted);
@@ -498,7 +563,7 @@ a {
 
   a {
     font-size: 0.7rem;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--text-muted);
 
     &:hover {
@@ -515,7 +580,7 @@ a {
 
 .gallery-link {
   font-size: 0.7rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-muted);
 
   &:hover {
