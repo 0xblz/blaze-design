@@ -46,7 +46,7 @@ html, body {
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 ::selection {
@@ -64,10 +64,18 @@ html, body {
   padding: 2rem;
 }
 
+// ─── Card frame (positioning context for guides) ────────────────────────────
+.card-frame {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  margin-block: auto;
+  aspect-ratio: 1.75;
+  perspective: 1200px;
+  overflow: visible;
+}
+
 // ─── Page tagline ─────────────────────────────────────────────────────────────
-// Fine-print line that sits at the page bottom. margin-top: auto consumes all
-// remaining space in the flex column, pinning the tagline to the bottom.
-// margin-bottom keeps it off the viewport edge.
 .page-tagline {
   margin-top: auto;
   margin-bottom: 1rem;
@@ -80,18 +88,6 @@ html, body {
   text-align: center;
   opacity: 0.6;
   letter-spacing: 0.02em;
-}
-
-// ─── Card frame (positioning context for guides) ────────────────────────────
-// margin-block: auto keeps the card vertically centered in the flex column
-// while margin-top: auto on .page-tagline claims the remaining bottom space.
-.card-frame {
-  position: relative;
-  width: 100%;
-  max-width: 480px;
-  margin-block: auto;
-  aspect-ratio: 1.75;
-  perspective: 1200px;
 }
 
 // ─── Guide lines (4 lines at card edges, extending to viewport) ─────────────
@@ -722,6 +718,7 @@ a {
     aspect-ratio: 1.5;
     perspective: 800px;
   }
+
 
   .card-front-content,
   .card-back-content {
