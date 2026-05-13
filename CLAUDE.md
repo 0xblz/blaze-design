@@ -31,8 +31,8 @@ llms.txt             — LLM-readable site summary
 
 ### Business Card UI
 The site is a single-page centered business card with a 3D flip interaction:
-- **Front face** (`.card-front`): white in light mode, dark (`#111`) in dark mode. Holographic glow (`::before`, multiply/screen blend) and dot pattern (`::after`, dark/white dots) adapt per theme. Share button top-right
-- **Back face** (`.card-back`): colored surface with soft white glow (`::after`) on hover, paper grain texture (`::before`), gallery button top-right, color picker on right edge
+- **Front face** (`.card-front`): smooth surface — white in light mode, dark (`#111`) in dark mode. Holographic iridescent glow (`::before`, multiply in light / multi-hue screen in dark) and dot pattern (`::after`, dark/white dots) appear on hover. Share button top-right
+- **Back face** (`.card-back`): colored surface with cotton paper grain texture (`::before`, two dot layers at coprime sizes for organic pattern), soft white glow (`::after`) on hover, gallery button top-right, color picker on right edge
 - **Color picker** (`.color-picker`): 3 dot buttons on the card back right edge — blue (`#2563eb`), pink (`#db2777`), purple (`#7c3aed`). Sets `data-color` attribute on `.card-back`, CSS applies colors via `[data-color]` selectors
 - Clicking the card toggles `.flipped` class (rotateY 180deg)
 - `.card-frame` provides perspective; `.card` handles flip + tilt transforms
