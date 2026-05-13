@@ -7,8 +7,18 @@ var isFlipped = false;
 // Populated by the tilt IIFE — aborts any in-flight spring-back before a flip.
 var cancelSpringBack = function () {};
 
+// ─── Share button ────────────────────────────────────────────────────────────
+document.querySelector('.share-btn').addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (navigator.share) {
+        navigator.share({ title: 'Blaze Pollard', url: 'https://blaze.design' });
+    } else {
+        navigator.clipboard.writeText('https://blaze.design');
+    }
+});
+
 card.addEventListener('click', function (e) {
-    if (e.target.closest('a')) return;
+    if (e.target.closest('a') || e.target.closest('.share-btn')) return;
     cancelSpringBack();
     card.style.transition = '';
     card.style.transform = '';

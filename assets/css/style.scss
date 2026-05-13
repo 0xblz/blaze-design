@@ -282,6 +282,23 @@ html, body {
   padding: 1.75rem;
 }
 
+.share-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 0.4rem;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
 .card-header {
   display: flex;
   align-items: center;

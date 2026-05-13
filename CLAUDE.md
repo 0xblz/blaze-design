@@ -1,0 +1,74 @@
+# blaze-design
+
+Personal portfolio site built with Jekyll, hosted on GitHub Pages.
+
+## Stack
+
+- **Jekyll** static site generator (Ruby)
+- **SCSS** for styles (`assets/css/style.scss`) — compiled by Jekyll's built-in Sass pipeline
+- **Vanilla JS** (`assets/js/gallery.js`) — handles card flip, 3D tilt, lightbox gallery, and share
+- **Font Awesome** via kit CDN for icons
+- **Google Fonts** — Archivo Black (headings) + Rubik (body)
+
+## Project Structure
+
+```
+_config.yml          — Jekyll config, plugins, defaults
+_layouts/default.html — Base HTML layout (head, meta, OG tags, scripts)
+_includes/
+  gallery.html       — Lightbox markup + gallery image array (Liquid)
+  analytics.html     — Analytics snippet
+index.html           — Main page content (front matter + card markup)
+assets/
+  css/style.scss     — All styles (design tokens, card, guides, lightbox, responsive)
+  js/gallery.js      — All JS (flip, tilt, share, lightbox)
+  images/            — Avatar, project SVGs, favicon, OG image, gallery images
+llms.txt             — LLM-readable site summary
+```
+
+## Architecture
+
+### Business Card UI
+The site is a single-page centered business card with a 3D flip interaction:
+- **Front face** (`.card-front`): dark surface with holographic dot pattern on hover
+- **Back face** (`.card-back`): blue surface with project list and social links
+- Clicking the card toggles `.flipped` class (rotateY 180deg)
+- `.card-frame` provides perspective; `.card` handles flip + tilt transforms
+
+### 3D Tilt Effect (desktop only)
+- Mousemove on `.card-frame` applies `rotateX`/`rotateY` to `.card` via JS
+- Dynamic shadow shifts opposite to tilt direction
+- CSS custom properties `--mx`, `--my`, `--angle` set on `.card` for cursor-relative effects
+- Guarded by `(hover: hover)` media query — no tilt on touch devices
+- Tilt composes with flip by building the full transform string in JS
+
+### Guide Lines
+Four 1px lines (`.guide` elements) positioned absolutely on `.card-frame`, extending to viewport edges:
+- Two vertical lines aligned to card left/right edges
+- Two horizontal lines aligned to card top/bottom edges
+- Creates a print/architectural crop-mark aesthetic
+
+### Theming
+- Light/dark mode via `prefers-color-scheme` — only affects page background, guide lines, shadows, and selection colors
+- Card faces have hardcoded colors that don't change between modes
+
+### Lightbox Gallery
+- Images sourced from `/assets/images/gallery/` via Liquid `site.static_files`
+- Gallery link opens lightbox at first image
+- Keyboard nav (arrows, Escape), touch swipe, crossfade transitions
+
+## Build & Serve
+
+```sh
+bundle exec jekyll build
+bundle exec jekyll serve
+```
+
+## Key Conventions
+
+- Styles use CSS custom properties for design tokens (colors, shadows)
+- SCSS nesting for component scoping (`.card-front { h1 { ... } }`)
+- All JS in one file, no build step, no dependencies
+- Front matter `js: gallery` loads the JS file via the layout
+- Front matter `standalone: true` bypasses the `<main>` wrapper and default stylesheet
+- `aspect-ratio: 1.75` on desktop for business card proportions; `1.5` on mobile
