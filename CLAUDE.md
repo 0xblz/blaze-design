@@ -6,7 +6,7 @@ Personal portfolio site built with Jekyll, hosted on GitHub Pages.
 
 - **Jekyll** static site generator (Ruby)
 - **SCSS** for styles (`assets/css/style.scss`) — compiled by Jekyll's built-in Sass pipeline
-- **Vanilla JS** (`assets/js/gallery.js`) — handles card flip, 3D tilt, color picker, lightbox gallery, and share
+- **Vanilla JS** (`assets/js/gallery.js`) — handles theme toggle, card flip, 3D tilt, color picker, lightbox gallery, share, and sound effects
 - **Font Awesome** via kit CDN for icons
 - **Google Fonts** — Archivo Black (headings) + Manrope variable (body, 200–800)
 
@@ -21,7 +21,8 @@ _includes/
 index.html           — Main page content (front matter + card markup)
 assets/
   css/style.scss     — All styles (design tokens, card, guides, lightbox, responsive)
-  js/gallery.js      — All JS (flip, tilt, share, lightbox)
+  js/gallery.js      — All JS (theme toggle, flip, tilt, share, lightbox, sounds)
+  audio/             — Sound effects (pop.mp3, toggle.mp3, swoosh.mp3)
   images/            — Avatar, project SVGs, favicon, OG image, gallery images
 llms.txt             — LLM-readable site summary
 ```
