@@ -161,8 +161,8 @@ document.querySelector('.color-picker').addEventListener('click', function (e) {
         var nx = ((e.clientX - rect.left) / rect.width  - 0.5) * 2;
         var ny = ((e.clientY - rect.top)  / rect.height - 0.5) * 2;
 
-        targetRotY =  nx * MAX_TILT;
-        targetRotX = -ny * MAX_TILT;
+        targetRotY = -nx * MAX_TILT;
+        targetRotX =  ny * MAX_TILT;
         targetMx   = (nx * 0.5 + 0.5) * 100;
         targetMy   = (ny * 0.5 + 0.5) * 100;
 
