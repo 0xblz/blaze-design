@@ -13,21 +13,9 @@
   --text-muted:    #737373;
   --border:        #e5e5e5;
   --guide:         rgba(0, 0, 0, 0.08);
+  --card-shadow:   0 4px 24px rgba(0, 0, 0, 0.08);
   --selection-bg:  #d4d4d4;
   --selection-fg:  #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg:            #0a0a0a;
-    --card-bg:       #111111;
-    --text:          #ededed;
-    --text-muted:    #737373;
-    --border:        #2e2e2e;
-    --guide:         rgba(255, 255, 255, 0.06);
-    --selection-bg:  #404040;
-    --selection-fg:  #ededed;
-  }
 }
 
 // ─── Reset ───────────────────────────────────────────────────────────────────
@@ -109,11 +97,15 @@ html, body {
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
   cursor: pointer;
 
   &.flipped {
     transform: rotateY(180deg);
+  }
+
+  &.flipping {
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
@@ -126,15 +118,27 @@ html, body {
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   overflow: hidden;
-  transition: border-color 200ms ease;
-
-  &:hover {
-    border-color: color-mix(in srgb, var(--border) 50%, var(--text));
-  }
+  box-shadow: var(--card-shadow);
+  transition: box-shadow 0.3s ease;
 }
 
 .card-back {
   transform: rotateY(180deg);
+}
+
+// ─── Front face — dark surface ───────────────────────────────────────────────
+.card-front {
+  background: #111111;
+  border-color: #2e2e2e;
+
+  h1 {
+    color: #ededed;
+  }
+
+  .subtitle,
+  .card-url {
+    color: #888888;
+  }
 }
 
 // ─── Front face layout ──────────────────────────────────────────────────────
