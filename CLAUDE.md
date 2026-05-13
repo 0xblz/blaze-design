@@ -30,15 +30,15 @@ llms.txt             — LLM-readable site summary
 
 ### Business Card UI
 The site is a single-page centered business card with a 3D flip interaction:
-- **Front face** (`.card-front`): dark surface with holographic dot pattern on hover
-- **Back face** (`.card-back`): blue surface with project list and social links
+- **Front face** (`.card-front`): dark surface (`#111`) with holographic color glow (`::before`) and dot pattern (`::after`) on hover, share button top-right
+- **Back face** (`.card-back`): blue surface (`#1e40af`) with soft white glow (`::after`) on hover, paper grain texture (`::before`), gallery button top-right
 - Clicking the card toggles `.flipped` class (rotateY 180deg)
 - `.card-frame` provides perspective; `.card` handles flip + tilt transforms
 
 ### 3D Tilt Effect (desktop only)
 - Mousemove on `.card-frame` applies `rotateX`/`rotateY` to `.card` via JS
 - Dynamic shadow shifts opposite to tilt direction
-- CSS custom properties `--mx`, `--my`, `--angle` set on `.card` for cursor-relative effects
+- CSS custom properties `--mx`, `--my`, `--angle` set on `.card` for cursor-relative glow/dot effects on both faces
 - Guarded by `(hover: hover)` media query — no tilt on touch devices
 - Tilt composes with flip by building the full transform string in JS
 

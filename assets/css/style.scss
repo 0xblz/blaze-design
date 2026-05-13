@@ -154,6 +154,33 @@ html, body {
     background-size: 200px 200px;
   }
 
+  // Soft white glow — tracks the cursor via --mx/--my (set on .card by JS).
+  // overlay blend mode lightens the blue without washing out to white; keeps
+  // the effect matte rather than specular. Intentionally softer than the front
+  // holographic layer — less radius, lower opacity ceiling.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(
+      circle 140px at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 255, 255, 0.12),
+      transparent 80%
+    );
+    mix-blend-mode: overlay;
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .card.flipped:hover & {
+    &::after {
+      opacity: 1;
+    }
+  }
+
   // ── Type & interactive elements scoped to the blue surface ──────────────────
   h2 {
     color: rgba(255, 255, 255, 0.45);
